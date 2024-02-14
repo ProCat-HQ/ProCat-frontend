@@ -5,6 +5,10 @@ import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.data_storage.DataStorage
+import com.example.procatfirst.ui.personal.notifications.NotificationsScreen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class UserCartCache {
 
@@ -17,14 +21,18 @@ class UserCartCache {
 
     fun addUserCartStuff(tool : Tool) {
         toolsStorage.add(tool)
-        DataStorage.shared.setUserCartToMemory(toolsStorage)
-        //intent
-        //NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
-
+        runBlocking {
+            launch(Dispatchers.Default) {
+                DataStorage.shared.setUserCartToMemory(toolsStorage)
+            }
+        }
     }
 
     fun setUserCartStuff(cart: MutableList<Tool>) {
-        toolsStorage = cart
+        if (cart.isNotEmpty()) {
+            toolsStorage = cart
+            NotificationCoordinator.shared.sendIntent(SystemNotifications.cartLoaded)
+        }
     }
 
     fun getUserCartStuff(): MutableList<Tool> {
@@ -33,8 +41,12 @@ class UserCartCache {
 
     fun removeUserCartStuff(tool : Tool) {
         toolsStorage.remove(tool)
+        runBlocking {
+            launch(Dispatchers.Default) {
+                DataStorage.shared.setUserCartToMemory(toolsStorage)
+            }
+        }
         NotificationCoordinator.shared.sendIntent(SystemNotifications.delInCartIntent)
-        DataStorage.shared.setUserCartToMemory(toolsStorage)
     }
 
 }

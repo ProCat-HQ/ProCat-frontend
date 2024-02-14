@@ -11,5 +11,5 @@ object SystemNotifications {
     const val delInCartIntent = "del-in-cart-intent"
     const val stuffAddedIntent = "stuff-added-intent"
     const val loginIntent = "login-intent"
-    const val shakalno = "shakalno"
+    const val cartLoaded = "cartLoaded"
 }

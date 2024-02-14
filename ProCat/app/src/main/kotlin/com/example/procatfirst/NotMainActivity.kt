@@ -33,6 +33,7 @@ import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinato
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
+import com.example.procatfirst.repository.data_storage.DataStorage
 import com.example.procatfirst.ui.CustomComposeTextWithReceiver
 
 
@@ -48,7 +49,9 @@ class NotMainActivity : ComponentActivity() {
     }
 
     private fun initBackground() {
-        NotificationCoordinator.shared.initialize(baseContext)
+        //NotificationCoordinator.shared.initialize(baseContext)
+
+            //DataStorage.shared.initialize(baseContext)
 
         DataCoordinatorOLD.shared.initialize(
             context = baseContext,
