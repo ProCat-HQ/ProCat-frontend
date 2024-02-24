@@ -13,7 +13,7 @@ class CatalogCache {
 
     companion object {
         val shared = CatalogCache()
-        const val identifier = "[LocalStorage]"
+        const val identifier = "[CatalogCache]"
     }
 
     fun addCatalogStuff(list: List<Item>) {
@@ -33,11 +33,11 @@ class CatalogCache {
         }
     }
 
-    fun setCatalogStuff(cart: MutableList<Tool>) {
+    fun setCatalogStuff(cart: MutableList<Tool>) { //useless?
         toolsStorage = cart
     }
 
-    fun getCatalogStuff(): MutableList<Tool> {
+    fun getCatalogStuff(): List<Tool> {
         return toolsStorage
     }
 
