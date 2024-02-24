@@ -3,6 +3,8 @@ package com.example.procatfirst.repository.data_storage
 import android.content.Context
 import android.util.Log
 import com.example.procatfirst.data.Tool
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -19,12 +21,14 @@ class DataStorage {
     private var context: Context? = null
     private var filesDir: File? = null
 
-    fun getUserCartFromMemory(): MutableList<Tool> {
+    suspend fun getUserCartFromMemory(): MutableList<Tool> {
         var rowJsonUserCart = "{}"
         try {
             rowJsonUserCart = File(filesDir, FILEPATH).readText()
         } catch (e: FileNotFoundException) {
-            File(filesDir, FILEPATH).createNewFile()
+            withContext(Dispatchers.IO) {
+                File(filesDir, FILEPATH).createNewFile()
+            }
         }
         val json = Json { prettyPrint = true }
         val result: MutableList<Tool> = try {
@@ -35,10 +39,12 @@ class DataStorage {
         return result
     }
 
-    fun setUserCartToMemory(cart: MutableList<Tool>) {
+    suspend fun setUserCartToMemory(cart: MutableList<Tool>) {
         val json = Json { prettyPrint = true }
         if(!(File(filesDir, FILEPATH).exists())) {
-            File(filesDir, FILEPATH).createNewFile()
+            withContext(Dispatchers.IO) {
+                File(filesDir, FILEPATH).createNewFile()
+            }
         }
         try {
             File(filesDir, FILEPATH).writeText(json.encodeToString(cart))
@@ -53,6 +59,12 @@ class DataStorage {
     fun initialize(con: Context) {
         this.context = con
         filesDir = con.applicationContext.filesDir
+
+        Log.i(
+            identifier,
+            "data storage init"
+        )
+
     }
 
 

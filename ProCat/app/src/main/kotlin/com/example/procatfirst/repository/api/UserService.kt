@@ -17,8 +17,8 @@ interface UserService {
     fun getUsers(): Call<UserResponse>
 
     //read about coroutines (suspend)
+    // TODO все эти методы должны быть suspend (наверное, надо проверить на блокировку)
     @POST("/login")
-   // fun setUsers(@Body requestBody: RequestBody): Response<ResponseBody>
     fun setUsers(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/items")

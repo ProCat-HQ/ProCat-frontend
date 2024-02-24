@@ -18,6 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.intents.NotificationCoordinator
+import com.example.procatfirst.intents.SystemNotifications
+import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.theme.md_theme_light_scrim
 import com.example.procatfirst.ui.theme.md_theme_light_tertiary
@@ -45,7 +48,7 @@ fun Cart(
         ToolCard()
 
         Button(
-            onClick = {}
+            onClick = {NotificationCoordinator.shared.sendIntent(SystemNotifications.cartLoaded) }
         ) {
             Text(text = "Оформить заказ")
         }

@@ -10,8 +10,10 @@ import androidx.compose.ui.unit.sp
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.example.procatfirst.intents.SystemNotifications
+import com.example.procatfirst.repository.cache.UserCartCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
+import java.lang.Thread.sleep
 
 @Composable
 fun ToolCard() {
@@ -55,27 +57,22 @@ fun ToolCard() {
     }
     
 */
-    var isActive by remember { mutableStateOf(DataCoordinator.shared.getUserCart().isNotEmpty())}
-    if(isActive) {
-        var tools: MutableList<Tool> = DataCoordinator.shared.getUserCart()
-
-        val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
-            override fun howToReactOnIntent() {
-                if(DataCoordinator.shared.getUserCart().isEmpty()) {
-                    isActive = false
-                }
-                else {
-                    isActive = false
-                    tools = DataCoordinator.shared.getUserCart()
-                    isActive = true
-                }
-            }
+    var tools by remember { mutableStateOf(DataCoordinator.shared.getUserCart()) }
+    var isActive by remember { mutableStateOf(true) }
+    val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
+        override fun howToReactOnIntent() {
+            isActive = false
+            tools = DataCoordinator.shared.getUserCart()
+            isActive = true
         }
-        receiver1.CreateReceiver(intentToReact = SystemNotifications.delInCartIntent)
+    }
+    receiver1.CreateReceiver(intentToReact = SystemNotifications.delInCartIntent)
+    receiver1.CreateReceiver(intentToReact = SystemNotifications.cartLoaded)
 
+    if(tools.isNotEmpty() && isActive) {
         ToolsScreenCart(tools)
-
     } else {
         Text(text = "Ваша корзина пуста", fontSize = 18.sp)
     }
+
 }

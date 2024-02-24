@@ -35,7 +35,7 @@ import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 
 @Composable
 fun ToolsScreenCart(
-    tools: MutableList<Tool>
+    tools: List<Tool>
 ) {
 
         Column(
@@ -89,7 +89,8 @@ fun ToolCardCart(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Button(onClick = { DataCoordinator.shared.removeToolFromUserCart(tool)
-                NotificationCoordinator.shared.sendIntent(SystemNotifications.shakalno)}) {
+                //NotificationCoordinator.shared.sendIntent(SystemNotifications.shakalno)
+                }) {
                     Text(text = "удалить", fontSize = 14.sp)
                 }
             }
