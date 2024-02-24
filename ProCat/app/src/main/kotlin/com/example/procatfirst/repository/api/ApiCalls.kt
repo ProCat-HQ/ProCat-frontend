@@ -44,7 +44,7 @@ class ApiCalls {
             override fun onFailure(call: Call<ItemsResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("API", t.toString())
-                //!!!! error intent
+                //!!!! TODO error intent !!!!
                 NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
                 //DataCoordinator.shared.updateUserEmail("ERROR 404")
             }
@@ -55,7 +55,7 @@ class ApiCalls {
                 Log.i("RESPONSE", response.raw().toString())
                 /* This will print the response of the network call to the Logcat */
                 response.body()?.let { CatalogCache.shared.addCatalogStuff(it.items) }
-                //~~~~~~~~~~~//DataCoordinator.shared.updateUserEmail(response.body().toString())
+
             }
 
         })

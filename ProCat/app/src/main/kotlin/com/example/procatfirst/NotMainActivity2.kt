@@ -99,7 +99,7 @@ import com.example.procatfirst.ui.theme.ProCatFirstTheme
             Button(
                 onClick = {
                     //runApi("https://randomuser.me/")
-                    ApiCalls.shared.getItems()
+                    //ApiCalls.shared.getItems()
                           },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.LightGray,

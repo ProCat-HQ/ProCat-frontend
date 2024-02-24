@@ -1,6 +1,5 @@
 package com.example.procatfirst.ui.tools
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,17 +38,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
-import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun ToolsScreen(
     onNextButtonClicked: () -> Unit,
@@ -57,8 +59,8 @@ fun ToolsScreen(
     modifier: Modifier = Modifier
     ) {
     val searchUiState by toolsViewModel.uiState.collectAsState()
-
-    //ApiCalls.shared.getItems()//ToolDataProvider.tools
+    loadCatalog(toolsViewModel)
+    //ToolDataProvider.tools
     //DataCoordinator.shared.addToolToUserCart(Tool(2, "Молоток", 1, "ddjdjjd", "sksks", 30))
     var tools by remember {
         mutableStateOf(CatalogCache.shared.getCatalogStuff())
@@ -200,5 +202,14 @@ fun ToolCard(
 fun ToolPreview() {
     ProCatFirstTheme {
         //ToolsScreen()
+    }
+}
+
+/**
+ *  На самом деле тут корутина не понадобилась, но для примера пусть пока будет
+ */
+fun loadCatalog(toolsViewModel : ViewModel) {
+    toolsViewModel.viewModelScope.launch {
+        DataCoordinator.shared.loadCatalog()
     }
 }

@@ -1,6 +1,5 @@
 package com.example.procatfirst.repository.api
 
-import com.example.procatfirst.repository.api.UserResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -16,8 +15,10 @@ interface UserService {
     @GET("/api")
     fun getUsers(): Call<UserResponse>
 
-    //read about coroutines (suspend)
     // TODO все эти методы должны быть suspend (наверное, надо проверить на блокировку)
+    // Разобрался: в текущей реализации все API методы являются асинхронными
+    // Соответственно они не блокируют главный поток и могут спокойно выполняться
+    // без корутин
     @POST("/login")
     fun setUsers(@Body requestBody: RequestBody): Call<ResponseBody>
 
