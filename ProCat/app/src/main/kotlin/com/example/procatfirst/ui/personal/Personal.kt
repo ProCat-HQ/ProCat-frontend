@@ -25,6 +25,7 @@ fun PersonalScreen(
     onToProfileClicked: () -> Unit,
     onToOrdersClicked: () -> Unit,
     onToNotificationsClicked: () -> Unit,
+    onToChatsClicked:() -> Unit,
     //personalViewModel: PersonalViewModel = viewModel(),
     //modifier: Modifier = Modifier
 ) {
@@ -70,7 +71,7 @@ fun PersonalScreen(
         // Chats button
         Button(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
-            onClick = { }
+            onClick = { onToChatsClicked() }
         ) {
             Text(
                 text = stringResource(R.string.chats),

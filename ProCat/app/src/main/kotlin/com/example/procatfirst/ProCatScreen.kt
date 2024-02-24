@@ -42,6 +42,8 @@ import com.example.procatfirst.ui.cart.Cart
 import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.item.ToolViewModel
 import com.example.procatfirst.ui.personal.PersonalScreen
+import com.example.procatfirst.ui.personal.chats.ChatScreen
+import com.example.procatfirst.ui.personal.chats.ListOfChatsScreen
 import com.example.procatfirst.ui.personal.notifications.NotificationsScreen
 import com.example.procatfirst.ui.personal.orders.OrdersScreen
 import com.example.procatfirst.ui.personal.profile.ProfileScreen
@@ -59,7 +61,9 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Personal(title = R.string.personal),
     Profile(title = R.string.profile),
     Orders(title = R.string.list_of_orders),
-    Notifications(title = R.string.notifications)
+    Notifications(title = R.string.notifications),
+    ListOfChatsScreen(title = R.string.list_of_chats),
+    Chat(title = R.string.chat)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -239,6 +243,9 @@ fun ProCatApp (
                     onToNotificationsClicked = {
                         navController.navigate(ProCatScreen.Notifications.name)
                     },
+                    onToChatsClicked = {
+                        navController.navigate(ProCatScreen.ListOfChatsScreen.name)
+                    },
                     /*
                     modifier = Modifier
                         .fillMaxSize()
@@ -266,6 +273,28 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Notifications.name) {
                 NotificationsScreen(
+                    /*
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        */
+                )
+            }
+            composable(route = ProCatScreen.ListOfChatsScreen.name) {
+                ListOfChatsScreen(
+                    onToChatClicked = {
+                        navController.navigate(ProCatScreen.Chat.name)
+                    },
+                    /*
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        */
+                )
+            }
+            composable(route = ProCatScreen.Chat.name) {
+                ChatScreen(
+
                     /*
                     modifier = Modifier
                         .fillMaxSize()
