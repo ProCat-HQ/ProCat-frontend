@@ -32,7 +32,6 @@ fun Cart(
     authViewModel: AuthViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState()),

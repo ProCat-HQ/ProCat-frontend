@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.procatfirst.R
+import ru.dublgis.dgismobile.mapsdk.MapFragment
 
 @Composable
 fun StartScreen(
@@ -44,5 +45,7 @@ fun StartScreen(
         ) {
             Text(stringResource(R.string.next))
         }
+
+
     }
 }

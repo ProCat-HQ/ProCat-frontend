@@ -2,8 +2,8 @@ package com.example.procatfirst
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,56 +28,35 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.procatfirst.repository.api.ApiCalls
-import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
-import com.example.procatfirst.repository.data_storage.DataStorage
+import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.ui.CustomComposeTextWithReceiver
+import ru.dublgis.dgismobile.mapsdk.LonLat
+import ru.dublgis.dgismobile.mapsdk.Map
+import ru.dublgis.dgismobile.mapsdk.MapFragment
 
 
-class NotMainActivity : ComponentActivity() {
+class MapActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        initMainPageCompose()
-        initBackground()
+        setContentView(R.layout.activity_map)
 
-    }
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as MapFragment
 
-    private fun initBackground() {
-        //NotificationCoordinator.shared.initialize(baseContext)
-
-            //DataStorage.shared.initialize(baseContext)
-
-        DataCoordinatorOLD.shared.initialize(
-            context = baseContext,
-            onLoad = {
-                //DataCoordinator.shared.updateUserEmail(DataCoordinator.shared.defaultUserEmailPreferenceValue)
-            }
+        mapFragment.setup(
+            apiKey = "810e358b-1439-4919-9eab-4618b85be168",
+            center = LonLat(37.6175, 55.7520),
+            zoom = 16.0
         )
-    }
 
 
-    private fun secondPageInit() {
-        // setContentView(R.layout.right_menu)
-        // super.findViewById<Button>(R.id.backButton).setOnClickListener {
-       // initMainPageCompose()
-        //  }
-   }
-
-
-    private fun initMainPageCompose() {
-
-        setContent {
-            MyHeader()
-            TestButtons()
         }
 
-    }
 
 
     @Composable
@@ -90,7 +69,7 @@ class NotMainActivity : ComponentActivity() {
             ) {
                 Text(text = "ProCat app", fontSize = 22.sp)
                 Spacer(Modifier.size(60.dp))
-                FloatingActionButton(onClick = { secondPageInit() }) {
+                FloatingActionButton(onClick = { }) {
                     Image(
                         painter = painterResource(id = androidx.appcompat.R.drawable.abc_ic_arrow_drop_right_black_24dp),
                         contentDescription = "desk",
@@ -151,9 +130,7 @@ class NotMainActivity : ComponentActivity() {
     }
 
     private fun runApi(url: String) {
-        ApiCalls.shared.runApi(url)
-        //PostApi.shared.rawJSON()
-        //ApiCalls.shared.postApi("http://dummy.restapiexample.com")
+        ApiCalls.shared.runApi()
     }
 
 }

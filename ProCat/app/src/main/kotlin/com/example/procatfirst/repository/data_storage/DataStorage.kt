@@ -67,6 +67,18 @@ class DataStorage {
 
     }
 
+    fun getJson()  {
+        val rowJsonUserCart = File("com/example/procatfirst/repository/api/data.json").readText()
+
+        val json = Json { prettyPrint = true }
+        val result: MutableList<Tool> = try {
+            json.decodeFromString(rowJsonUserCart)
+        } catch (e: RuntimeException) {
+            mutableListOf()
+        }
+        //return result
+    }
+
 
 
 }

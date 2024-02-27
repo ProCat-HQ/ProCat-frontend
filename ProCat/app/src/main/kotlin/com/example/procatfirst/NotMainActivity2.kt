@@ -132,7 +132,7 @@ import com.example.procatfirst.ui.theme.ProCatFirstTheme
     //}
 
     private fun runApi(url: String) {
-        ApiCalls.shared.runApi(url)
+        ApiCalls.shared.runApi()
         //PostApi.shared.rawJSON()
         //ApiCalls.shared.postApi("http://dummy.restapiexample.com")
     }

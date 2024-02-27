@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -91,6 +93,6 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
 
-
+    implementation("ru.dublgis.dgismobile.mapsdk:mapsdk:latest.release")
 
 }
