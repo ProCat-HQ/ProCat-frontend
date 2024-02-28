@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.intents.NotificationCoordinator
@@ -32,7 +33,6 @@ fun Cart(
     authViewModel: AuthViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState()),

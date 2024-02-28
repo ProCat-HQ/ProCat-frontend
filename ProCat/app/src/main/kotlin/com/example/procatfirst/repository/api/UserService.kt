@@ -24,4 +24,7 @@ interface UserService {
 
     @GET("/items")
     fun getItems(): Call<ItemsResponse>
+
+    @POST()
+    fun getDistance(@Body requestBody: RequestBody): Call<ResponseBody>
 }

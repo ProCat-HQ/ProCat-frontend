@@ -1,5 +1,6 @@
 package com.example.procatfirst
 
+import android.content.Context
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -140,6 +141,7 @@ fun BottomNavigationBar(navController: NavController) {
 
 @Composable
 fun ProCatApp (
+    controller : Context,
     authViewModel: AuthViewModel = viewModel(),
     toolViewModel: ToolViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
@@ -173,6 +175,7 @@ fun ProCatApp (
         ) {
             composable(route = ProCatScreen.Start.name) {
                 StartScreen(
+                    controller = controller,
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Auth.name)
                     },
