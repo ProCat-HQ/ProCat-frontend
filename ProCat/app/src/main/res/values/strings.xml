@@ -37,6 +37,12 @@
     <string name="notifications">Уведомления</string>
     <string name="chats">Чаты</string>
 
+    <string name="phone">Телефон</string>
+    <string name="inn">ИНН</string>
+    <string name="email">Электронная почта</string>
+    <string name="fullname">Полное имя</string>
+
+
     <string name="change_password">Сменить пароль</string>
     <string name="edit">Редактировать</string>
 

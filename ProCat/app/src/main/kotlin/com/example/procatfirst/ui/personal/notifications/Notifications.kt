@@ -18,6 +18,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,13 +28,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.ui.personal.profile.ProfileViewModel
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
+
 
 @Composable
 fun NotificationsScreen(
+    notificationViewModel: NotificationViewModel = viewModel(),
+    ) {
 
-) {
+    val notifications by notificationViewModel.notifications.collectAsState()
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -45,10 +53,20 @@ fun NotificationsScreen(
             style = MaterialTheme.typography.titleLarge
         )
 
-        notification()
-        notification()
-        notification()
 
+        notifications.forEach { notification ->
+            notification(
+                title = notification.title,
+                date = "12.02.2024",
+                description = notification.description,
+                isViewed = notification.isViewed,
+                onClick = {
+                    notificationViewModel.markAsRead(notification)
+                }
+            )
+        }
+
+        //переходить в новый диалог с установленной темой
         FilledTonalButton(onClick = {  }) {
             Text(
                 text = stringResource(R.string.ask_question)
@@ -60,19 +78,22 @@ fun NotificationsScreen(
 
 @Composable
 fun notification(
-    header: String = "Header",
-    date: String = "12.02.2024",
-    body: String = "He'll want to use your yacht, and I don't want this thing smelling like fish."
+    title: String,
+    date: String,
+    description: String,
+    isViewed: Boolean,
+    onClick: () -> Unit
 ) {
     OutlinedCard(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = if (isViewed) MaterialTheme.colorScheme.surface else Color.LightGray,
         ),
         border = BorderStroke(1.dp, Color.Black),
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .padding(8.dp)
+            .clickable{onClick()}
 
     ) {
         Row(
@@ -82,9 +103,11 @@ fun notification(
             horizontalArrangement = Arrangement.SpaceBetween
         ){
             Text(
-                text = header,
+                text = title,
                 textAlign = TextAlign.Left,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+
             )
             Text(
                 text = date,
@@ -94,7 +117,7 @@ fun notification(
             )
         }
         Text(
-            text = body,
+            text = description,
             textAlign = TextAlign.Left,
             modifier = Modifier
                 .padding(16.dp),
