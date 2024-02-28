@@ -1,10 +1,12 @@
-import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+val apiKey: String = gradleLocalProperties(rootDir).getProperty("apiKey")
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization") version "1.9.22"
 }
+
 
 android {
     namespace = "com.example.procatfirst"
@@ -17,6 +19,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildFeatures.buildConfig = true
+        buildConfigField("String", "apiKey", apiKey)
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -25,6 +30,7 @@ android {
 
     buildTypes {
         release {
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

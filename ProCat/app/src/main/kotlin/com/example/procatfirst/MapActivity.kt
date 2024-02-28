@@ -19,11 +19,10 @@ class MapActivity : AppCompatActivity() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as MapFragment
 
         mapFragment.setup(
-            apiKey = "810e358b-1439-4919-9eab-4618b85be168",
+            apiKey = BuildConfig.apiKey,
             center = LonLat(37.6175, 55.7520),
             zoom = 16.0
         )
-
 
     }
 
