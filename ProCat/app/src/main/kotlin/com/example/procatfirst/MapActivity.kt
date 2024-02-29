@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.procatfirst.repository.api.ApiCalls
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.MapFragment
+import ru.dublgis.dgismobile.mapsdk.Map
+import ru.dublgis.dgismobile.mapsdk.MarkerOptions
 
 
 class MapActivity : AppCompatActivity() {
@@ -24,6 +26,18 @@ class MapActivity : AppCompatActivity() {
             zoom = 16.0
         )
 
+        mapFragment.mapReadyCallback = this::onDGisMapReady
+
+    }
+
+    private fun onDGisMapReady(map: Map?) {
+        map?.let {
+            val marker = it.addMarker(
+                MarkerOptions(
+                LonLat(37.6175, 55.7520)
+                )
+            )
+        }
     }
 
     private fun createToast(body: String?) {
