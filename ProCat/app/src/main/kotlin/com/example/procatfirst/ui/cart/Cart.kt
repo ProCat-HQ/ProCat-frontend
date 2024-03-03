@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,9 +29,9 @@ import com.example.procatfirst.ui.theme.md_theme_light_tertiary
 
 @Composable
 fun Cart(
-    onNextButtonClicked: () -> Unit,
-    authViewModel: AuthViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onToOrderingClicked: () -> Unit
+
 ) {
 
     Column(
@@ -47,19 +48,14 @@ fun Cart(
 
         ToolCard()
 
-        Button(
-            onClick = {NotificationCoordinator.shared.sendIntent(SystemNotifications.cartLoaded) }
-        ) {
-            Text(text = "Оформить заказ")
-        }
-
-        Button(
-            onClick = { onNextButtonClicked() },
+        Button (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            //onClick = {NotificationCoordinator.shared.sendIntent(SystemNotifications.cartLoaded) }
+            onClick = {onToOrderingClicked()}
         ) {
-            Text(stringResource(R.string.next))
+            Text(text = stringResource(R.string.checkout))
         }
     }
 

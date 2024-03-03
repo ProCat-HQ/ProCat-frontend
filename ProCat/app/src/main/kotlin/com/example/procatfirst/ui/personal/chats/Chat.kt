@@ -36,9 +36,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Chat
-import com.example.procatfirst.data.Person
-import com.example.procatfirst.data.chatList
+import com.example.procatfirst.data.Message
+import com.example.procatfirst.data.User
+import com.example.procatfirst.data.UserDataProvider.users
+import com.example.procatfirst.data.messageList
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
+import com.example.procatfirst.ui.theme.md_theme_light_background
+import com.example.procatfirst.ui.theme.md_theme_light_inversePrimary
+import com.example.procatfirst.ui.theme.md_theme_light_outline
+import com.example.procatfirst.ui.theme.md_theme_light_scrim
+import com.example.procatfirst.ui.theme.md_theme_light_secondaryContainer
+import com.example.procatfirst.ui.theme.md_theme_light_tertiaryContainer
 
 
 @Composable
@@ -46,24 +54,26 @@ fun ChatScreen(
 ) {
 
     var message by remember { mutableStateOf("") }
+    val companion = users[2]
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(md_theme_light_scrim)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
             UserNameRow(
-                person = Person(1, "Курьер"),
+                user = companion,
+                name = "Поломка инструмента",
                 modifier = Modifier.padding(top = 60.dp, start = 20.dp, end = 20.dp, bottom = 20.dp)
             )
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        Color.White, RoundedCornerShape(
+                        md_theme_light_background, RoundedCornerShape(
                             topStart = 30.dp, topEnd = 30.dp
                         )
                     )
@@ -78,8 +88,8 @@ fun ChatScreen(
                         bottom = 75.dp
                     )
                 ) {
-                    items(chatList, key = { it.id }) {
-                        ChatRow(chat = it)
+                    items(messageList, key = { it.messageId }) {
+                        ChatRow(message = it, currentUserId = 2)
                     }
                 }
             }
@@ -97,24 +107,25 @@ fun ChatScreen(
 
 @Composable
 fun ChatRow(
-    chat: Chat
+    message: Message,
+    currentUserId: Int
 ) {
 
     Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = if (chat.direction) Alignment.Start else Alignment.End
+        horizontalAlignment = if (message.userId == currentUserId) Alignment.End else Alignment.Start
     ) {
         Box(
             modifier = Modifier
                 .background(
-                    if (chat.direction) Color.Gray else Color.Yellow,
+                    if (message.userId == currentUserId) md_theme_light_tertiaryContainer else md_theme_light_secondaryContainer,
                     RoundedCornerShape(100.dp)
                 ),
             contentAlignment = Center
         ) {
             Text(
-                text = chat.message, style = TextStyle(
-                    color = Color.Black,
+                text = message.text, style = TextStyle(
+                    color = md_theme_light_scrim,
                     fontSize = 15.sp
                 ),
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 15.dp),
@@ -122,9 +133,9 @@ fun ChatRow(
             )
         }
         Text(
-            text = chat.time,
+            text = message.date,
             style = TextStyle(
-                color = Color.Gray,
+                color = md_theme_light_outline,
                 fontSize = 12.sp
             ),
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 15.dp),
@@ -147,13 +158,13 @@ fun CustomTextField(
                 text = stringResource(R.string.type_message),
                 style = TextStyle(
                     fontSize = 14.sp,
-                    color = Color.Black
+                    color = md_theme_light_scrim
                 ),
                 textAlign = TextAlign.Center
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color.Gray,
+            containerColor = md_theme_light_secondaryContainer,
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent
         ),
@@ -171,7 +182,7 @@ fun CommonIconButton(
 
     Box(
         modifier = Modifier
-            .background(Color.Yellow, CircleShape)
+            .background(md_theme_light_inversePrimary, CircleShape)
             .size(33.dp), contentAlignment = Center
     ) {
     }
@@ -199,7 +210,8 @@ fun CommonIconButtonDrawable(
 @Composable
 fun UserNameRow(
     modifier: Modifier = Modifier,
-    person: Person
+    name: String,
+    user: User
 ) {
 
     Row(
@@ -210,14 +222,14 @@ fun UserNameRow(
 
             Column {
                 Text(
-                    text = person.name, style = TextStyle(
+                    text = name, style = TextStyle(
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
                     )
                 )
                 Text(
-                    text = "online", style = TextStyle(
+                    text = user.fullName, style = TextStyle(
                         color = Color.White,
                         fontSize = 14.sp
                     )

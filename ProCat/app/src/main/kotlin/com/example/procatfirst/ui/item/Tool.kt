@@ -15,7 +15,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -59,8 +61,6 @@ fun ToolScreen(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
-        //verticalArrangement = Arrangement.Center,
-        //horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Image(
@@ -106,11 +106,11 @@ fun ToolScreen(
             toolViewModel
         )
 
-        Button(
+        ElevatedButton(
             onClick = { onNextButtonClicked() },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(stringResource(R.string.cart))
+            Text(text = stringResource(R.string.cart), fontSize = 16.sp)
         }
 
     }
@@ -131,7 +131,7 @@ fun BottomBar(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.Bottom
     ) {
-        Button(
+        FilledTonalButton (
             modifier = Modifier.fillMaxWidth(),
             onClick = { addToCart() },
             enabled = !toolUiState.addedToCart

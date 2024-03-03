@@ -54,7 +54,7 @@ class AuthViewModel: ViewModel()  {
                 currentState.copy(enteredPhoneNumberWrong = true)
             }
         }
-        updateUserPassword("")
+        updateUserPhoneNumber("")
     }
 
     private fun checkUserPassword() {

@@ -30,12 +30,22 @@
 
     <string name="test">Тест</string>
     <string name="cart">Корзина</string>
+    <string name="checkout">Оформить заказ</string>
+    <string name="ordering">Оформление заказа</string>
+    <string name="delivery">Доставка</string>
+
 
     <string name="personal">Меню</string>
     <string name="profile">Профиль</string>
     <string name="orders">Мои заказы</string>
     <string name="notifications">Уведомления</string>
     <string name="chats">Чаты</string>
+
+    <string name="phone">Телефон</string>
+    <string name="inn">ИНН</string>
+    <string name="email">Электронная почта</string>
+    <string name="fullname">Полное имя</string>
+
 
     <string name="change_password">Сменить пароль</string>
     <string name="edit">Редактировать</string>

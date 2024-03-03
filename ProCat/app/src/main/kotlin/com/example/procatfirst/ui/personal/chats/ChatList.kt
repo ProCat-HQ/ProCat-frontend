@@ -14,6 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
@@ -23,21 +24,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.procatfirst.data.Person
-import com.example.procatfirst.data.PersonList.personList
+import com.example.procatfirst.data.User
+import com.example.procatfirst.data.UserDataProvider.users
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
+import com.example.procatfirst.ui.theme.md_theme_light_onPrimary
+import com.example.procatfirst.ui.theme.md_theme_light_outline
+import com.example.procatfirst.ui.theme.md_theme_light_scrim
 
 
 @Composable
 fun ListOfChatsScreen(
-    //navHostController: NavHostController
     onToChatClicked: () -> Unit
-
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(md_theme_light_scrim)
     ) {
 
         Column(
@@ -45,12 +47,11 @@ fun ListOfChatsScreen(
                 .fillMaxSize()
                 .padding(top = 30.dp)
         ) {
-            //HeaderOrViewStory()
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        Color.White, RoundedCornerShape(
+                        md_theme_light_onPrimary, RoundedCornerShape(
                             topStart = 30.dp, topEnd = 30.dp
                         )
                     )
@@ -59,16 +60,12 @@ fun ListOfChatsScreen(
                 LazyColumn(
                     modifier = Modifier.padding(bottom = 15.dp, top = 30.dp)
                 ) {
-                    items(personList, key = { it.id }) {
+                    items(users, key = { it.userId }) {
                         UserEachRow(
-                            person = it,
+                            user = it,
                             onToChatClicked = onToChatClicked
                         ) {
-                            /*navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                                "data",
-                                it
-                            ) */
-                            //navHostController.navigate(CHAT_SCREEN)
+                            //navigation
                         }
                     }
                 }
@@ -80,7 +77,7 @@ fun ListOfChatsScreen(
 
 @Composable
 fun UserEachRow(
-    person: Person,
+    user: User,
     onToChatClicked: () -> Unit,
     function: () -> Unit
 ) {
@@ -100,25 +97,25 @@ fun UserEachRow(
                 Row {
                     Column {
                         Text(
-                            text = person.name, style = TextStyle(
-                                color = Color.Black, fontSize = 15.sp, fontWeight = FontWeight.Bold
+                            text = user.fullName, style = TextStyle(
+                                color = md_theme_light_scrim, fontSize = 15.sp, fontWeight = FontWeight.Bold
                             )
                         )
-                        Text(
-                            text = "okay", style = TextStyle(
-                                color = Gray, fontSize = 14.sp
+                        Text( //lastMessage?
+                            text = user.phoneNumber, style = TextStyle(
+                                color = md_theme_light_outline, fontSize = 14.sp
                             )
                         )
                     }
 
                 }
-                Text(
-                    text = "_12_23_pm", style = TextStyle(
-                        color = Gray, fontSize = 12.sp
+                Text( //date of last message?
+                    text = user.role, style = TextStyle(
+                        color = md_theme_light_outline, fontSize = 12.sp
                     )
                 )
             }
-            Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Black)
+            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Black)
         }
     }
 
