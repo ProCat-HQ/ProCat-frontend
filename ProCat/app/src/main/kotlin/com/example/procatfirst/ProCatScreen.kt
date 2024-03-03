@@ -213,7 +213,6 @@ fun ProCatApp (
             composable(route = ProCatScreen.Tool.name) {
                 ToolScreen(
                     onNextButtonClicked = {
-//                        navController.navigate(ProCatScreen.Misha.name)
                         navController.navigate(ProCatScreen.Cart.name)
                     },
                     modifier = Modifier
@@ -221,7 +220,7 @@ fun ProCatApp (
                         .padding(16.dp)
                 )
             }
-            composable(route = ProCatScreen.Misha.name) {
+      /*      composable(route = ProCatScreen.Misha.name) {
                 TestButtons(
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Cart.name)
@@ -230,7 +229,7 @@ fun ProCatApp (
                         .fillMaxSize()
                         .padding(16.dp)
                 )
-            }
+            }*/
             composable(route = ProCatScreen.Cart.name) {
                 Cart(
                     modifier = Modifier
