@@ -25,7 +25,7 @@ class ProfileViewModel: ViewModel() {
     }
 
     //Phone Number
-    var userInputPhoneNumber by mutableStateOf("")
+    var userInputPhoneNumber by mutableStateOf(_uiState.value.phoneNumber)
         private set
 
     fun updateUserPhoneNumber(enteredPhoneNumber: String){
@@ -36,11 +36,11 @@ class ProfileViewModel: ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(phoneNumber = userInputPhoneNumber)
         }
-        updateUserPhoneNumber("")
+        updateUserPhoneNumber(userInputPhoneNumber)
     }
 
     //FullName
-    var userInputFullName by mutableStateOf("")
+    var userInputFullName by mutableStateOf(_uiState.value.fullName)
         private set
 
     fun updateUserFullName(enteredFullName: String){
@@ -51,11 +51,11 @@ class ProfileViewModel: ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(fullName = userInputFullName)
         }
-        updateUserFullName("")
+        updateUserFullName(userInputFullName)
     }
 
     //IdentificationNumber
-    var userInputIdentificationNumber by mutableStateOf("")
+    var userInputIdentificationNumber by mutableStateOf(_uiState.value.identificationNumber)
         private set
 
     fun updateUserIdentificationNumber(enteredIdentificationNumber: String){
@@ -66,11 +66,11 @@ class ProfileViewModel: ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(identificationNumber = userInputIdentificationNumber)
         }
-        updateUserIdentificationNumber("")
+        updateUserIdentificationNumber(userInputIdentificationNumber)
     }
 
     //Email
-    var userInputEmail by mutableStateOf("")
+    var userInputEmail by mutableStateOf(_uiState.value.email)
         private set
 
     fun updateUserEmail(enteredEmail: String){
@@ -81,7 +81,7 @@ class ProfileViewModel: ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(email = userInputEmail)
         }
-        updateUserEmail("")
+        updateUserEmail(userInputEmail)
     }
 
 

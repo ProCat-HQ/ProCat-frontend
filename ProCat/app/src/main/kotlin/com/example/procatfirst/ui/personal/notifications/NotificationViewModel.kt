@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class NotificationViewModel: ViewModel() {
 
-    val notifications: MutableStateFlow<List<Notification>> = MutableStateFlow(NotificationDataProvider.notifications)
+    val notifications: MutableStateFlow<List<Notification>> = MutableStateFlow(
+        NotificationDataProvider.notifications)
 
     init {
 

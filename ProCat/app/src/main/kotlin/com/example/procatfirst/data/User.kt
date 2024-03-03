@@ -24,6 +24,33 @@ object UserDataProvider {
             identificationNumber = "00000000",
             isConfirmed = false,
             role = "user"
-        )
+        ),
+        User(
+            userId = 2,
+            fullName = "Nastya Nas",
+            email = "email@gmail.com",
+            phoneNumber = "89000000000",
+            identificationNumber = "00000000",
+            isConfirmed = true,
+            role = "user"
+        ),
+        User(
+            userId = 3,
+            fullName = "Olya Aloy",
+            email = "email@gmail.com",
+            phoneNumber = "89000000000",
+            identificationNumber = "00000000",
+            isConfirmed = false,
+            role = "admin"
+        ),
+        User(
+            userId = 4,
+            fullName = "Charlie Morning",
+            email = "email@gmail.com",
+            phoneNumber = "89000000000",
+            identificationNumber = "00000000",
+            isConfirmed = false,
+            role = "courier"
+        ),
     )
 }

@@ -30,6 +30,10 @@
 
     <string name="test">Тест</string>
     <string name="cart">Корзина</string>
+    <string name="checkout">Оформить заказ</string>
+    <string name="ordering">Оформление заказа</string>
+    <string name="delivery">Доставка</string>
+
 
     <string name="personal">Меню</string>
     <string name="profile">Профиль</string>

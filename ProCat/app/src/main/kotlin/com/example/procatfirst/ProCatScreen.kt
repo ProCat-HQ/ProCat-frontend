@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
@@ -41,6 +42,7 @@ import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.cart.Cart
 import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.item.ToolViewModel
+import com.example.procatfirst.ui.ordering.OrderingScreen
 import com.example.procatfirst.ui.personal.PersonalScreen
 import com.example.procatfirst.ui.personal.chats.ChatScreen
 import com.example.procatfirst.ui.personal.chats.ListOfChatsScreen
@@ -48,6 +50,8 @@ import com.example.procatfirst.ui.personal.notifications.NotificationsScreen
 import com.example.procatfirst.ui.personal.orders.OrdersScreen
 import com.example.procatfirst.ui.personal.profile.ProfileScreen
 import com.example.procatfirst.ui.start.StartScreen
+import com.example.procatfirst.ui.theme.md_theme_light_inversePrimary
+import com.example.procatfirst.ui.theme.md_theme_light_secondaryContainer
 import com.example.procatfirst.ui.tools.ToolsScreen
 
 
@@ -63,7 +67,9 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Orders(title = R.string.list_of_orders),
     Notifications(title = R.string.notifications),
     ListOfChatsScreen(title = R.string.list_of_chats),
-    Chat(title = R.string.chat)
+    Chat(title = R.string.chat),
+    Ordering(title = R.string.ordering)
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,10 +100,10 @@ fun ProCatAppBar(
 }
 
 sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
-    object Home : BottomNavItem("start", Icons.Default.Home, "Home")
-    object Tools : BottomNavItem("tools", Icons.Default.Search, "Search")
-    object Cart : BottomNavItem("cart", Icons.Default.ShoppingCart, "Cart")
-    object Personal : BottomNavItem("personal", Icons.Default.Person, "Profile")
+    object Home : BottomNavItem("start", Icons.Default.Home, "Главная")
+    object Tools : BottomNavItem("tools", Icons.Default.Search, "Поиск")
+    object Cart : BottomNavItem("cart", Icons.Default.ShoppingCart, "Корзина")
+    object Personal : BottomNavItem("personal", Icons.Default.Person, "Меню")
 }
 
 
@@ -111,14 +117,14 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Personal
     )
     BottomNavigation(
-        backgroundColor = colorResource(id = R.color.white),
-        contentColor = Color.White
+        backgroundColor = md_theme_light_secondaryContainer,
+        contentColor = md_theme_light_secondaryContainer
     ) {
         items.forEach { item ->
             BottomNavigationItem(
                 icon = { Icon(item.icon, contentDescription = item.label) },
-                label = { Text(text = item.label) },
-                selectedContentColor = Color.White,
+                label = { Text(text = item.label, fontSize = 12.sp) },
+                selectedContentColor = md_theme_light_inversePrimary,
                 unselectedContentColor = Color.White.copy(0.4f),
                 alwaysShowLabel = true,
                 selected = false,
@@ -224,12 +230,12 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Cart.name) {
                 Cart(
-                    onNextButtonClicked = {
-                        navController.navigate(ProCatScreen.Personal.name)
-                    },
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    onToOrderingClicked = {
+                        navController.navigate(ProCatScreen.Ordering.name)
+                    },
                 )
             }
             composable(route = ProCatScreen.Personal.name) {
@@ -300,6 +306,11 @@ fun ProCatApp (
                         .fillMaxSize()
                         .padding(16.dp)
                         */
+                )
+            }
+            composable(route = ProCatScreen.Ordering.name) {
+                OrderingScreen(
+
                 )
             }
         }

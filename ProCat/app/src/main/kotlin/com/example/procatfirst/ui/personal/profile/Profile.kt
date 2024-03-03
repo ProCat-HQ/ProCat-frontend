@@ -18,6 +18,8 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -100,7 +102,7 @@ fun ProfileScreen(
             onUserInputChanged = { profileViewModel.updateUserEmail(it) },
             onKeyboardDone = { profileViewModel.saveUserEmail() },
             )
-        Button(
+        FilledTonalButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -141,8 +143,6 @@ fun mutableField(
 
     Column (
         modifier = Modifier
-            //.fillMaxWidth()
-            //.shadow(4.dp, shape = MaterialTheme.shapes.small)
             .padding(8.dp)
     ){
         Row(
@@ -197,12 +197,10 @@ fun mutableField(
             }
 
         }
-        Divider(color = Color.LightGray, thickness = 1.dp)
-
+        HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
     }
 
 }
-
 @Composable
 fun ChangePasswordDialog(
     onDismiss: () -> Unit,
@@ -210,40 +208,61 @@ fun ChangePasswordDialog(
 ) {
     var oldPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
+    var confirmNewPassword by remember { mutableStateOf("") }
+
+    var isCheckingOldPassword by remember { mutableStateOf(true) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Сменить пароль") },
+        title = { Text(if (isCheckingOldPassword) "Введите старый пароль" else "Введите новый пароль") },
         text = {
             Column {
                 OutlinedTextField(
-                    value = oldPassword,
-                    onValueChange = { oldPassword = it },
-                    label = { Text("Старый пароль") },
+                    value = if (isCheckingOldPassword) oldPassword else newPassword,
+                    onValueChange = {
+                        if (isCheckingOldPassword) {
+                            oldPassword = it
+                        } else {
+                            newPassword = it
+                        }
+                    },
+                    label = { Text(if (isCheckingOldPassword) "Старый пароль" else "Новый пароль") },
                     visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier
                         .padding(0.dp, 8.dp)
                         .fillMaxWidth()
                 )
-                OutlinedTextField(
-                    value = newPassword,
-                    onValueChange = { newPassword = it },
-                    label = { Text("Новый пароль") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier
-                        .padding(0.dp, 8.dp)
-                        .fillMaxWidth()
-                )
+
+                if (!isCheckingOldPassword) {
+                    OutlinedTextField(
+                        value = confirmNewPassword,
+                        onValueChange = { confirmNewPassword = it },
+                        label = { Text("Подтвердите новый пароль") },
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier
+                            .padding(0.dp, 8.dp)
+                            .fillMaxWidth()
+                    )
+                }
             }
         },
         confirmButton = {
             Button(
                 onClick = {
-                    onChangePassword(newPassword)
-                    onDismiss()
+                    if (isCheckingOldPassword) {
+                        // Check old password logic here
+                        isCheckingOldPassword = false
+                    } else {
+                        if (newPassword == confirmNewPassword) {
+                            onChangePassword(newPassword)
+                            onDismiss()
+                        } else {
+                            // Handle password confirmation mismatch
+                        }
+                    }
                 }
             ) {
-                Text("Сменить пароль")
+                Text(if (isCheckingOldPassword) "Проверить" else "Сменить пароль")
             }
         },
         dismissButton = {
@@ -253,6 +272,7 @@ fun ChangePasswordDialog(
         }
     )
 }
+
 
 @Preview(showBackground = true)
 @Composable

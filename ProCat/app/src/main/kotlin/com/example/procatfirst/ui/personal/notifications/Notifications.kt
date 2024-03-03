@@ -30,9 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
-import com.example.procatfirst.ui.personal.profile.ProfileViewModel
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
-
+import com.example.procatfirst.ui.theme.md_theme_light_outline
+import com.example.procatfirst.ui.theme.md_theme_light_scrim
+import com.example.procatfirst.ui.theme.md_theme_light_surface
+import com.example.procatfirst.ui.theme.md_theme_light_surfaceVariant
+import com.example.procatfirst.ui.theme.md_theme_light_tertiaryContainer
 
 @Composable
 fun NotificationsScreen(
@@ -86,9 +89,9 @@ fun notification(
 ) {
     OutlinedCard(
         colors = CardDefaults.cardColors(
-            containerColor = if (isViewed) MaterialTheme.colorScheme.surface else Color.LightGray,
+            containerColor = if (isViewed) md_theme_light_surface else md_theme_light_surfaceVariant,
         ),
-        border = BorderStroke(1.dp, Color.Black),
+        border = BorderStroke(1.dp, md_theme_light_scrim),
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
@@ -113,7 +116,7 @@ fun notification(
                 text = date,
                 textAlign = TextAlign.Right,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
+                color = md_theme_light_outline
             )
         }
         Text(
