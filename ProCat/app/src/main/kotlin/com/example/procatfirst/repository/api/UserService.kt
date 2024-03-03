@@ -12,12 +12,10 @@ import retrofit2.http.POST
  * these at runtime */
 
 interface UserService {
-    @GET("/api")
-    fun getUsers(): Call<UserResponse>
 
-    // TODO все эти методы должны быть suspend (наверное, надо проверить на блокировку)
+    // TODO все эти методы должны быть suspend (наверное)
     // Разобрался: в текущей реализации все API методы являются асинхронными
-    // Соответственно они не блокируют главный поток и могут спокойно выполняться
+    // Соответственно они не блокируют главный поток и могут выполняться
     // без корутин
     @POST("/login")
     fun setUsers(@Body requestBody: RequestBody): Call<ResponseBody>
@@ -25,6 +23,4 @@ interface UserService {
     @GET("/items")
     fun getItems(): Call<ItemsResponse>
 
-    @POST()
-    fun getDistance(@Body requestBody: RequestBody): Call<ResponseBody>
 }

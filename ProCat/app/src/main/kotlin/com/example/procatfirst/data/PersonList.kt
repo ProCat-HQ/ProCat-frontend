@@ -1,8 +1,5 @@
 package com.example.procatfirst.data
 
-import android.os.Parcelable
-import androidx.annotation.DrawableRes
-import com.example.procatfirst.R
 import kotlinx.serialization.Serializable
 
 @Serializable

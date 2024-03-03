@@ -29,6 +29,9 @@ class DataCoordinator {
         const val identifier = "[DataCoordinatorNew]"
     }
 
+    /**
+     * Я этим не пользуюсь, но смотрю сюда иногда и думаю...
+     */
     @OptIn(DelicateCoroutinesApi::class) //useless
     fun getUserCart1(): List<Tool> {
         if (UserCartCache.shared.getUserCartStuff().isEmpty()) {

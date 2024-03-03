@@ -20,8 +20,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 
 /**
- * Тут из полезного пока только runApi() - делает GET запрос по указанному url, пишет результат
- *          в память в user email.
+ * Тут из полезного пока только getItems() - делает GET запрос, результат пишет в кэш.
  * Есть ещё postApi() - шлёт данные по указанному url, но пока не понятно, работает ли оно вообще.
  * Короче над Api ещё много работы.
  */
@@ -48,7 +47,6 @@ class ApiCalls {
                 Log.i("API", t.toString())
                 //!!!! TODO error intent !!!!
                 NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
-                //DataCoordinator.shared.updateUserEmail("ERROR 404")
             }
 
             /* The HTTP call was successful, we should still check status code and response body
@@ -56,6 +54,7 @@ class ApiCalls {
             override fun onResponse(call: Call<ItemsResponse>, response: Response<ItemsResponse>) {
                 Log.i("RESPONSE", response.raw().toString())
                 /* This will print the response of the network call to the Logcat */
+                // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
                 response.body()?.let { CatalogCache.shared.addCatalogStuff(it.items) }
 
             }
