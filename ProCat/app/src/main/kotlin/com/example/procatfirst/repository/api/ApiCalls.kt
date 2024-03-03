@@ -7,6 +7,7 @@ import com.example.procatfirst.repository.data_storage_deprecated.updateUserEmai
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
+import kotlinx.serialization.json.Json
 import okhttp3.FormBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -16,10 +17,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.io.File
 
 /**
- * Тут из полезного пока только runApi() - делает GET запрос по указанному url, пишет результат
- *          в память в user email.
+ * Тут из полезного пока только getItems() - делает GET запрос, результат пишет в кэш.
  * Есть ещё postApi() - шлёт данные по указанному url, но пока не понятно, работает ли оно вообще.
  * Короче над Api ещё много работы.
  */
@@ -46,7 +47,6 @@ class ApiCalls {
                 Log.i("API", t.toString())
                 //!!!! TODO error intent !!!!
                 NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
-                //DataCoordinator.shared.updateUserEmail("ERROR 404")
             }
 
             /* The HTTP call was successful, we should still check status code and response body
@@ -54,6 +54,7 @@ class ApiCalls {
             override fun onResponse(call: Call<ItemsResponse>, response: Response<ItemsResponse>) {
                 Log.i("RESPONSE", response.raw().toString())
                 /* This will print the response of the network call to the Logcat */
+                // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
                 response.body()?.let { CatalogCache.shared.addCatalogStuff(it.items) }
 
             }
@@ -61,17 +62,17 @@ class ApiCalls {
         })
     }
 
-    public fun runApi(url: String)  {
-
+    public fun runApi()  {
+/*
         val service = Retrofit.Builder()
-            .baseUrl(url)
+            .baseUrl("https://routing.api.2gis.com/get_pairs/1.0/car?key=810e358b-1439-4919-9eab-4618b85be168")
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create(UserService::class.java)
 
         /* Calls the endpoint set on getUsers (/api) from UserService using enqueue method
          * that creates a new worker thread to make the HTTP call */
-        service.getUsers().enqueue(object : Callback<UserResponse> {
+        service.getDistance(File(filesDir, FILEPATH).readText()).enqueue(object : Callback<ResponseBody> {
 
             /* The HTTP call failed. This method is run on the main thread */
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
@@ -89,7 +90,7 @@ class ApiCalls {
             }
 
         })
-
+*/
     }
 
     public fun postApi(login: String, password: String)  {

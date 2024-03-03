@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.intents.SystemNotifications
@@ -43,6 +44,7 @@ fun AuthScreen(
     authViewModel: AuthViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
+
     val authUiState by authViewModel.uiState.collectAsState()
 
     val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
