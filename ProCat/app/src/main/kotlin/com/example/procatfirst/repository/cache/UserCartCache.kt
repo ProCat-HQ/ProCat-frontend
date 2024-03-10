@@ -19,6 +19,8 @@ class UserCartCache {
         const val identifier = "[UserCartCache]"
     }
 
+    //Снова нарушена архитектура: Этот класс ничего не должен знать про DataStorage
+    // (ему вообщеничего знать не надо, это хранилище)
     fun addUserCartStuff(tool : Tool) {
         toolsStorage.add(tool)
         runBlocking {
