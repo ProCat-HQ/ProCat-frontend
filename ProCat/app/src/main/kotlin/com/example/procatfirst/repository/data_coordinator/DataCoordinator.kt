@@ -25,7 +25,7 @@ class DataCoordinator {
 
     companion object {
         val shared = DataCoordinator()
-        const val identifier = "[DataCoordinatorNew]"
+        const val identifier = "[DataCoordinator]"
     }
 
     /**
@@ -33,13 +33,7 @@ class DataCoordinator {
      */
     suspend fun getUserCart(): List<Tool> {
         if (UserCartCache.shared.getUserCartStuff().isEmpty()) {
-            withContext(Dispatchers.IO) {
-                UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
-                Log.d(
-                   "UserCart",
-                    "Loaded"
-                )
-            }
+            UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
         }
         return UserCartCache.shared.getUserCartStuff()
     }

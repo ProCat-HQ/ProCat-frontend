@@ -11,34 +11,34 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.data.Tool
-import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun ToolCard(toolViewModel: ToolCardViewModel = viewModel()) {
 
     val authUiState by toolViewModel.uiState.collectAsState()
 
-    var t = emptyList<Tool>()
-    toolViewModel.viewModelScope.launch {
-        t = DataCoordinator.shared.getUserCart()
-        //NotificationCoordinator.shared.sendIntent(SystemNotifications.cartLoaded)
-    }
-
     var tools by remember {
-        mutableStateOf(t)
+        mutableStateOf(emptyList<Tool>())
     }
 
     var isActive by remember { mutableStateOf(true) }
+
+    toolViewModel.viewModelScope.launch {
+        tools = withContext(Dispatchers.IO) {
+            DataCoordinator.shared.getUserCart()
+        }
+    }
+
     val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
         override fun howToReactOnIntent() {
             isActive = false
-            toolViewModel.viewModelScope.launch { t = DataCoordinator.shared.getUserCart() }
-            //tools = t
+            toolViewModel.viewModelScope.launch { tools = DataCoordinator.shared.getUserCart() }
             isActive = true
         }
     }
