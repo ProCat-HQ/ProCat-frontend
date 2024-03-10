@@ -54,37 +54,24 @@ abstract class IntentsReceiverAbstractObject {
                                 "got Intent"
                             )
                             // Check for Extras
-                            val extras = intent.extras
-                            if (extras != null) {
-                                // There are extras!
-                                val extra = extras.getString(SystemNotificationsExtras.myExtra)
-
-                                Log.i(
-                                    identifier,
-                                    " onSampleIntent extra: $extra."
-                                )
-
-                            } else {
-                                // There are no extras
-                            }
+                            val extra = intent.extras?.getString(SystemNotificationsExtras.myExtra)
                             Log.i(
                                 identifier,
-                                " onSampleIntent Sequence Complete"
+                                " onSampleIntent extra: $extra."
                             )
                         }
                     }
                 }
             }
             // Register Intents
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    context.registerReceiver(
-                        broadCast,
-                        IntentFilter(intentToReact),
-                        Context.RECEIVER_NOT_EXPORTED
-                    )
-                }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(
+                    broadCast,
+                    IntentFilter(intentToReact),
+                    Context.RECEIVER_NOT_EXPORTED
+                )
             }
+
             // Dispose
             onDispose {
                 context.unregisterReceiver(broadCast)
