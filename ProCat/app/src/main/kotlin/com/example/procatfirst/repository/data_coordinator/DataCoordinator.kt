@@ -42,7 +42,7 @@ class DataCoordinator {
         UserCartCache.shared.addUserCartStuff(tool)
     }
 
-    fun removeToolFromUserCart(tool : Tool) {
+    suspend fun removeToolFromUserCart(tool : Tool) {
         UserCartCache.shared.removeUserCartStuff(tool)
     }
 

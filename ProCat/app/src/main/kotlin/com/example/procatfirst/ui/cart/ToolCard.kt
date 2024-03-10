@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun ToolCard(toolViewModel: ToolCardViewModel = viewModel()) {
+fun ToolCard(toolViewModel: ToolCartViewModel = viewModel()) {
 
     val authUiState by toolViewModel.uiState.collectAsState()
 

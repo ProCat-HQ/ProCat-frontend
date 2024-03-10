@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
@@ -51,6 +52,7 @@ fun ToolsScreenCart(
 
 @Composable
 fun ToolCardCart(
+    toolViewModel: ToolViewModel = viewModel(),
     tool: Tool
 ) {
     Card(
@@ -88,8 +90,8 @@ fun ToolCardCart(
                     textAlign = TextAlign.Start,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Button(onClick = { DataCoordinator.shared.removeToolFromUserCart(tool)
-                //NotificationCoordinator.shared.sendIntent(SystemNotifications.shakalno)
+                Button(onClick = {
+                    toolViewModel.removeFromCart(tool)
                 }) {
                     Text(text = "удалить", fontSize = 14.sp)
                 }
