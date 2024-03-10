@@ -38,7 +38,7 @@ class DataCoordinator {
         return UserCartCache.shared.getUserCartStuff()
     }
 
-    fun addToolToUserCart(tool : Tool){
+    suspend fun addToolToUserCart(tool : Tool){
         UserCartCache.shared.addUserCartStuff(tool)
     }
 

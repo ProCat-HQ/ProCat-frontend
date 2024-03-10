@@ -40,8 +40,12 @@ class ToolViewModel: ViewModel() {
             )
         }
         val extraTool = Tool(22, "Набор", R.drawable.set, "desc", "extras", 2000)
-        DataCoordinator.shared.addToolToUserCart(_uiState.value.tool)
-        DataCoordinator.shared.addToolToUserCart(extraTool)
+        this.viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                DataCoordinator.shared.addToolToUserCart(_uiState.value.tool)
+                DataCoordinator.shared.addToolToUserCart(extraTool)
+            }
+        }
 
     }
 

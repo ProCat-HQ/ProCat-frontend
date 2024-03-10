@@ -17,13 +17,9 @@ class UserCartCache {
 
     //Снова нарушена архитектура: Этот класс ничего не должен знать про DataStorage
     // (ему вообщеничего знать не надо, это хранилище)
-    fun addUserCartStuff(tool : Tool) {
+    suspend fun addUserCartStuff(tool : Tool) {
         toolsStorage.add(tool)
-        runBlocking {
-            launch(Dispatchers.Default) {
-                DataStorage.shared.setUserCartToMemory(toolsStorage)
-            }
-        }
+        DataStorage.shared.setUserCartToMemory(toolsStorage)
     }
 
     fun setUserCartStuff(cart: MutableList<Tool>) {
