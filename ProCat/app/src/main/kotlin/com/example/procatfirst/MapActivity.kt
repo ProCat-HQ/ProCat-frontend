@@ -2,10 +2,11 @@ package com.example.procatfirst
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.example.procatfirst.repository.api.ApiCalls
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
 import ru.dublgis.dgismobile.mapsdk.MapFragment
@@ -43,27 +44,37 @@ class MapActivity : AppCompatActivity() {
 
     private fun onDGisMapReady(map: Map?) {
         val labels = mutableListOf<Label?>()
+        val goButton = addActionButton {
+            onDirectionReady(map)
+            it.visibility = View.INVISIBLE
+        }
+        goButton.visibility = View.INVISIBLE
+
         map?.let {
             val marker = it.addMarker(
                 MarkerOptions(
                     LonLat(83.0888, 54.8432)
                 )
             )
-            marker.setOnClickListener { labels.add(showLabel(map, LonLat(83.0887, 54.8431), "Заказ")) }
+            marker.setOnClickListener {
+                labels.add(showLabel(map, LonLat(83.0887, 54.8431), "Заказ №6423"))
+                goButton.visibility = View.VISIBLE
+            }
         }
         map?.setOnClickListener {
             for (i in labels) {
                 i?.hide()
             }
+            goButton.visibility = View.INVISIBLE
         }
+
     }
 
-    private fun showLabel(map :Map?, coords : LonLat, text : String) : Label? {
+    private fun showLabel(map: Map?, coords: LonLat, text: String): Label? {
         return map?.createLabel(
-                LabelOptions(
-                    coordinates = coords,
-                    text = text,
-                    haloColor = 100
+            LabelOptions(
+                coordinates = coords,
+                text = text
             )
         )
     }
@@ -72,6 +83,7 @@ class MapActivity : AppCompatActivity() {
         map?.enableUserLocation(UserLocationOptions(isVisible = true))
         map?.userLocation?.observe(this, Observer {})
         val direct = map?.createDirections(DirectionsOptions(BuildConfig.apiKey))
+            //createToast(map?.userLocation?.value.toString()) //null
         val opt = CarRouteOptions(listOf(LonLat(83.0888, 54.8432), LonLat(83.0888, 54.8632)))
         direct?.carRoute(opt)
     }
@@ -89,6 +101,17 @@ class MapActivity : AppCompatActivity() {
                 coordinates + ' ' + objectId.toString()
             )
         }
+    }
+
+    private fun addActionButton(action: (View) -> Unit) : Button {
+            val btn = findViewById<Button>(R.id.zoom_in)
+            btn.setOnClickListener( action )
+            return btn
+    }
+
+    private fun createToast(@Suppress("UNUSED_PARAMETER") view: View?, body: String?) {
+        val myToast = Toast.makeText(this, body, Toast.LENGTH_SHORT)
+        myToast.show()
     }
 
     private fun createToast(body: String?) {
