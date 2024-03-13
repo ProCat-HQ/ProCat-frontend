@@ -10,10 +10,11 @@ import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
 import ru.dublgis.dgismobile.mapsdk.MapFragment
 import ru.dublgis.dgismobile.mapsdk.MapPointerEvent
-import ru.dublgis.dgismobile.mapsdk.MarkerClickCallback
 import ru.dublgis.dgismobile.mapsdk.MarkerOptions
 import ru.dublgis.dgismobile.mapsdk.directions.CarRouteOptions
 import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
+import ru.dublgis.dgismobile.mapsdk.labels.Label
+import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 import ru.dublgis.dgismobile.mapsdk.mapObjectsByIds
 
@@ -34,21 +35,37 @@ class MapActivity : AppCompatActivity() {
             zoom = 16.0
         )
 
-        //mapFragment.mapReadyCallback = this::onDGisMapReady
+        mapFragment.mapReadyCallback = this::onDGisMapReady
         //mapFragment.mapReadyCallback = this::onClickListenerReady
-        mapFragment.mapReadyCallback = this::onDirectionReady
+        //mapFragment.mapReadyCallback = this::onDirectionReady
 
     }
 
     private fun onDGisMapReady(map: Map?) {
+        val labels = mutableListOf<Label?>()
         map?.let {
             val marker = it.addMarker(
                 MarkerOptions(
                     LonLat(83.0888, 54.8432)
                 )
             )
-            marker.setOnClickListener { println("ooo") }
+            marker.setOnClickListener { labels.add(showLabel(map, LonLat(83.0887, 54.8431), "Заказ")) }
         }
+        map?.setOnClickListener {
+            for (i in labels) {
+                i?.hide()
+            }
+        }
+    }
+
+    private fun showLabel(map :Map?, coords : LonLat, text : String) : Label? {
+        return map?.createLabel(
+                LabelOptions(
+                    coordinates = coords,
+                    text = text,
+                    haloColor = 100
+            )
+        )
     }
 
     private fun onDirectionReady(map: Map?) {
@@ -77,10 +94,6 @@ class MapActivity : AppCompatActivity() {
     private fun createToast(body: String?) {
         val myToast = Toast.makeText(this, body, Toast.LENGTH_SHORT)
         myToast.show()
-    }
-
-    private fun runApi(url: String) {
-        ApiCalls.shared.runApi()
     }
 
 }
