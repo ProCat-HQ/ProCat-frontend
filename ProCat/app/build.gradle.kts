@@ -1,6 +1,9 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 val apiKey: String = gradleLocalProperties(rootDir).getProperty("apiKey")
 
+task("testClasses")
+
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")

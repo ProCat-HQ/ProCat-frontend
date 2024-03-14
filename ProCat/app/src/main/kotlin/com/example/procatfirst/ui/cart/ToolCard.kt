@@ -19,9 +19,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun ToolCard(toolViewModel: ToolCartViewModel = viewModel()) {
+fun ToolCard(
+    toolViewModel: ToolCartViewModel = viewModel()
+) {
 
-    val authUiState by toolViewModel.uiState.collectAsState()
+    val toolUiState by toolViewModel.uiState.collectAsState()
 
     var tools by remember {
         mutableStateOf(emptyList<Tool>())
