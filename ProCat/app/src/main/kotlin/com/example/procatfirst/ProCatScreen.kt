@@ -48,6 +48,7 @@ import com.example.procatfirst.ui.personal.PersonalScreen
 import com.example.procatfirst.ui.personal.chats.ChatScreen
 import com.example.procatfirst.ui.personal.chats.ListOfChatsScreen
 import com.example.procatfirst.ui.personal.notifications.NotificationsScreen
+import com.example.procatfirst.ui.personal.orders.OrdersDeliveryScreen
 import com.example.procatfirst.ui.personal.orders.OrdersScreen
 import com.example.procatfirst.ui.personal.profile.ProfileScreen
 import com.example.procatfirst.ui.start.StartScreen
@@ -69,7 +70,8 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Notifications(title = R.string.notifications),
     ListOfChatsScreen(title = R.string.list_of_chats),
     Chat(title = R.string.chat),
-    Ordering(title = R.string.ordering)
+    Ordering(title = R.string.ordering),
+    Delivery(title = R.string.ordering), // damn
 
 }
 
@@ -254,6 +256,9 @@ fun ProCatApp (
                     onToChatsClicked = {
                         navController.navigate(ProCatScreen.ListOfChatsScreen.name)
                     },
+                    onToDeliveryClicked = {
+                        navController.navigate(ProCatScreen.Delivery.name)
+                    },
                     /*
                     modifier = Modifier
                         .fillMaxSize()
@@ -272,6 +277,16 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Orders.name) {
                 OrdersScreen(
+                    /*
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        */
+                )
+            }
+            composable(route = ProCatScreen.Delivery.name) {
+                OrdersDeliveryScreen(
+                    controller
                     /*
                     modifier = Modifier
                         .fillMaxSize()

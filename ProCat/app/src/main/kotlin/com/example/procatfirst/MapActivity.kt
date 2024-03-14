@@ -7,22 +7,27 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.example.procatfirst.data.OrderDataProvider
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
 import ru.dublgis.dgismobile.mapsdk.MapFragment
 import ru.dublgis.dgismobile.mapsdk.MapPointerEvent
+import ru.dublgis.dgismobile.mapsdk.Marker
 import ru.dublgis.dgismobile.mapsdk.MarkerOptions
 import ru.dublgis.dgismobile.mapsdk.directions.CarRouteOptions
+import ru.dublgis.dgismobile.mapsdk.directions.Directions
 import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 import ru.dublgis.dgismobile.mapsdk.mapObjectsByIds
+import java.util.concurrent.CompletableFuture
 
 
 class MapActivity : AppCompatActivity() {
 
-
+    private var location = LonLat(54.843243, 83.088801)
+    private var direct : Directions? = null
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -44,21 +49,28 @@ class MapActivity : AppCompatActivity() {
 
     private fun onDGisMapReady(map: Map?) {
         val labels = mutableListOf<Label?>()
+        val markers = mutableListOf<Marker?>()
         val goButton = addActionButton {
             onDirectionReady(map)
             it.visibility = View.INVISIBLE
         }
         goButton.visibility = View.INVISIBLE
 
+        val orders = OrderDataProvider.deliveryOrders
         map?.let {
-            val marker = it.addMarker(
-                MarkerOptions(
-                    LonLat(83.0888, 54.8432)
+            for (order in orders) {
+                val marker = it.addMarker(
+                    MarkerOptions(
+                        LonLat(order.companyName.substring(10).toDouble(), order.companyName.substring(0, 8).toDouble())
+                    )
                 )
-            )
-            marker.setOnClickListener {
-                labels.add(showLabel(map, LonLat(83.0887, 54.8431), "Заказ №6423"))
-                goButton.visibility = View.VISIBLE
+                marker.setOnClickListener {
+                    location = marker.position
+                    Log.i("LOCATION", location.toString())
+                    labels.add(showLabel(map, marker.position, "Заказ №" + order.orderId + ", " + order.address))
+                    goButton.visibility = View.VISIBLE
+                }
+                markers.add(marker)
             }
         }
         map?.setOnClickListener {
@@ -66,6 +78,7 @@ class MapActivity : AppCompatActivity() {
                 i?.hide()
             }
             goButton.visibility = View.INVISIBLE
+            direct?.clear()
         }
 
     }
@@ -74,7 +87,8 @@ class MapActivity : AppCompatActivity() {
         return map?.createLabel(
             LabelOptions(
                 coordinates = coords,
-                text = text
+                text = text,
+                fontSize = 18f
             )
         )
     }
@@ -82,9 +96,9 @@ class MapActivity : AppCompatActivity() {
     private fun onDirectionReady(map: Map?) {
         map?.enableUserLocation(UserLocationOptions(isVisible = true))
         map?.userLocation?.observe(this, Observer {})
-        val direct = map?.createDirections(DirectionsOptions(BuildConfig.apiKey))
-            //createToast(map?.userLocation?.value.toString()) //null
-        val opt = CarRouteOptions(listOf(LonLat(83.0888, 54.8432), LonLat(83.0888, 54.8632)))
+        direct = map?.createDirections(DirectionsOptions(BuildConfig.apiKey))
+        //createToast(map?.userLocation?.value.toString()) //null
+        val opt = CarRouteOptions(listOf(LonLat(83.088801, 54.843243), location))
         direct?.carRoute(opt)
     }
 
