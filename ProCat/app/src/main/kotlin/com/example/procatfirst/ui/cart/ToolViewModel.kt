@@ -1,5 +1,8 @@
 package com.example.procatfirst.ui.cart
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.Tool
@@ -19,6 +22,10 @@ class ToolViewModel: ViewModel()  {
     private val _uiState = MutableStateFlow(ToolUiState())
     val uiState: StateFlow<ToolUiState> = _uiState.asStateFlow()
 
+
+    var quantity by mutableStateOf(1)
+        private set
+
     init{
         open()
     }
@@ -33,6 +40,16 @@ class ToolViewModel: ViewModel()  {
                 DataCoordinator.shared.removeToolFromUserCart(tool)
             }
             NotificationCoordinator.shared.sendIntent(SystemNotifications.delInCartIntent)
+        }
+    }
+
+    fun increaseAmount() {
+        quantity++
+    }
+
+    fun decreaseAmount() {
+        if (quantity > 1) {
+            quantity--
         }
     }
 
