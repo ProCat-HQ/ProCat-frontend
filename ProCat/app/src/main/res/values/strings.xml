@@ -1,4 +1,7 @@
 <resources>
+    <string name="api_key">api_key_here</string>
+
+
     <string name="app_name">ProCat</string>
     <string name="welcome">Добро пожаловать в ProCat!</string>
     <string name="logo">Логотип</string>
@@ -30,9 +33,15 @@
 
     <string name="test">Тест</string>
     <string name="cart">Корзина</string>
+    <string name="delete">Удалить</string>
     <string name="checkout">Оформить заказ</string>
     <string name="ordering">Оформление заказа</string>
     <string name="delivery">Доставка</string>
+    <string name="final_price">Итоговая сумма</string>
+    <string name="confirm_inn">Подтвердите ИИН</string>
+    <string name="inn_confirmed">ИИН Подтвержден </string>
+    <string name="confirm_inn_text">Чтобы продолжить офромление заказа необходимо ввести ИИН в Личном кабинете и дождаться его проверки</string>
+    <string name="to_personal">Перейти в личный кабинет</string>
 
 
     <string name="personal">Меню</string>
@@ -56,4 +65,5 @@
     <string name="list_of_chats">Чаты</string>
     <string name="type_message">Введите сообщение</string>
     <string name="chat">Чат</string>
+    <string name="go_go_go">В путь!</string>
 </resources>

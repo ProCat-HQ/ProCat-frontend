@@ -27,6 +27,7 @@ fun PersonalScreen(
     onToOrdersClicked: () -> Unit,
     onToNotificationsClicked: () -> Unit,
     onToChatsClicked:() -> Unit,
+    onToDeliveryClicked:() -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -74,6 +75,16 @@ fun PersonalScreen(
         ) {
             Text(
                 text = stringResource(R.string.chats),
+                fontSize = 16.sp
+            )
+        }
+
+        Button(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            onClick = { onToDeliveryClicked() }
+        ) {
+            Text(
+                text = "Я курьер",
                 fontSize = 16.sp
             )
         }

@@ -10,11 +10,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
@@ -37,7 +48,6 @@ import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 fun ToolsScreenCart(
     tools: List<Tool>
 ) {
-
         Column(
             modifier = Modifier
                 .padding(16.dp),
@@ -51,6 +61,7 @@ fun ToolsScreenCart(
 
 @Composable
 fun ToolCardCart(
+    toolViewModel: ToolViewModel = viewModel(),
     tool: Tool
 ) {
     Card(
@@ -70,12 +81,19 @@ fun ToolCardCart(
                     .padding(6.dp)
                     .weight(3f) // Adjust the weight for text content
             ) {
+                IconButton(
+                    onClick = { toolViewModel.removeFromCart(tool) },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.delete))
+                }
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = tool.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = tool.description,
@@ -88,11 +106,11 @@ fun ToolCardCart(
                     textAlign = TextAlign.Start,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Button(onClick = { DataCoordinator.shared.removeToolFromUserCart(tool)
-                //NotificationCoordinator.shared.sendIntent(SystemNotifications.shakalno)
-                }) {
-                    Text(text = "удалить", fontSize = 14.sp)
-                }
+                QuantityButton(
+                    quantity = toolViewModel.quantity,
+                    onIncrease = { toolViewModel.increaseAmount() },
+                    onDecrease = { toolViewModel.decreaseAmount() }
+                )
             }
 
             Column (
@@ -103,7 +121,7 @@ fun ToolCardCart(
             ){
                 Spacer(modifier = Modifier.height(10.dp))
                 Image(
-                    painter = painterResource(id = tool.imageResId),
+                    painter = painterResource(id = R.drawable.hammer),//(id = tool.imageResId),
                     contentDescription = tool.name,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -114,5 +132,28 @@ fun ToolCardCart(
 
         }
 
+    }
+}
+
+@Composable
+fun QuantityButton(
+    quantity: Int,
+    onIncrease: () -> Unit,
+    onDecrease: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onDecrease) {
+            Icon(Icons.Default.Clear, contentDescription = "Decrease")
+        }
+        Text(
+            text = quantity.toString(),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+        IconButton(onClick = onIncrease) {
+            Icon(Icons.Default.Add, contentDescription = "Increase")
+        }
     }
 }
