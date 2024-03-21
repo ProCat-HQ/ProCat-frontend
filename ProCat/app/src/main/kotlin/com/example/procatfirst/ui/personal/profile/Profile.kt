@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -89,19 +90,32 @@ fun ProfileScreen(
             onKeyboardDone = { profileViewModel.saveUserPhoneNumber() },
         )
         mutableField(
-            stringResource(R.string.inn),
-            profileUiState.identificationNumber,
-            userInput = profileViewModel.userInputIdentificationNumber,
-            onUserInputChanged = { profileViewModel.updateUserIdentificationNumber(it) },
-            onKeyboardDone = { profileViewModel.saveUserIdentificationNumber() },
-        )
-        mutableField(
             stringResource(R.string.email),
             profileUiState.email,
             userInput = profileViewModel.userInputEmail,
             onUserInputChanged = { profileViewModel.updateUserEmail(it) },
             onKeyboardDone = { profileViewModel.saveUserEmail() },
             )
+        mutableField(
+            stringResource(R.string.inn),
+            profileUiState.identificationNumber,
+            userInput = profileViewModel.userInputIdentificationNumber,
+            onUserInputChanged = { profileViewModel.updateUserIdentificationNumber(it) },
+            onKeyboardDone = { profileViewModel.saveUserIdentificationNumber() },
+        )
+        if (profileViewModel.uiState.value.isConfirmed) {
+            Row(
+                modifier = Modifier.padding(16.dp)
+            ){
+                Text(text = stringResource(R.string.inn_confirmed))
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = stringResource(R.string.inn_confirmed),
+                    tint = md_theme_light_tertiary
+                )
+            }
+        }
+
         FilledTonalButton(
             modifier = Modifier
                 .fillMaxWidth()

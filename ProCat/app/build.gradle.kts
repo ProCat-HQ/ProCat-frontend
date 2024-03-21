@@ -1,5 +1,11 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-val apiKey: String = gradleLocalProperties(rootDir).getProperty("apiKey")
+import java.util.Properties
+
+//val apiKey: String = gradleLocalProperties(rootDir).getProperty("apiKey")
+
+
+task("testClasses")
+
 
 plugins {
     id("com.android.application")
@@ -20,12 +26,25 @@ android {
         versionName = "1.0"
 
         buildFeatures.buildConfig = true
-        buildConfigField("String", "apiKey", apiKey)
+        //buildConfigField("String", "apiKey", apiKey)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        //load the values from .properties file
+        val keystoreFile = project.rootProject.file("apikeys.properties")
+        val properties = Properties()
+        properties.load(keystoreFile.inputStream())
+
+        //return empty key in case something goes wrong
+        val apiKey = properties.getProperty("apiKey") ?: ""
+        buildConfigField(
+            type = "String",
+            name = "apiKey",
+            value = apiKey
+        )
     }
 
     buildTypes {

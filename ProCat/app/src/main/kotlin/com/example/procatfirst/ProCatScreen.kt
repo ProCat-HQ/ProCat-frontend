@@ -240,6 +240,9 @@ fun ProCatApp (
                     onToOrderingClicked = {
                         navController.navigate(ProCatScreen.Ordering.name)
                     },
+                    onGoToProfile = {
+                        navController.navigate(ProCatScreen.Profile.name)
+                    }
                 )
             }
             composable(route = ProCatScreen.Personal.name) {
