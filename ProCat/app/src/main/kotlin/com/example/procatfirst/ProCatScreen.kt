@@ -51,6 +51,7 @@ import com.example.procatfirst.ui.personal.notifications.NotificationsScreen
 import com.example.procatfirst.ui.personal.orders.OrdersDeliveryScreen
 import com.example.procatfirst.ui.personal.orders.OrdersScreen
 import com.example.procatfirst.ui.personal.profile.ProfileScreen
+import com.example.procatfirst.ui.registration.RegistrationScreen
 import com.example.procatfirst.ui.start.StartScreen
 import com.example.procatfirst.ui.theme.md_theme_light_inversePrimary
 import com.example.procatfirst.ui.theme.md_theme_light_secondaryContainer
@@ -72,7 +73,7 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Chat(title = R.string.chat),
     Ordering(title = R.string.ordering),
     Delivery(title = R.string.ordering), // damn
-
+    Registration(title = R.string.registration),
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -196,6 +197,22 @@ fun ProCatApp (
                 AuthScreen(
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Tools.name)
+                    },
+                    onToRegistrationClick = {
+                        navController.navigate(ProCatScreen.Registration.name)
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                )
+            }
+            composable(route = ProCatScreen.Registration.name) {
+                RegistrationScreen(
+                    onNextButtonClicked = {
+                        navController.navigate(ProCatScreen.Tools.name)
+                    },
+                    onToAuthClick = {
+                        navController.navigate(ProCatScreen.Auth.name)
                     },
                     modifier = Modifier
                         .fillMaxSize()
