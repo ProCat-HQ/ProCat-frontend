@@ -4,15 +4,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.procatfirst.MainActivity
+//import com.example.procatfirst.ProCatApplication
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
+import com.example.procatfirst.repository.UserRoleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class AuthViewModel: ViewModel()  {
+class AuthViewModel(
+    //private val userRoleRepository: UserRoleRepository
+): ViewModel()  {
+
+
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
@@ -65,6 +78,7 @@ class AuthViewModel: ViewModel()  {
                     enteredPasswordWrong = false
                 )
             }
+            //selectRole("user")
         } else {
             _uiState.update { currentState ->
                 currentState.copy(enteredPasswordWrong = true)
@@ -76,6 +90,26 @@ class AuthViewModel: ViewModel()  {
     fun forgotPassword() {
 
     }
+
+
+    /*
+    fun selectRole(userRole: String) {
+        viewModelScope.launch {
+            userRoleRepository.saveUserRole(userRole)
+        }
+    }
+
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as ProCatApplication)
+                AuthViewModel(application.userRoleRepository)
+            }
+        }
+    } */
+
+
 
     private fun open(){
         _uiState.value = AuthUiState()

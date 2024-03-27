@@ -1,5 +1,6 @@
 package com.example.procatfirst
 
+import android.app.Application
 import android.content.Context
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -25,10 +26,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
@@ -37,6 +42,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.procatfirst.repository.UserRoleRepository
 import com.example.procatfirst.ui.auth.AuthScreen
 
 import com.example.procatfirst.ui.auth.AuthViewModel
@@ -147,6 +153,21 @@ fun BottomNavigationBar(navController: NavController) {
         }
     }
 }
+
+private const val USER_ROLE_NAME = "guest"
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = USER_ROLE_NAME
+)
+
+/*
+class ProCatApplication: Application() {
+    lateinit var userRoleRepository: UserRoleRepository
+
+    override fun onCreate() {
+        super.onCreate()
+        userRoleRepository = UserRoleRepository(dataStore)
+    }
+} */
 
 @Composable
 fun ProCatApp (

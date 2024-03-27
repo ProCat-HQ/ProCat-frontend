@@ -43,7 +43,9 @@ import com.example.procatfirst.ui.theme.md_theme_light_tertiary
 fun AuthScreen(
     onNextButtonClicked: () -> Unit,
     onToRegistrationClick: () -> Unit,
+    //authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory),
     authViewModel: AuthViewModel = viewModel(),
+
     modifier: Modifier = Modifier
 ) {
 
