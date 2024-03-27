@@ -1,5 +1,6 @@
 package com.example.procatfirst.repository
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -8,10 +9,45 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.Component
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.io.IOException
+import javax.inject.Singleton
+
+/*
+@HiltAndroidApp
+class ProCatApplication: Application()
+
+@Module
+@InstallIn(SingletonComponent::class)
+object RepositoryModule {
+
+    @Provides
+    @Singleton
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
+    @Provides
+    @Singleton
+    fun provideUserRoleRepository(context: Context): UserRoleRepository {
+        return UserRoleRepository(context)
+    }
+}
+
+@Singleton
+@Component(modules = [RepositoryModule::class])
+interface AppComponent {
+    fun getUserRoleRepository(): UserRoleRepository
+}
+
+ */
 
 class UserRoleRepository(
     private val context: Context

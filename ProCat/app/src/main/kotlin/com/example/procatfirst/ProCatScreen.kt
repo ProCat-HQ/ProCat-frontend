@@ -159,15 +159,6 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = USER_ROLE_NAME
 )
 
-/*
-class ProCatApplication: Application() {
-    lateinit var userRoleRepository: UserRoleRepository
-
-    override fun onCreate() {
-        super.onCreate()
-        userRoleRepository = UserRoleRepository(dataStore)
-    }
-} */
 
 @Composable
 fun ProCatApp (

@@ -18,8 +18,11 @@ import com.example.procatfirst.repository.UserRoleRepository
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
+//@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

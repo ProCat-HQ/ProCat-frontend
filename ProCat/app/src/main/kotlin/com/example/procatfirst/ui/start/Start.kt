@@ -35,7 +35,9 @@ fun StartScreen(
     controller : Context,
     modifier: Modifier = Modifier,
     onNextButtonClicked: () -> Unit,
-    ) {
+    //userRoleRepository: UserRoleRepository = LocalContext.current.myComponent.getUserRoleRepository(),
+
+) {
 
     val context = LocalContext.current
     val userRoleRepository = UserRoleRepository(context)
