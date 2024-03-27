@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
+import com.example.procatfirst.BuildConfig
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.repository.data_storage_deprecated.updateUserEmail
@@ -62,36 +63,6 @@ class ApiCalls {
         })
     }
 
-    public fun runApi()  {
-/*
-        val service = Retrofit.Builder()
-            .baseUrl("https://routing.api.2gis.com/get_pairs/1.0/car?key=810e358b-1439-4919-9eab-4618b85be168")
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
-
-        /* Calls the endpoint set on getUsers (/api) from UserService using enqueue method
-         * that creates a new worker thread to make the HTTP call */
-        service.getDistance(File(filesDir, FILEPATH).readText()).enqueue(object : Callback<ResponseBody> {
-
-            /* The HTTP call failed. This method is run on the main thread */
-            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                t.printStackTrace()
-                DataCoordinatorOLD.shared.updateUserEmail("ERROR 404")
-            }
-
-            /* The HTTP call was successful, we should still check status code and response body
-             * on a production app. This method is run on the main thread */
-            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                /* This will print the response of the network call to the Logcat */
-
-                DataCoordinatorOLD.shared.updateUserEmail(response.body().toString().substring(27, 55))
-
-            }
-
-        })
-*/
-    }
 
     public fun postApi(login: String, password: String)  {
 
@@ -113,14 +84,12 @@ class ApiCalls {
             .add("password", password)
             .build()
 
-//        Log.i("REQUEST", )
-
         service.setUsers(requestBody).enqueue(object : Callback<ResponseBody> { //ResponseBody
 
             /* The HTTP call failed. This method is run on the main thread */
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 t.printStackTrace()
-                DataCoordinatorOLD.shared.updateUserEmail("ERROR 404")
+                Log.i("RESPONSE", "Fail")
             }
 
             /* The HTTP call was successful, we should still check status code and response body
@@ -131,6 +100,39 @@ class ApiCalls {
 //                DataCoordinator.shared.updateUserEmail(response.body().toString())
 //                response.body()?.let {DataCoordinator.shared.updateUserEmail(it.string())}
 
+            }
+
+        })
+
+    }
+
+
+
+
+    public fun geocoderApi()  {
+
+        val service = Retrofit.Builder()
+            .baseUrl("https://catalog.api.2gis.com/3.0/items/")
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        /* Calls the endpoint set on getUsers (/api) from UserService using enqueue method
+         * that creates a new worker thread to make the HTTP call */
+
+        service.geocoder().enqueue(object : Callback<ResponseBody> { //ResponseBody
+
+            /* The HTTP call failed. This method is run on the main thread */
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("RESPONSE", "Fail")
+            }
+
+            /* The HTTP call was successful, we should still check status code and response body
+             * on a production app. This method is run on the main thread */
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                /* This will print the response of the network call to the Logcat */
+                response.body()?.string()?.let { Log.i("RESPONSE", it) }
             }
 
         })

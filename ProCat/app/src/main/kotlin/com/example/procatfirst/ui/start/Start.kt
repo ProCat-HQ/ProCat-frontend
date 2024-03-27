@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.procatfirst.MapActivity
 import com.example.procatfirst.R
+import com.example.procatfirst.repository.api.ApiCalls
 
 @Composable
 fun StartScreen(
@@ -53,9 +54,18 @@ fun StartScreen(
             onClick = { controller.startActivity(Intent(controller, MapActivity().javaClass)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(6.dp)
         ) {
             Text("Карта!")
+        }
+        Button(
+            onClick = { //ApiCalls.shared.geocoderApi() },
+                ApiCalls.shared.postApi("loGGin", "paSSword") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+        ) {
+            Text("Geocoder")
         }
 
     }
