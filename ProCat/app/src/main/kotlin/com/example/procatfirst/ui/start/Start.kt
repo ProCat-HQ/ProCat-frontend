@@ -60,12 +60,13 @@ fun StartScreen(
         }
         Button(
             onClick = { //ApiCalls.shared.geocoderApi() },
-                ApiCalls.shared.postApi("loGGin", "paSSword") },
+                ApiCalls.shared.postApi("88005553535", "paSSword") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(6.dp)
         ) {
-            Text("Geocoder")
+            //Text("Geocoder")
+            Text("PostApi")
         }
 
     }

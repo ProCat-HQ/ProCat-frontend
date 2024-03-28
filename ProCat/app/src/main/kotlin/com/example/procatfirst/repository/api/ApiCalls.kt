@@ -1,14 +1,10 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
-import com.example.procatfirst.BuildConfig
-import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.example.procatfirst.repository.cache.CatalogCache
-import com.example.procatfirst.repository.data_storage_deprecated.updateUserEmail
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
-import kotlinx.serialization.json.Json
 import okhttp3.FormBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -18,7 +14,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.io.File
 
 /**
  * Тут из полезного пока только getItems() - делает GET запрос, результат пишет в кэш.
@@ -76,15 +71,15 @@ class ApiCalls {
          * that creates a new worker thread to make the HTTP call */
 
         val jsonObject = JSONObject()
-        jsonObject.put("username", login)
+        jsonObject.put("phoneNumber", login)
         jsonObject.put("password", password)
 
         val requestBody: RequestBody = FormBody.Builder()
-            .add("username", login)
+            .add("phoneNumber", login)
             .add("password", password)
             .build()
 
-        service.setUsers(requestBody).enqueue(object : Callback<ResponseBody> { //ResponseBody
+        service.login(requestBody).enqueue(object : Callback<ResponseBody> { //ResponseBody
 
             /* The HTTP call failed. This method is run on the main thread */
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

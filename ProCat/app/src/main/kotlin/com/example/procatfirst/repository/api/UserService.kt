@@ -15,13 +15,15 @@ import retrofit2.http.POST
 interface UserService {
 
 
-    @POST("/login")
-    fun setUsers(@Body requestBody: RequestBody): Call<ResponseBody>
+    @POST("/users/sign-in")
+    fun login(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("geocode?q=Новосибирск, Пирогова 1&fields=items.point&key=${BuildConfig.apiKey}")
     fun geocoder(): Call<ResponseBody>
 
     @GET("/items")
     fun getItems(): Call<ItemsResponse>
+
+
 
 }
