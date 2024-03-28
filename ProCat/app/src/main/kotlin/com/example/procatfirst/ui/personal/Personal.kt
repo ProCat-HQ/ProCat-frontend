@@ -28,6 +28,7 @@ fun PersonalScreen(
     onToNotificationsClicked: () -> Unit,
     onToChatsClicked:() -> Unit,
     onToDeliveryClicked:() -> Unit,
+    onToManagerClicked:() -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -85,6 +86,16 @@ fun PersonalScreen(
         ) {
             Text(
                 text = "Я курьер",
+                fontSize = 16.sp
+            )
+        }
+
+        Button(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            onClick = { onToManagerClicked() }
+        ) {
+            Text(
+                text = "Я менеджер",
                 fontSize = 16.sp
             )
         }
