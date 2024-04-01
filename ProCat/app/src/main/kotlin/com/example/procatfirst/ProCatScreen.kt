@@ -1,5 +1,6 @@
 package com.example.procatfirst
 
+import android.app.Application
 import android.content.Context
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -25,10 +26,14 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
@@ -37,6 +42,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.procatfirst.repository.UserRoleRepository
 import com.example.procatfirst.ui.auth.AuthScreen
 
 import com.example.procatfirst.ui.auth.AuthViewModel
@@ -53,6 +59,7 @@ import com.example.procatfirst.ui.personal.notifications.NotificationsScreen
 import com.example.procatfirst.ui.personal.orders.OrdersDeliveryScreen
 import com.example.procatfirst.ui.personal.orders.OrdersScreen
 import com.example.procatfirst.ui.personal.profile.ProfileScreen
+import com.example.procatfirst.ui.registration.RegistrationScreen
 import com.example.procatfirst.ui.start.StartScreen
 import com.example.procatfirst.ui.theme.md_theme_light_inversePrimary
 import com.example.procatfirst.ui.theme.md_theme_light_secondaryContainer
@@ -74,8 +81,8 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Chat(title = R.string.chat),
     Ordering(title = R.string.ordering),
     Delivery(title = R.string.ordering), // damn
+    Registration(title = R.string.registration),
     Manager(title = R.string.manager), // damn
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,6 +157,12 @@ fun BottomNavigationBar(navController: NavController) {
     }
 }
 
+private const val USER_ROLE_NAME = "guest"
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = USER_ROLE_NAME
+)
+
+
 @Composable
 fun ProCatApp (
     controller : Context,
@@ -199,6 +212,22 @@ fun ProCatApp (
                 AuthScreen(
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Tools.name)
+                    },
+                    onToRegistrationClick = {
+                        navController.navigate(ProCatScreen.Registration.name)
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                )
+            }
+            composable(route = ProCatScreen.Registration.name) {
+                RegistrationScreen(
+                    onNextButtonClicked = {
+                        navController.navigate(ProCatScreen.Tools.name)
+                    },
+                    onToAuthClick = {
+                        navController.navigate(ProCatScreen.Auth.name)
                     },
                     modifier = Modifier
                         .fillMaxSize()

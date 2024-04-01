@@ -17,6 +17,19 @@
     <string name="wrong_password">Неправильный пароль</string>
     <string name="enter_phone_number">Введите номер телефона</string>
     <string name="wrong_phone_number">Неправильный номер телефона</string>
+    <string name="to_register">Нет аккаунта? Зарегистрируйтесь!</string>
+
+    <string name="registration">Регистрация</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="enter_last_name">Введите фамилию</string>
+    <string name="enter_first_name">Введите имя</string>
+    <string name="enter_father_name">Введите отчество</string>
+    <string name="wrong_last_name">Неправильная фамилия</string>
+    <string name="wrong_first_name">Неправильное имя</string>
+    <string name="wrong_father_name">Неправильное отчество</string>
+
+
+
 
     <string name="hammer">Молоток</string>
     <string name="tool">Инструмент</string>

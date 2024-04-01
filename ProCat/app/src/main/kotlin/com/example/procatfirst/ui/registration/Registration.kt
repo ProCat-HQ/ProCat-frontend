@@ -1,4 +1,4 @@
-package com.example.procatfirst.ui.auth
+package com.example.procatfirst.ui.registration
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,16 +40,14 @@ import com.example.procatfirst.ui.theme.md_theme_light_tertiary
 
 
 @Composable
-fun AuthScreen(
+fun RegistrationScreen(
     onNextButtonClicked: () -> Unit,
-    onToRegistrationClick: () -> Unit,
-    //authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory),
-    authViewModel: AuthViewModel = viewModel(),
-
+    onToAuthClick: () -> Unit,
+    registrationViewModel: RegistrationViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
 
-    val authUiState by authViewModel.uiState.collectAsState()
+    val registrationUiState by registrationViewModel.uiState.collectAsState()
 
     val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
         var counter = 0
@@ -77,15 +75,30 @@ fun AuthScreen(
         )
 
         inputField(
-            userInputPassword = authViewModel.userInputPassword,
-            onUserPasswordChanged = { authViewModel.updateUserPassword(it) },
-            onKeyboardDone = { authViewModel.check() },
-            isPasswordWrong = authUiState.enteredPasswordWrong,
+            userInputLastName = registrationViewModel.userInputLastName,
+            onUserLastNameChanged = { registrationViewModel.updateUserLastName(it) },
+            onKeyboardDoneLn = { registrationViewModel.check() },
+            isLastNameWrong = registrationUiState.enteredLastNameWrong,
 
-            userInputPhoneNumber = authViewModel.userInputPhoneNumber,
-            onUserPhoneNumberChanged = { authViewModel.updateUserPhoneNumber(it) },
-            onKeyboardDone2 = { authViewModel.check() },
-            isPhoneNumberWrong = authUiState.enteredPhoneNumberWrong,
+            userInputFirstName = registrationViewModel.userInputFirstName,
+            onUserFirstNameChanged = { registrationViewModel.updateUserFirstName(it) },
+            onKeyboardDoneFn = { registrationViewModel.check() },
+            isFirstNameWrong = registrationUiState.enteredFirstNameWrong,
+
+            userInputFatherName = registrationViewModel.userInputFatherName,
+            onUserFatherNameChanged = { registrationViewModel.updateUserFatherName(it) },
+            onKeyboardDoneFan = { registrationViewModel.check() },
+            isFatherNameWrong = registrationUiState.enteredFatherNameWrong,
+
+            userInputPhoneNumber = registrationViewModel.userInputPhoneNumber,
+            onUserPhoneNumberChanged = { registrationViewModel.updateUserPhoneNumber(it) },
+            onKeyboardDone2 = { registrationViewModel.check() },
+            isPhoneNumberWrong = registrationUiState.enteredPhoneNumberWrong,
+
+            userInputPassword = registrationViewModel.userInputPassword,
+            onUserPasswordChanged = { registrationViewModel.updateUserPassword(it) },
+            onKeyboardDone = { registrationViewModel.check() },
+            isPasswordWrong = registrationUiState.enteredPasswordWrong
         )
 
 
@@ -93,51 +106,36 @@ fun AuthScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { authViewModel.check()}
+            onClick = { registrationViewModel.check()}
         ) {
             Text(
-                text = stringResource(R.string.sign_in),
+                text = stringResource(R.string.register),
                 fontSize = 16.sp
             )
         }
 
-        OutlinedButton(
 
-            onClick = { authViewModel.forgotPassword() },
-
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.forgot_password),
-                fontSize = 16.sp
-            )
-        }
-
-        TextButton(
-            onClick = { onToRegistrationClick() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = stringResource(R.string.to_register))
-        }
-
-        Button(
-            onClick = { onNextButtonClicked() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(stringResource(R.string.next))
-        }
     }
 
 }
 
 @Composable
 fun inputField(
+    isLastNameWrong: Boolean,
+    userInputLastName: String,
+    onUserLastNameChanged: (String) -> Unit,
+    onKeyboardDoneLn: () -> Unit,
+
+    isFirstNameWrong: Boolean,
+    userInputFirstName: String,
+    onUserFirstNameChanged: (String) -> Unit,
+    onKeyboardDoneFn: () -> Unit,
+
+    isFatherNameWrong: Boolean,
+    userInputFatherName: String,
+    onUserFatherNameChanged: (String) -> Unit,
+    onKeyboardDoneFan: () -> Unit,
+
     isPasswordWrong: Boolean,
     userInputPassword: String,
     onUserPasswordChanged: (String) -> Unit,
@@ -147,11 +145,93 @@ fun inputField(
     userInputPhoneNumber: String,
     onUserPhoneNumberChanged: (String) -> Unit,
     onKeyboardDone2: () -> Unit,
+
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
+        OutlinedTextField(
+            value = userInputLastName,
+            singleLine = true,
+            shape = shapes.large,
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = colorScheme.surface,
+                unfocusedContainerColor = colorScheme.surface,
+                disabledContainerColor = colorScheme.surface,
+            ),
+            onValueChange = { onUserLastNameChanged(it) },
+            label = {
+                if (isLastNameWrong) {
+                    Text(stringResource(R.string.wrong_last_name))
+                } else {
+                    Text(stringResource(R.string.enter_last_name))
+                }
+            },
+            isError = isLastNameWrong,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { onKeyboardDoneLn() }
+            )
+        )
+
+        OutlinedTextField(
+            value = userInputFirstName,
+            singleLine = true,
+            shape = shapes.large,
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = colorScheme.surface,
+                unfocusedContainerColor = colorScheme.surface,
+                disabledContainerColor = colorScheme.surface,
+            ),
+            onValueChange = { onUserFirstNameChanged(it) },
+            label = {
+                if (isFirstNameWrong) {
+                    Text(stringResource(R.string.wrong_first_name))
+                } else {
+                    Text(stringResource(R.string.enter_first_name))
+                }
+            },
+            isError = isFirstNameWrong,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { onKeyboardDoneFn() }
+            )
+        )
+
+        OutlinedTextField(
+            value = userInputFatherName,
+            singleLine = true,
+            shape = shapes.large,
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = colorScheme.surface,
+                unfocusedContainerColor = colorScheme.surface,
+                disabledContainerColor = colorScheme.surface,
+            ),
+            onValueChange = { onUserFatherNameChanged(it) },
+            label = {
+                if (isFatherNameWrong) {
+                    Text(stringResource(R.string.wrong_father_name))
+                } else {
+                    Text(stringResource(R.string.enter_father_name))
+                }
+            },
+            isError = isFatherNameWrong,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { onKeyboardDoneFan() }
+            )
+        )
+
         OutlinedTextField(
             value = userInputPhoneNumber,
             singleLine = true,

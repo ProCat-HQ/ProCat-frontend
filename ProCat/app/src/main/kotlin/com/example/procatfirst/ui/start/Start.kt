@@ -11,21 +11,46 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.procatfirst.MapActivity
 import com.example.procatfirst.R
+import com.example.procatfirst.repository.UserRoleRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import com.example.procatfirst.repository.api.ApiCalls
+
 
 @Composable
 fun StartScreen(
     controller : Context,
     modifier: Modifier = Modifier,
     onNextButtonClicked: () -> Unit,
-    ) {
+    //userRoleRepository: UserRoleRepository = LocalContext.current.myComponent.getUserRoleRepository(),
+
+) {
+
+    val context = LocalContext.current
+    val userRoleRepository = UserRoleRepository(context)
+
+    val userRoleText by userRoleRepository.userRole.collectAsState(initial = "")
+
+    val userRoleInputValue = remember {
+        mutableStateOf(TextFieldValue())
+    }
+
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
@@ -34,6 +59,24 @@ fun StartScreen(
             text = stringResource(R.string.welcome),
             style = MaterialTheme.typography.titleLarge
         )
+
+        Text(
+            text = userRoleText
+        )
+        TextField(
+            value = userRoleInputValue.value,
+            onValueChange = { userRoleInputValue.value = it },
+        )
+        Button(
+            onClick = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    userRoleRepository.saveUserRole(userRoleInputValue.value.text)
+                }
+            }
+        ) {
+            Text(text = "Изменить пользователя")
+        }
+
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = stringResource(id = R.string.logo),
