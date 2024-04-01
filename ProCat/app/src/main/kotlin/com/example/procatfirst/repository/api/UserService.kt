@@ -24,6 +24,10 @@ interface UserService {
     @GET("/items")
     fun getItems(): Call<ItemsResponse>
 
+    @GET("/orders")
+    fun getOrders(): Call<ResponseBody>
 
+    @GET("/cart")
+    fun getItemsInCart(): Call<ResponseBody>
 
 }
