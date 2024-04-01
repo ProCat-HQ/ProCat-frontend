@@ -1,7 +1,4 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import java.util.Properties
-
-//val apiKey: String = gradleLocalProperties(rootDir).getProperty("apiKey")
 
 
 task("testClasses")
@@ -11,8 +8,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization") version "1.9.22"
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    //id("kotlin-kapt")
+    //id("com.google.dagger.hilt.android")
 
 }
 
@@ -124,8 +121,8 @@ dependencies {
 
     implementation("ru.dublgis.dgismobile.mapsdk:mapsdk:latest.release")
 
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-compiler:2.44")
+    //implementation("com.google.dagger:hilt-android:2.44")
+    //kapt("com.google.dagger:hilt-compiler:2.44")
 }
 
 /*

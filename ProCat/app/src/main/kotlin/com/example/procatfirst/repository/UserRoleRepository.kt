@@ -1,5 +1,6 @@
 package com.example.procatfirst.repository
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.util.Log
@@ -9,17 +10,17 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import dagger.Component
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.components.SingletonComponent
+//import dagger.Component
+//import dagger.Module
+//import dagger.Provides
+//import dagger.hilt.InstallIn
+//import dagger.hilt.android.HiltAndroidApp
+//import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import java.io.IOException
-import javax.inject.Singleton
+//import javax.inject.Singleton
 
 /*
 @HiltAndroidApp
@@ -53,14 +54,16 @@ class UserRoleRepository(
     private val context: Context
 ){
 
-    private companion object {
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        val shared : UserRoleRepository? = null
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user_role")
         val USER_ROLE = stringPreferencesKey("user_role")
         const val TAG = "UserRoleRepo"
     }
 
 
-    val userRole: Flow<String> = context.dataStore.data
+    private val userRole: Flow<String> = context.dataStore.data
         .catch {
             if(it is IOException) {
                 Log.e(TAG, "Error reading preferences.", it)
@@ -73,10 +76,15 @@ class UserRoleRepository(
             preferences[USER_ROLE] ?: "guest"
         }
 
+    fun getUserRole() : Flow<String> {
+        return userRole
+    }
+
 
     suspend fun saveUserRole(userRole: String) {
         context.dataStore.edit { preferences ->
             preferences[USER_ROLE] = userRole
         }
     }
+
 }

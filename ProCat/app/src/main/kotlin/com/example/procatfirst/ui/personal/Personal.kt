@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.repository.UserRoleRepository
 import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 
@@ -80,25 +81,31 @@ fun PersonalScreen(
             )
         }
 
-        Button(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            onClick = { onToDeliveryClicked() }
-        ) {
-            Text(
-                text = "Я курьер",
-                fontSize = 16.sp
-            )
+        if(UserRoleRepository.shared?.getUserRole().toString() == "delivery") {
+            Button(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                onClick = { onToDeliveryClicked() }
+            ) {
+                Text(
+                    text = "Я курьер",
+                    fontSize = 16.sp
+                )
+            }
         }
 
-        Button(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            onClick = { onToManagerClicked() }
-        ) {
-            Text(
-                text = "Я менеджер",
-                fontSize = 16.sp
-            )
+
+        if(UserRoleRepository.shared?.getUserRole().toString() == "manager") {
+            Button(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                onClick = { onToManagerClicked() }
+            ) {
+                Text(
+                    text = "Я менеджер",
+                    fontSize = 16.sp
+                )
+            }
         }
+
     }
 }
 
