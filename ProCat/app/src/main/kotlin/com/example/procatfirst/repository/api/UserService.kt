@@ -1,5 +1,6 @@
 package com.example.procatfirst.repository.api
 
+import com.example.procatfirst.BuildConfig
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -13,14 +14,20 @@ import retrofit2.http.POST
 
 interface UserService {
 
-    // TODO все эти методы должны быть suspend (наверное)
-    // Разобрался: в текущей реализации все API методы являются асинхронными
-    // Соответственно они не блокируют главный поток и могут выполняться
-    // без корутин
-    @POST("/login")
-    fun setUsers(@Body requestBody: RequestBody): Call<ResponseBody>
+
+    @POST("/users/sign-in")
+    fun login(@Body requestBody: RequestBody): Call<ResponseBody>
+
+    @GET("geocode?q=Новосибирск, Пирогова 1&fields=items.point&key=${BuildConfig.apiKey}")
+    fun geocoder(): Call<ResponseBody>
 
     @GET("/items")
     fun getItems(): Call<ItemsResponse>
+
+    @GET("/orders")
+    fun getOrders(): Call<ResponseBody>
+
+    @GET("/cart")
+    fun getItemsInCart(): Call<ResponseBody>
 
 }

@@ -29,6 +29,8 @@ import com.example.procatfirst.repository.UserRoleRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.procatfirst.repository.api.ApiCalls
+
 
 @Composable
 fun StartScreen(
@@ -95,9 +97,19 @@ fun StartScreen(
             onClick = { controller.startActivity(Intent(controller, MapActivity().javaClass)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(6.dp)
         ) {
             Text("Карта!")
+        }
+        Button(
+            onClick = { //ApiCalls.shared.geocoderApi() },
+                ApiCalls.shared.postApi("88005553535", "paSSword") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp)
+        ) {
+            //Text("Geocoder")
+            Text("PostApi")
         }
 
     }

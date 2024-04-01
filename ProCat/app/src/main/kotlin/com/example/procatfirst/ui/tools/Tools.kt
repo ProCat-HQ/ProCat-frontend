@@ -46,6 +46,8 @@ import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getCatalog
+import com.example.procatfirst.repository.data_coordinator.loadCatalog
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import kotlinx.coroutines.Dispatchers
@@ -63,7 +65,7 @@ fun ToolsScreen(
     //ToolDataProvider.tools
     //DataCoordinator.shared.addToolToUserCart(Tool(2, "Молоток", 1, "ddjdjjd", "sksks", 30))
     var tools by remember {
-        mutableStateOf(CatalogCache.shared.getCatalogStuff())
+        mutableStateOf(DataCoordinator.shared.getCatalog())
     }
     var loadText by remember {
         mutableStateOf("Loading...")

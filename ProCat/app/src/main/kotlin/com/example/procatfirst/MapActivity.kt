@@ -21,7 +21,7 @@ import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 import ru.dublgis.dgismobile.mapsdk.mapObjectsByIds
-import java.util.concurrent.CompletableFuture
+import android.content.Intent
 
 
 class MapActivity : AppCompatActivity() {
@@ -55,6 +55,11 @@ class MapActivity : AppCompatActivity() {
             it.visibility = View.INVISIBLE
         }
         goButton.visibility = View.INVISIBLE
+
+        val outButton = addOutButton {
+            //start main activity
+            startActivity(Intent(this, MainActivity().javaClass))
+        }
 
         val orders = OrderDataProvider.deliveryOrders
         map?.let {
@@ -118,9 +123,15 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun addActionButton(action: (View) -> Unit) : Button {
-            val btn = findViewById<Button>(R.id.zoom_in)
+            val btn = findViewById<Button>(R.id.go_button)
             btn.setOnClickListener( action )
             return btn
+    }
+
+    private fun addOutButton(action: (View) -> Unit) : Button {
+        val btn = findViewById<Button>(R.id.out)
+        btn.setOnClickListener( action )
+        return btn
     }
 
     private fun createToast(@Suppress("UNUSED_PARAMETER") view: View?, body: String?) {

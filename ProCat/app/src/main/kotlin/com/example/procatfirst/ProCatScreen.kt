@@ -49,6 +49,8 @@ import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.cart.Cart
 import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.item.ToolViewModel
+import com.example.procatfirst.ui.managment.ManagerScreen
+import com.example.procatfirst.ui.managment.OrdersManagerScreen
 import com.example.procatfirst.ui.ordering.OrderingScreen
 import com.example.procatfirst.ui.personal.PersonalScreen
 import com.example.procatfirst.ui.personal.chats.ChatScreen
@@ -80,6 +82,7 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Ordering(title = R.string.ordering),
     Delivery(title = R.string.ordering), // damn
     Registration(title = R.string.registration),
+    Manager(title = R.string.manager), // damn
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -291,6 +294,9 @@ fun ProCatApp (
                     onToDeliveryClicked = {
                         navController.navigate(ProCatScreen.Delivery.name)
                     },
+                    onToManagerClicked = {
+                        navController.navigate(ProCatScreen.Manager.name)
+                    },
                     /*
                     modifier = Modifier
                         .fillMaxSize()
@@ -319,11 +325,11 @@ fun ProCatApp (
             composable(route = ProCatScreen.Delivery.name) {
                 OrdersDeliveryScreen(
                     controller
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
+                )
+            }
+            composable(route = ProCatScreen.Manager.name) {
+                OrdersManagerScreen(
+                    controller
                 )
             }
             composable(route = ProCatScreen.Notifications.name) {
