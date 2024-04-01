@@ -27,6 +27,7 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -49,7 +50,9 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,7 +61,6 @@ fun OrderingScreen(
     orderingViewModel: OrderingViewModel = viewModel(),
 ) {
     var delivery by remember { mutableStateOf(true) }
-    val selectedDate = remember { mutableStateOf("01/01/2023") }
 
 
     Column(
@@ -88,7 +90,6 @@ fun OrderingScreen(
         // выбор адреса
         // залог?
 
-        Text(text = "Selected Date: ${selectedDate.value}")
 
         DateTimePickerComponent(
         )
@@ -111,20 +112,28 @@ fun OrderingScreen(
     }
 }
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateTimePickerComponent(
-) {
+    //onDateSelected: (String) -> Unit,
 
-    val datePickerState = rememberDatePickerState()
+    ) {
+
     var showDatePicker by remember { mutableStateOf(false) }
-    val selectedDate = remember { mutableStateOf(Calendar.getInstance()) }
+    val datePickerState = rememberDatePickerState(selectableDates = object : SelectableDates {
+        override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+            return utcTimeMillis >= System.currentTimeMillis()
+        }
+    })
+    val selectedDate = datePickerState.selectedDateMillis?.let {
+        convertMillisToDate(it)
+    } ?: ""
 
-
-    val timePickerState = rememberTimePickerState()
     var showTimePicker by remember { mutableStateOf(false) }
-
+    val timePickerState = rememberTimePickerState()
+    val selectedTime = timePickerState.hour
 
     Column(
         modifier = Modifier
@@ -134,7 +143,7 @@ fun DateTimePickerComponent(
         verticalArrangement = Arrangement.Center,
     ) {
 
-        Text(text = "Selected Date: ${selectedDate.value.time}", modifier = Modifier.padding(bottom = 16.dp))
+        Text(text = "Выбранная дата: $selectedDate", modifier = Modifier.padding(bottom = 16.dp))
 
         Button(
             onClick = {
@@ -142,12 +151,13 @@ fun DateTimePickerComponent(
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(text = "Date Picker")
+            Text(text = stringResource(R.string.pick_date))
         }
 
         Divider(modifier = Modifier.padding(vertical = 24.dp))
 
-        Text(text = "No Time Selected", modifier = Modifier.padding(bottom = 16.dp))
+        Text(text = "Выбранное время: $selectedTime", modifier = Modifier.padding(bottom = 16.dp))
+
 
         Button(
             onClick = {
@@ -155,7 +165,7 @@ fun DateTimePickerComponent(
             },
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(text = "Time Picker")
+            Text(text = stringResource(R.string.pick_time))
         }
 
     }
@@ -167,6 +177,7 @@ fun DateTimePickerComponent(
                 TextButton(
                     onClick = {
                         showDatePicker = false
+                        //onDateSelected(selectedDate)
                     }
                 ) { Text("OK") }
             },
@@ -211,7 +222,7 @@ fun DateTimePickerComponent(
 
 @Composable
 fun TimePickerDialog(
-    title: String = "Select Time",
+    title: String = "Выберите время",
     onDismissRequest: () -> Unit,
     confirmButton: @Composable (() -> Unit),
     dismissButton: @Composable (() -> Unit)? = null,
@@ -262,7 +273,10 @@ fun TimePickerDialog(
     }
 }
 
-
+private fun convertMillisToDate(millis: Long): String {
+    val formatter = SimpleDateFormat("dd.MM.yyyy")
+    return formatter.format(Date(millis))
+}
 
 
 

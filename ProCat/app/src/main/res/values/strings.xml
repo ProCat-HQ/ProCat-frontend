@@ -56,6 +56,11 @@
     <string name="confirm_inn_text">Чтобы продолжить офромление заказа необходимо ввести ИИН в Личном кабинете и дождаться его проверки</string>
     <string name="to_personal">Перейти в личный кабинет</string>
 
+    <string name="pick_date">Выберите дату</string>
+    <string name="pick_time">Выберите время</string>
+
+
+
 
     <string name="personal">Меню</string>
     <string name="profile">Профиль</string>
