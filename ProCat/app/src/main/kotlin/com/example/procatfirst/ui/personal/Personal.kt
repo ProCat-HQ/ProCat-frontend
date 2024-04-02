@@ -10,15 +10,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.repository.UserRoleRepository
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getUserRole
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.lang.Thread.sleep
 
 @Composable
 fun PersonalScreen(
@@ -29,6 +40,8 @@ fun PersonalScreen(
     onToDeliveryClicked:() -> Unit,
     onToManagerClicked:() -> Unit,
 ) {
+    val userRole = remember { mutableStateOf(DataCoordinator.shared.getUserRole())}
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState()),
@@ -38,7 +51,9 @@ fun PersonalScreen(
 
         // Profile button
         Button(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             onClick = { onToProfileClicked() }
         ) {
             Text(
@@ -48,7 +63,9 @@ fun PersonalScreen(
         }
         // My orders button
         Button(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             onClick = { onToOrdersClicked() }
         ) {
             Text(
@@ -59,7 +76,9 @@ fun PersonalScreen(
 
         // Notifications button
         Button(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             onClick = { onToNotificationsClicked() }
         ) {
             Text(
@@ -70,7 +89,9 @@ fun PersonalScreen(
 
         // Chats button
         Button(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             onClick = { onToChatsClicked() }
         ) {
             Text(
@@ -79,9 +100,13 @@ fun PersonalScreen(
             )
         }
 
-        if(UserRoleRepository.shared.getUserRole().toString() == "delivery") {
+       // Log.d("UserRole", userRole.toString())
+
+        if(userRole.value == "delivery" || userRole.value == "admin") {
             Button(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 onClick = { onToDeliveryClicked() }
             ) {
                 Text(
@@ -91,11 +116,11 @@ fun PersonalScreen(
             }
         }
 
-        Log.i("USER_ROLE", UserRoleRepository.shared.getUserRole().toString())
-
-        if(UserRoleRepository.shared.getUserRole().toString() == "manager") {
+        if(userRole.value == "manager" || userRole.value == "admin") {
             Button(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 onClick = { onToManagerClicked() }
             ) {
                 Text(

@@ -24,6 +24,7 @@ class DataCoordinator {
         withContext(Dispatchers.IO) {
             UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
         }
+        setUserRole()
     }
 
 }

@@ -30,6 +30,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.procatfirst.repository.api.ApiCalls
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.setUserRole
 
 
 @Composable
@@ -71,6 +73,7 @@ fun StartScreen(
             onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
                     UserRoleRepository.shared.saveUserRole(userRoleInputValue.value.text)
+                    DataCoordinator.shared.setUserRole()
                 }
             }
         ) {

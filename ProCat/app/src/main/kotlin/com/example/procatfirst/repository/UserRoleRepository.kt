@@ -63,6 +63,7 @@ class UserRoleRepository {
     private var context: Context? = null
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user_role")
     private var userRole: Flow<String>? = null
+    //private var token: String? = null
 
     fun getUserRole() : Flow<String> {
         return userRole!!
