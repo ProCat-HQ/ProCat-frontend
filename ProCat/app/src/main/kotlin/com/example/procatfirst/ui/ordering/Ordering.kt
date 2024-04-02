@@ -66,15 +66,18 @@ import java.util.Date
 fun OrderingScreen(
     orderingViewModel: OrderingViewModel = viewModel(),
 ) {
-    var delivery by remember { mutableStateOf(true) }
-    var address by remember { mutableStateOf("") }
+    //var delivery by remember { mutableStateOf(true) }
+    //var address by remember { mutableStateOf("") }
 
     val addresses = listOf(
         SelectionOption("Адрес 1", initialSelectedValue = true),
         SelectionOption("Адрес 2", initialSelectedValue = false)
     )
     val onOptionClicked: (SelectionOption) -> Unit = { selectedOption ->
-        selectedOption.selected = !selectedOption.selected
+        //selectedOption.selected = !selectedOption.selected
+        addresses.forEach { it.selected = false }
+        selectedOption.selected = true
+        orderingViewModel.address = selectedOption.option
     }
 
 
@@ -94,21 +97,19 @@ fun OrderingScreen(
                 text = stringResource(R.string.delivery)
             )
             Switch(
-                checked = delivery,
+                checked = orderingViewModel.delivery,
                 onCheckedChange = {
-                    delivery = it
-                    address = ""
+                    orderingViewModel.delivery = it
+                    orderingViewModel.address = ""
                 }
             )
         }
 
-        // залог?
 
-
-        if (delivery) {
+        if (orderingViewModel.delivery) {
             OutlinedTextField(
-                value = address,
-                onValueChange = { address = it },
+                value = orderingViewModel.address,
+                onValueChange = { orderingViewModel.address = it },
                 label = { Text(text = stringResource(R.string.enter_address)) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -122,25 +123,36 @@ fun OrderingScreen(
 
         }
 
-        DateTimePickerComponent()
+        DateTimePickerComponent(orderingViewModel)
 
         Spacer(modifier = Modifier.weight(1f))
 
+        Column(
+            
+        ) {
+            Row (){
+                Text(
+                    text = stringResource(R.string.final_price),
+                    modifier = Modifier.weight(5f)
 
-        Row (
+                )
+                Text(
+                    text = "5.000$",
+                    modifier = Modifier.weight(1f)
 
-        ){
-            Text(
-                text = stringResource(R.string.final_price),
-                modifier = Modifier.weight(5f)
-
-            )
-            Text(
-                text = "5.000$",
-                modifier = Modifier.weight(1f)
-
-            )
+                )
+            }
+            Button (
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onClick = {
+                    //TODO
+                    }
+            ) {
+                Text(text = stringResource(R.string.order))
+            }
         }
+        
 
 
     }

@@ -58,9 +58,12 @@
 
     <string name="enter_address">Введите адрес доставки</string>
     <string name="choose_address_from_list">Выберите адрес пункта</string>
-
     <string name="pick_date">Выберите дату</string>
-    <string name="pick_time">Выберите время</string>
+    <string name="from">От:</string>
+    <string name="to">До:</string>
+    <string name="order">Заказать</string>
+
+
 
 
 

@@ -28,6 +28,7 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -48,9 +50,11 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateTimePickerComponent(
-    //onDateSelected: (String) -> Unit,
+    orderingViewModel: OrderingViewModel,
 
-) {
+    ) {
+    val orderingUiState by orderingViewModel.uiState.collectAsState()
+
 
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(selectableDates = object : SelectableDates {
@@ -62,9 +66,17 @@ fun DateTimePickerComponent(
         convertMillisToDate(it)
     } ?: ""
 
-    var showTimePicker by remember { mutableStateOf(false) }
-    val timePickerState = rememberTimePickerState()
-    val selectedTime = timePickerState.hour
+    var showTimePickerFrom by remember { mutableStateOf(false) }
+    var showTimePickerTo by remember { mutableStateOf(false) }
+
+    val timePickerStateFrom = rememberTimePickerState()
+    val selectedTimeFromHour = timePickerStateFrom.hour
+    val selectedTimeFromMinute = timePickerStateFrom.minute
+
+    val timePickerStateTo = rememberTimePickerState()
+    val selectedTimeToHour = timePickerStateTo.hour
+    val selectedTimeToMinute = timePickerStateTo.minute
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,17 +95,29 @@ fun DateTimePickerComponent(
 
         Divider(modifier = Modifier.padding(vertical = 24.dp))
 
-        Text(text = "Выбранное время: $selectedTime", modifier = Modifier.padding(bottom = 16.dp))
+        Text(text = "Выбранное время: ${orderingUiState.selectedTimeFromHour}:${orderingUiState.selectedTimeFromMinute} - ${orderingUiState.selectedTimeToHour}:${orderingUiState.selectedTimeToMinute}", modifier = Modifier.padding(bottom = 16.dp))
 
 
-        ElevatedButton(
-            onClick = {
-                showTimePicker = true
-            },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(text = stringResource(R.string.pick_time))
+        Row() {
+            ElevatedButton(
+                onClick = {
+                    showTimePickerFrom = true
+                },
+                modifier = Modifier.weight(3f),
+            ) {
+                Text(text = stringResource(R.string.from))
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            ElevatedButton(
+                onClick = {
+                    showTimePickerTo = true
+                },
+                modifier = Modifier.weight(3f),
+            ) {
+                Text(text = stringResource(R.string.to))
+            }
         }
+
 
     }
 
@@ -104,7 +128,7 @@ fun DateTimePickerComponent(
                 TextButton(
                     onClick = {
                         showDatePicker = false
-                        //onDateSelected(selectedDate)
+                        orderingViewModel.updateSelectedDate(selectedDate)
                     }
                 ) { Text("OK") }
             },
@@ -121,27 +145,54 @@ fun DateTimePickerComponent(
     }
 
 
-    // time picker component
-    if (showTimePicker) {
+    // time picker component From
+    if (showTimePickerFrom) {
         TimePickerDialog(
             onDismissRequest = { /*TODO*/ },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        showTimePicker = false
+                        showTimePickerFrom = false
+                        orderingViewModel.updateSelectedTimeFrom(selectedTimeFromHour, selectedTimeFromMinute)
                     }
                 ) { Text("OK") }
             },
             dismissButton = {
                 TextButton(
                     onClick = {
-                        showTimePicker = false
+                        showTimePickerFrom = false
                     }
                 ) { Text("Закрыть") }
             }
         )
         {
-            TimePicker(state = timePickerState)
+            TimePicker(state = timePickerStateFrom)
+        }
+    }
+
+
+    // time picker component To
+    if (showTimePickerTo) {
+        TimePickerDialog(
+            onDismissRequest = { /*TODO*/ },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showTimePickerTo = false
+                        orderingViewModel.updateSelectedTimeTo(selectedTimeToHour, selectedTimeToMinute)
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showTimePickerTo = false
+                    }
+                ) { Text("Закрыть") }
+            }
+        )
+        {
+            TimePicker(state = timePickerStateTo)
         }
     }
 
