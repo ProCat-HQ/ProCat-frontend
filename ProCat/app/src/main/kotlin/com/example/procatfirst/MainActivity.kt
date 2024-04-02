@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun initBackground() {
-        UserRoleRepository(baseContext)
+        UserRoleRepository.shared.init(baseContext)
         NotificationCoordinator.shared.initialize(baseContext)
         lifecycleScope.launch { DataCoordinator.shared.initialize(baseContext) }
 

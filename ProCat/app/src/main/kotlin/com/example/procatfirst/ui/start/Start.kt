@@ -44,7 +44,7 @@ fun StartScreen(
     val context = LocalContext.current
     //val userRoleRepository = UserRoleRepository(context)
 
-    val userRoleText by UserRoleRepository.shared!!.getUserRole().collectAsState(initial = "")
+    val userRoleText by UserRoleRepository.shared.getUserRole().collectAsState(initial = "")
 
     val userRoleInputValue = remember {
         mutableStateOf(TextFieldValue())
@@ -70,7 +70,7 @@ fun StartScreen(
         Button(
             onClick = {
                 CoroutineScope(Dispatchers.IO).launch {
-                    UserRoleRepository.shared?.saveUserRole(userRoleInputValue.value.text)
+                    UserRoleRepository.shared.saveUserRole(userRoleInputValue.value.text)
                 }
             }
         ) {

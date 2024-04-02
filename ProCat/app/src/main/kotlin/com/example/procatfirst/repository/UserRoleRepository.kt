@@ -50,41 +50,45 @@ interface AppComponent {
 
  */
 
-class UserRoleRepository(
-    private val context: Context
-){
+class UserRoleRepository {
 
     companion object {
-        @SuppressLint("StaticFieldLeak")
-        val shared : UserRoleRepository? = null
-        private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user_role")
+
+        var shared : UserRoleRepository = UserRoleRepository()
         val USER_ROLE = stringPreferencesKey("user_role")
         const val TAG = "UserRoleRepo"
+
     }
 
-
-    private val userRole: Flow<String> = context.dataStore.data
-        .catch {
-            if(it is IOException) {
-                Log.e(TAG, "Error reading preferences.", it)
-                emit(emptyPreferences())
-            } else {
-                throw it
-            }
-        }
-        .map { preferences ->
-            preferences[USER_ROLE] ?: "guest"
-        }
+    private var context: Context? = null
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("user_role")
+    private var userRole: Flow<String>? = null
 
     fun getUserRole() : Flow<String> {
-        return userRole
+        return userRole!!
     }
 
 
     suspend fun saveUserRole(userRole: String) {
-        context.dataStore.edit { preferences ->
+        context?.dataStore?.edit { preferences ->
             preferences[USER_ROLE] = userRole
         }
+    }
+
+    fun init(context1 : Context) {
+        context = context1
+        userRole = context!!.dataStore.data
+            .catch {
+                if(it is IOException) {
+                    Log.e(TAG, "Error reading preferences.", it)
+                    emit(emptyPreferences())
+                } else {
+                    throw it
+                }
+            }
+            .map { preferences ->
+                preferences[USER_ROLE] ?: "guest"
+            }
     }
 
 }
