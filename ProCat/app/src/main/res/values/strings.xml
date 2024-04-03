@@ -10,6 +10,7 @@
     <string name="next">Далее</string>
 
     <string name="auth">Авторизация</string>
+    <string name="authorize">Авторизироваться</string>
     <string name="sign_in_intro">Вход</string>
     <string name="sign_in">Войти</string>
     <string name="forgot_password">Забыл пароль</string>

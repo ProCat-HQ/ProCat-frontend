@@ -136,15 +136,20 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Personal
     )
     BottomNavigation(
-        backgroundColor = md_theme_light_secondaryContainer,
-        contentColor = md_theme_light_secondaryContainer
+        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.secondaryContainer
     ) {
         items.forEach { item ->
             BottomNavigationItem(
                 icon = { Icon(item.icon, contentDescription = item.label) },
-                label = { Text(text = item.label, fontSize = 12.sp) },
-                selectedContentColor = md_theme_light_inversePrimary,
-                unselectedContentColor = Color.White.copy(0.4f),
+                label = {
+                    Text(
+                        text = item.label,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    ) },
+                selectedContentColor = MaterialTheme.colorScheme.inversePrimary,
+                unselectedContentColor = MaterialTheme.colorScheme.inversePrimary,
                 alwaysShowLabel = true,
                 selected = false,
                 onClick = {
