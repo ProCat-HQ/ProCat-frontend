@@ -94,7 +94,7 @@ fun AuthScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { authViewModel.check()}
+            onClick = { authViewModel.signIn()}
         ) {
             Text(
                 text = stringResource(R.string.sign_in),

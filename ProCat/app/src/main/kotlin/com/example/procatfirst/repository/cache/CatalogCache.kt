@@ -25,7 +25,7 @@ class CatalogCache {
                 } else {
                     R.drawable.set
                 }
-                resultList.add(Tool(i.id, i.name, img, i.description, "", i.price))
+                resultList.add(Tool(i.id, i.name, i.description, i.price, true, 0, img))
             }
             toolsStorage.addAll(resultList)
             //intent

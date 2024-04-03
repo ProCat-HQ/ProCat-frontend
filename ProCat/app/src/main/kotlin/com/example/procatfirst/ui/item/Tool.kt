@@ -97,7 +97,7 @@ fun ToolScreen(
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            text = toolUiState.tool.specifications,
+            text = toolUiState.tool.price.toString(),
             style = MaterialTheme.typography.bodyMedium
         )
 

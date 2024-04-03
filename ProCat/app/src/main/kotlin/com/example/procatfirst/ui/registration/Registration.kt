@@ -107,7 +107,7 @@ fun RegistrationScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { registrationViewModel.check()}
+            onClick = { registrationViewModel.signUp()}
         ) {
             Text(
                 text = stringResource(R.string.register),

@@ -5,9 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.procatfirst.repository.api.ApiCalls
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class OrderingViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(OrderingUiState())
@@ -18,7 +21,7 @@ class OrderingViewModel: ViewModel() {
 
     var delivery by mutableStateOf(true)
 
-    var orderStatus by mutableStateOf("")
+    var orderStatus by mutableStateOf("В ожидании подтверждения")
 
 
 
@@ -34,9 +37,17 @@ class OrderingViewModel: ViewModel() {
         _uiState.value = _uiState.value.copy(selectedTimeToHour = selectedTimeToHour, selectedTimeToMinute = selectedTimeToMinute)
     }
 
+    fun updateSelectedAddress(address: String) {
+        _uiState.value = _uiState.value.copy(address = address)
+    }
+
     fun order() {
         // send request to make order with date, time, address and items!
-        orderStatus = "В ожидании подтверждения"
+        updateSelectedAddress(address)
+        viewModelScope.launch {
+            //ApiCalls.shared.postCart()
+            //ApiCalls.shared.postOrder()
+        }
     }
 
 
