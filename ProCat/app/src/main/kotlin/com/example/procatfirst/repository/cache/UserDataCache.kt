@@ -5,7 +5,8 @@ import com.example.procatfirst.data.User
 class UserDataCache {
 
     var user : User? = null
-    var role : String = "User"
+    private var role : String = "User"
+    private var token : String = "none"
 
     companion object {
         val shared = UserDataCache()
@@ -27,5 +28,15 @@ class UserDataCache {
     fun setUserRole(userRole : String) {
         role = userRole
     }
+
+    fun getUserToken() : String {
+        return token
+    }
+
+    fun setUserToken(userToken : String) {
+        token = userToken
+    }
+
+
 
 }

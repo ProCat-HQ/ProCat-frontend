@@ -5,6 +5,10 @@ import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
+import com.example.procatfirst.repository.cache.UserDataCache
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.setUserRole
+import okhttp3.FormBody
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -35,7 +39,8 @@ class ApiCalls {
             .build()
             .create(UserService::class.java)
 
-        service.getItems().enqueue(object : Callback<ItemsResponse> {
+
+        service.getItems("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ItemsResponse> {
 
             /* The HTTP call failed. This method is run on the main thread */
             override fun onFailure(call: Call<ItemsResponse>, t: Throwable) {
@@ -127,7 +132,7 @@ class ApiCalls {
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                 /* This will print the response of the network call to the Logcat */
                 response.body()?.let {
-                    //it.
+                    UserDataCache.shared.setUserToken(it.token)
                     Log.i("RESPONSE", it.token)
                 }
 

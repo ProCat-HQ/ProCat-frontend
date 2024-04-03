@@ -8,7 +8,11 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 /* Retrofit service that maps the different endpoints on the API, you'd create one
  * method per endpoint, and use the @Path, @Query and other annotations to customize
@@ -27,7 +31,7 @@ interface UserService {
     fun geocoder(): Call<ResponseBody>
 
     @GET("/items")
-    fun getItems(): Call<ItemsResponse>
+    fun getItems(@Header("Authorization") token: String?): Call<ItemsResponse>
 
     @GET("/orders")
     fun getOrders(): Call<ResponseBody>
