@@ -90,4 +90,6 @@
     <string name="type_message">Введите сообщение</string>
     <string name="chat">Чат</string>
     <string name="go_go_go">В путь!</string>
+    <string name="manager">Страница администратора</string>
+
 </resources>

@@ -19,7 +19,7 @@ class DataStorage {
 
     private val FILEPATH = "user_cart.json"
     private var context: Context? = null
-    private var filesDir: File? = null
+    public var filesDir: File? = null
 
     suspend fun getUserCartFromMemory(): MutableList<Tool> {
         var rowJsonUserCart = "{}"
