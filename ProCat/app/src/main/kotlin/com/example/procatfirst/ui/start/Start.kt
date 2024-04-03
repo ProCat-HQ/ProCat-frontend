@@ -2,12 +2,8 @@ package com.example.procatfirst.ui.start
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -21,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -98,23 +93,33 @@ fun StartScreen(
         ) {
             Text(stringResource(R.string.next))
         }
-        Button(
-            onClick = { context.startActivity(Intent(controller, MapActivity().javaClass)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp)
-        ) {
-            Text("Карта!")
-        }
+//        Button(
+//            onClick = { context.startActivity(Intent(controller, MapActivity().javaClass)) },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(6.dp)
+//        ) {
+//            Text("Карта!")
+//        }
         Button(
             onClick = { //ApiCalls.shared.geocoderApi() },
-                ApiCalls.shared.postApi("88005553535", "paSSword") },
+                ApiCalls.shared.signUpApi("88005553535", "paSSword", "misha evdokimov") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(6.dp)
         ) {
             //Text("Geocoder")
-            Text("PostApi")
+            Text("Register")
+        }
+        Button(
+                onClick = { //ApiCalls.shared.geocoderApi() },
+                    ApiCalls.shared.signInApi("88005553535", "paSSword") },
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp)
+        ) {
+            //Text("Geocoder")
+            Text("login")
         }
 
     }

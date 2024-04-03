@@ -5,7 +5,6 @@ import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
-import okhttp3.FormBody
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -60,7 +59,7 @@ class ApiCalls {
     }
 
 
-    public fun postApi(login: String, password: String)  {
+    public fun signUpApi(login: String, password: String, name: String)  {
 
         val service = Retrofit.Builder()
             .baseUrl(BACKEND_URL)
@@ -72,20 +71,13 @@ class ApiCalls {
          * that creates a new worker thread to make the HTTP call */
 
         val jsonObject = JSONObject()
-        jsonObject.put("fullName", "misha evdokimov")
+        jsonObject.put("fullName", name)
         jsonObject.put("phoneNumber", login)
         jsonObject.put("password", password)
 
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
 
-        val requestBody1: RequestBody = FormBody.Builder()
-                .add("fullname", "misha evdokimov")
-                .add("phoneNumber", login)
-                .add("password", password)
-                .build()
-
-        //Log.i("Body", requestBody.toString())
-        service.login(requestBody).enqueue(object : Callback<ResponseBody> { //ResponseBody
+        service.register(requestBody).enqueue(object : Callback<ResponseBody> { //ResponseBody
 
             /* The HTTP call failed. This method is run on the main thread */
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -99,8 +91,45 @@ class ApiCalls {
                 /* This will print the response of the network call to the Logcat */
                 response.body()?.string()?.let { Log.i("RESPONSE", it) }
 
-//                DataCoordinator.shared.updateUserEmail(response.body().toString())
-//                response.body()?.let {DataCoordinator.shared.updateUserEmail(it.string())}
+            }
+
+        })
+
+    }
+
+    public fun signInApi(login: String, password: String)  {
+
+        val service = Retrofit.Builder()
+                .baseUrl(BACKEND_URL)
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build()
+                .create(UserService::class.java)
+
+        /* Calls the endpoint set on getUsers (/api) from UserService using enqueue method
+         * that creates a new worker thread to make the HTTP call */
+
+        val jsonObject = JSONObject()
+        jsonObject.put("phoneNumber", login)
+        jsonObject.put("password", password)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+        service.login(requestBody).enqueue(object : Callback<TokenResponse> { //ResponseBody
+
+            /* The HTTP call failed. This method is run on the main thread */
+            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("RESPONSE", "Fail")
+            }
+
+            /* The HTTP call was successful, we should still check status code and response body
+             * on a production app. This method is run on the main thread */
+            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                /* This will print the response of the network call to the Logcat */
+                response.body()?.let {
+                    //it.
+                    Log.i("RESPONSE", it.token)
+                }
 
             }
 

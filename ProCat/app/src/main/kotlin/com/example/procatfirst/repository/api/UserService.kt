@@ -18,7 +18,10 @@ interface UserService {
 
 
     @POST("/users/sign-up")
-    fun login(@Body requestBody: RequestBody): Call<ResponseBody>
+    fun register(@Body requestBody: RequestBody): Call<ResponseBody>
+
+    @POST("/users/sign-in")
+    fun login(@Body requestBody: RequestBody): Call<TokenResponse>
 
     @GET("geocode?q=Новосибирск, Пирогова 1&fields=items.point&key=${BuildConfig.apiKey}")
     fun geocoder(): Call<ResponseBody>
