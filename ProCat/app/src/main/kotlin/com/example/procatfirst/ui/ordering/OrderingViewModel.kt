@@ -18,6 +18,9 @@ class OrderingViewModel: ViewModel() {
 
     var delivery by mutableStateOf(true)
 
+    var orderStatus by mutableStateOf("")
+
+
 
     fun updateSelectedDate(selectedDate: String) {
         _uiState.value = _uiState.value.copy(selectedDate = selectedDate)
@@ -29,6 +32,11 @@ class OrderingViewModel: ViewModel() {
 
     fun updateSelectedTimeTo(selectedTimeToHour: Int, selectedTimeToMinute: Int) {
         _uiState.value = _uiState.value.copy(selectedTimeToHour = selectedTimeToHour, selectedTimeToMinute = selectedTimeToMinute)
+    }
+
+    fun order() {
+        // send request to make order with date, time, address and items!
+        orderStatus = "В ожидании подтверждения"
     }
 
 

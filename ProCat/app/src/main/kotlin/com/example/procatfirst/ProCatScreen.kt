@@ -2,6 +2,8 @@ package com.example.procatfirst
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -51,7 +53,9 @@ import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.item.ToolViewModel
 import com.example.procatfirst.ui.managment.ManagerScreen
 import com.example.procatfirst.ui.managment.OrdersManagerScreen
+import com.example.procatfirst.ui.ordering.OrderConfirmation
 import com.example.procatfirst.ui.ordering.OrderingScreen
+import com.example.procatfirst.ui.ordering.OrderingViewModel
 import com.example.procatfirst.ui.personal.PersonalScreen
 import com.example.procatfirst.ui.personal.chats.ChatScreen
 import com.example.procatfirst.ui.personal.chats.ListOfChatsScreen
@@ -83,6 +87,8 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Delivery(title = R.string.ordering), // damn
     Registration(title = R.string.registration),
     Manager(title = R.string.manager), // damn
+    OrderConfirmation(title = R.string.order_confirmation),
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -163,6 +169,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 )
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProCatApp (
     controller : Context,
@@ -365,7 +372,14 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Ordering.name) {
                 OrderingScreen(
-
+                    onToConfirmationClicked = {
+                        navController.navigate(ProCatScreen.OrderConfirmation.name)
+                    }
+                )
+            }
+            composable(route = ProCatScreen.OrderConfirmation.name) {
+                OrderConfirmation(
+                    orderingViewModel = viewModel()
                 )
             }
         }
