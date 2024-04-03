@@ -3,6 +3,8 @@ package com.example.procatfirst.ui.start
 import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -80,14 +82,14 @@ fun StartScreen(
             Text(text = "Изменить пользователя")
         }
 
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = stringResource(id = R.string.logo),
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
-                .padding(top = 5.dp, bottom = 5.dp)
-        )
+//        Image(
+//            painter = painterResource(id = R.drawable.logo),
+//            contentDescription = stringResource(id = R.string.logo),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
+//                .padding(top = 5.dp, bottom = 5.dp)
+//        )
         Button(
             onClick = { onNextButtonClicked() },
             modifier = Modifier

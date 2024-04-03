@@ -1,8 +1,10 @@
 package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.BuildConfig
+import com.squareup.moshi.Json
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -15,7 +17,7 @@ import retrofit2.http.POST
 interface UserService {
 
 
-    @POST("/users/sign-in")
+    @POST("/users/sign-up")
     fun login(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("geocode?q=Новосибирск, Пирогова 1&fields=items.point&key=${BuildConfig.apiKey}")

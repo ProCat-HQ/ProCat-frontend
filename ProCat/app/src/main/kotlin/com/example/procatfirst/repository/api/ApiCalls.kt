@@ -6,6 +6,7 @@ import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
 import okhttp3.FormBody
+import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -23,7 +24,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class ApiCalls {
     companion object {
         val shared = ApiCalls()
-        const val BACKEND_URL = "http://10.0.2.2:9000"
+        const val BACKEND_URL = "http://10.0.2.2:8080"
         const val identifier = "[ApiCalls]"
     }
 
@@ -71,14 +72,19 @@ class ApiCalls {
          * that creates a new worker thread to make the HTTP call */
 
         val jsonObject = JSONObject()
+        jsonObject.put("fullName", "misha evdokimov")
         jsonObject.put("phoneNumber", login)
         jsonObject.put("password", password)
 
-        val requestBody: RequestBody = FormBody.Builder()
-            .add("phoneNumber", login)
-            .add("password", password)
-            .build()
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
 
+        val requestBody1: RequestBody = FormBody.Builder()
+                .add("fullname", "misha evdokimov")
+                .add("phoneNumber", login)
+                .add("password", password)
+                .build()
+
+        //Log.i("Body", requestBody.toString())
         service.login(requestBody).enqueue(object : Callback<ResponseBody> { //ResponseBody
 
             /* The HTTP call failed. This method is run on the main thread */
@@ -92,6 +98,7 @@ class ApiCalls {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 /* This will print the response of the network call to the Logcat */
                 response.body()?.string()?.let { Log.i("RESPONSE", it) }
+
 //                DataCoordinator.shared.updateUserEmail(response.body().toString())
 //                response.body()?.let {DataCoordinator.shared.updateUserEmail(it.string())}
 
