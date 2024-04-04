@@ -2,6 +2,7 @@ package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.BuildConfig
 import com.example.procatfirst.data.User
+import com.example.procatfirst.data.DeliveryDistribution
 import com.squareup.moshi.Json
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -46,4 +47,6 @@ interface UserService {
     @GET("/cart")
     fun getItemsInCart(): Call<ResponseBody>
 
+    @GET("/users/admin/cluster")
+    fun getDeliveryDistribution(): Call<DeliveryDistribution>
 }

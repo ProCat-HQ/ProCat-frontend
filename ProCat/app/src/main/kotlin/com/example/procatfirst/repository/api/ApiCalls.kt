@@ -2,6 +2,9 @@ package com.example.procatfirst.repository.api
 
 import android.util.Log
 import com.example.procatfirst.R
+import com.example.procatfirst.data.ApiResponseDelivery
+import com.example.procatfirst.data.Delivery
+import com.example.procatfirst.data.DeliveryMan
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.data.User
 import com.example.procatfirst.repository.cache.CatalogCache
@@ -211,6 +214,43 @@ class ApiCalls {
             }
 
         })
+
+    }
+
+    public fun courierDistributionApi()  {
+
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        val jsonObject = JSONObject()
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+        //-----------------------
+        val deliveries = listOf(
+            Delivery(54.849023, 83.109914, 105),
+            Delivery(54.864174, 83.092518, 106),
+            Delivery(54.850213, 83.046704, 107),
+            Delivery(54.837411, 83.112056, 108)
+        )
+
+        val deliveryMan1 = DeliveryMan(1, deliveries)
+
+        val deliveries2 = listOf(
+            Delivery(55.04868, 82.988786, 101),
+            Delivery(54.98254, 82.814378, 102),
+            Delivery(54.96244, 82.885103, 103),
+            Delivery(54.988017, 83.015966, 104)
+        )
+
+        val deliveryMan2 = DeliveryMan(2, deliveries2)
+
+        val apiResponse = ApiResponseDelivery("ok", listOf(deliveryMan1, deliveryMan2))
+
+        val jsonObject2 = JSONObject(apiResponse.toString())
+        //-------------------
 
     }
 
