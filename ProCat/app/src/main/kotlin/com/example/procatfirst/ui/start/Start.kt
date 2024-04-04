@@ -80,14 +80,14 @@ fun StartScreen(
             Text(text = "Изменить пользователя")
         }
 
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = stringResource(id = R.string.logo),
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
-                .padding(top = 5.dp, bottom = 5.dp)
-        )
+//        Image(
+//            painter = painterResource(id = R.drawable.logo),
+//            contentDescription = stringResource(id = R.string.logo),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
+//                .padding(top = 5.dp, bottom = 5.dp)
+//        )
         Button(
             onClick = { onNextButtonClicked() },
             modifier = Modifier

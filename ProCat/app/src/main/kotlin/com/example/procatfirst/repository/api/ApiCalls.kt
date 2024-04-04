@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
+import android.widget.Toast
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
@@ -23,7 +24,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class ApiCalls {
     companion object {
         val shared = ApiCalls()
-        const val BACKEND_URL = "http://10.0.2.2:9000"
+        const val BACKEND_URL = "http://10.0.2.2:8080"
         const val identifier = "[ApiCalls]"
     }
 
