@@ -49,4 +49,6 @@ interface UserService {
 
     @GET("/users/admin/cluster")
     fun getDeliveryDistribution(): Call<DeliveryDistribution>
+    fun amina(): Call<ResponseBody>
+
 }

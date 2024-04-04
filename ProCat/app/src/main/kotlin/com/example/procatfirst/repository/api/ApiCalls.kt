@@ -138,6 +138,34 @@ class ApiCalls {
         })
     }
 
+    fun aminaApi() {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build()
+                .create(UserService::class.java)
+
+
+        service.amina().enqueue(object : Callback<ResponseBody> {
+
+            /* The HTTP call failed. This method is run on the main thread */
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("AMINA", t.toString())
+            }
+
+            /* The HTTP call was successful, we should still check status code and response body
+             * on a production app. This method is run on the main thread */
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                /* This will print the response of the network call to the Logcat */
+                response.body()?.let { Log.d("AMINA", it.toString()) }
+
+            }
+
+        })
+    }
 
     public fun signUpApi(login: String, password: String, name: String)  {
 
