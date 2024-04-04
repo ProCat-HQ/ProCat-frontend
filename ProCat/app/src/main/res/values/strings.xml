@@ -93,5 +93,6 @@
     <string name="chat">Чат</string>
     <string name="go_go_go">В путь!</string>
     <string name="manager">Страница администратора</string>
+    <string name="delivery_page">Страница курьера</string>
 
 </resources>

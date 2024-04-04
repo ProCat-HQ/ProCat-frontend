@@ -1,5 +1,7 @@
 package com.example.procatfirst.ui.courier.orders
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -35,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.procatfirst.MapActivity
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
@@ -46,7 +49,8 @@ var currentOrder : Order? = null
 
 @Composable
 fun CourierOrdersScreen(
-    ordersViewModel: CourierOrdersViewModel = viewModel()
+        controller : Context,
+        ordersViewModel: CourierOrdersViewModel = viewModel()
 ) {
     val orders by ordersViewModel.orders.collectAsState()
     var changeStatusDialogVisible by remember { mutableStateOf(false) }
@@ -74,6 +78,15 @@ fun CourierOrdersScreen(
                 order = order,
                 changeStatus = {changeStatusDialogVisible = true}
                 )
+        }
+
+        Button(
+                onClick = { controller.startActivity(Intent(controller, MapActivity().javaClass)) },
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+        ) {
+            Text("Показать карту")
         }
 
         if (changeStatusDialogVisible) {
@@ -208,10 +221,10 @@ fun ChangeStatusDialog(
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview() {
-    ProCatFirstTheme {
-        CourierOrdersScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ProfilePreview() {
+//    ProCatFirstTheme {
+//        CourierOrdersScreen()
+//    }
+//}

@@ -10,12 +10,19 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.procatfirst.MainActivity
+import com.example.procatfirst.data.User
 //import com.example.procatfirst.ProCatApplication
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.UserRoleRepository
 import com.example.procatfirst.repository.api.ApiCalls
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getUserData
+import com.example.procatfirst.repository.data_coordinator.setUserData
+import com.example.procatfirst.repository.data_coordinator.setUserRole
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,8 +40,6 @@ class AuthViewModel(
     init{
         open()
     }
-
-
 
     var userInputPassword by mutableStateOf("")
         private set
@@ -60,8 +65,15 @@ class AuthViewModel(
 
 
     private fun checkUserPhoneNumber(): Boolean {
-        if (userInputPhoneNumber.length == 11) {
+        if //(userInputPhoneNumber.length == 11) {
+            (userInputPhoneNumber != "") {
             //val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
+            CoroutineScope(Dispatchers.IO).launch {
+                UserRoleRepository.shared.saveUserRole(userInputPhoneNumber)
+                DataCoordinator.shared.setUserRole()
+                DataCoordinator.shared.setUserData(User(1, userInputPhoneNumber, userInputPhoneNumber + "@mail.ru", "", "", false, userInputPhoneNumber, "", ""))
+            }
+
             NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             updateUserPhoneNumber("")
             return true

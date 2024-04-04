@@ -43,6 +43,7 @@ import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.ui.auth.AuthScreen
 import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.cart.Cart
+import com.example.procatfirst.ui.courier.orders.CourierOrdersScreen
 import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.item.ToolViewModel
 import com.example.procatfirst.ui.managment.OrdersManagerScreen
@@ -74,7 +75,7 @@ enum class ProCatScreen(@StringRes val title: Int) {
     ListOfChatsScreen(title = R.string.list_of_chats),
     Chat(title = R.string.chat),
     Ordering(title = R.string.ordering),
-    Delivery(title = R.string.ordering), // damn
+    Delivery(title = R.string.delivery_page), // damn
     Registration(title = R.string.registration),
     Manager(title = R.string.manager), // damn
     OrderConfirmation(title = R.string.order_confirmation),
@@ -330,9 +331,10 @@ fun ProCatApp (
                 )
             }
             composable(route = ProCatScreen.Delivery.name) {
-                OrdersDeliveryScreen(
-                    controller
-                )
+//                OrdersDeliveryScreen(
+//                    controller
+//                )
+                CourierOrdersScreen(controller)
             }
             composable(route = ProCatScreen.Manager.name) {
                 OrdersManagerScreen(

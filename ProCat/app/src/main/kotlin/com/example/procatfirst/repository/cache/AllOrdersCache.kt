@@ -27,4 +27,8 @@ class AllOrdersCache {
         orders[orders.indexOf(order)] = order
     }
 
+    fun addOrder(order : Order) {
+        orders.add(order)
+    }
+
 }

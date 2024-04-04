@@ -6,7 +6,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.procatfirst.data.Order
 import com.example.procatfirst.repository.api.ApiCalls
+import com.example.procatfirst.repository.cache.AllOrdersCache
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,9 +43,10 @@ class OrderingViewModel: ViewModel() {
         _uiState.value = _uiState.value.copy(address = address)
     }
 
-    fun order() {
+    fun order(order : Order) {
         // send request to make order with date, time, address and items!
         updateSelectedAddress(address)
+        AllOrdersCache.shared.addOrder(order)
         viewModelScope.launch {
             //ApiCalls.shared.postCart()
             //ApiCalls.shared.postOrder()

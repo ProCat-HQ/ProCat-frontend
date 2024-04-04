@@ -163,7 +163,7 @@ fun orderItem(
             TextButton(
                 onClick = { currentOrder = order; changeStatus() },
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(3f)
                     .padding(4.dp)
             ) {
                 Text(
@@ -195,11 +195,11 @@ fun ChangeStatusDialog(
             Button(onClick = { onChangeStatus("Принят в обработку") }) {
                 Text("Принят в обработку")
             }
-            Button(onClick = { onChangeStatus("Готов к выдаче") }) {
-                Text("Готов к выдаче")
+            Button(onClick = { onChangeStatus("Ожидает доставки") }) {
+                Text("Ожидает доставки")
             }
-            Button(onClick = { onChangeStatus("Отклонён") }) {
-                Text("Отклонён")
+            Button(onClick = { onChangeStatus("Ожидает возврата") }) {
+                Text("Ожидает возврата")
             }
         },
         dismissButton = {

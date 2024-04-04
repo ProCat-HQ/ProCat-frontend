@@ -69,6 +69,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
@@ -177,7 +178,10 @@ fun OrderingScreen(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
+        var sum = 0
+        for (t in tools) {
+            sum += t.price
+        }
 
         Column(
             
@@ -188,8 +192,9 @@ fun OrderingScreen(
                     modifier = Modifier.weight(5f)
 
                 )
+
                 Text(
-                    text = "5.000$",
+                    text = sum.toString(),
                     modifier = Modifier.weight(1f)
 
                 )
@@ -198,7 +203,7 @@ fun OrderingScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 onClick = {
-                    orderingViewModel.order()
+                    orderingViewModel.order(Order(3, "Ожидает подтверджения", sum, "05.04.2024", orderingViewModel.address, "54.843243 83.088801", 897, 1))
                     onToConfirmationClicked(orderingViewModel)
                 }
             ) {
