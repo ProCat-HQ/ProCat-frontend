@@ -2,6 +2,9 @@ package com.example.procatfirst
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,6 +27,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -42,7 +47,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.UserRoleRepository
+import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.ui.auth.AuthScreen
 
 import com.example.procatfirst.ui.auth.AuthViewModel
@@ -163,6 +170,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 )
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProCatApp (
     controller : Context,
@@ -239,6 +247,10 @@ fun ProCatApp (
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Tool.name)
                     },
+                    onNextButtonClicked1 = {
+                        CatalogCache.shared.setCurrent(it)
+                        navController.navigate(ProCatScreen.Tool.name)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp)
@@ -249,6 +261,7 @@ fun ProCatApp (
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Cart.name)
                     },
+                    tool = CatalogCache.shared.getCurrent(),
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp)

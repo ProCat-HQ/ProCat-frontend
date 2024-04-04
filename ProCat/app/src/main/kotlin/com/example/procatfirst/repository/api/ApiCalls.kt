@@ -1,14 +1,16 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
+import com.example.procatfirst.R
+import com.example.procatfirst.data.Tool
+import com.example.procatfirst.data.User
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.setUserRole
-import okhttp3.FormBody
+import com.example.procatfirst.repository.data_coordinator.setUserData
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -31,7 +33,7 @@ class ApiCalls {
         const val identifier = "[ApiCalls]"
     }
 
-    fun getItems() {
+    fun getItemsApi1() {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
             .baseUrl(url)
@@ -56,8 +58,78 @@ class ApiCalls {
                 Log.i("RESPONSE", response.raw().toString())
                 /* This will print the response of the network call to the Logcat */
                 // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
-                response.body()?.let { CatalogCache.shared.addCatalogStuff(it.items) }
+                response.body()?.let { CatalogCache.shared.addCatalogStuff(it.payload) }
 
+            }
+
+        })
+    }
+
+    fun getItemsApi() {
+        val t1 = Item(1, "Молоток", R.drawable.hammer, "Надёжный, качественный", "Масса: 0.4 кг", 350)
+        val t2 = Item(1, "Набор", R.drawable.set, "Практичный, прочный", "Масса: 0.45 кг", 800)
+        val toolsList = listOf(t1, t2)
+        CatalogCache.shared.addCatalogStuff(toolsList)
+    }
+
+    fun getItemsApi2() {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build()
+                .create(UserService::class.java)
+
+
+        service.getItems1("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+
+            /* The HTTP call failed. This method is run on the main thread */
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+                //!!!! TODO error intent !!!!
+                NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
+            }
+
+            /* The HTTP call was successful, we should still check status code and response body
+             * on a production app. This method is run on the main thread */
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                /* This will print the response of the network call to the Logcat */
+                // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
+                response.body()?.string()?.let { Log.i("RESPONSE", it) }
+            }
+
+        })
+    }
+
+    fun getUserDataApi(id : Int) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build()
+                .create(UserService::class.java)
+
+
+        service.getUser(id).enqueue(object : Callback<User> {
+
+            /* The HTTP call failed. This method is run on the main thread */
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+                //!!!! TODO error intent !!!!
+
+            }
+
+            /* The HTTP call was successful, we should still check status code and response body
+             * on a production app. This method is run on the main thread */
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                Log.i("RESPONSE", response.raw().toString())
+                /* This will print the response of the network call to the Logcat */
+                // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
+                response.body()?.let { UserDataCache.shared.setUserData(it) }
+                Log.i("UserData", UserDataCache.shared.getUserData().toString())
             }
 
         })

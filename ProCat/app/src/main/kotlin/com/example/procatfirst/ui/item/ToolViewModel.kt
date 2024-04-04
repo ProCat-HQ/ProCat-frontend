@@ -32,7 +32,7 @@ class ToolViewModel: ViewModel() {
         }
     }
 
-    fun addToCart() {
+    fun addToCart(tool : Tool) {
         val newAmount = _uiState.value.amount.plus(1)
         _uiState.update { currentState ->
             currentState.copy(
@@ -43,8 +43,9 @@ class ToolViewModel: ViewModel() {
         val extraTool = Tool(22, "Набор", R.drawable.set, "desc", "extras", 2000)
         this.viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                DataCoordinator.shared.addToolToUserCart(_uiState.value.tool)
-                DataCoordinator.shared.addToolToUserCart(extraTool)
+                //DataCoordinator.shared.addToolToUserCart(_uiState.value.tool)
+                DataCoordinator.shared.addToolToUserCart(tool)
+                //DataCoordinator.shared.addToolToUserCart(extraTool)
             }
         }
 

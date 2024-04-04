@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.BuildConfig
+import com.example.procatfirst.data.User
 import com.squareup.moshi.Json
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -32,6 +33,12 @@ interface UserService {
 
     @GET("/items")
     fun getItems(@Header("Authorization") token: String?): Call<ItemsResponse>
+
+    @GET("/items")
+    fun getItems1(@Header("Authorization") token: String?): Call<ResponseBody>
+
+    @GET("/users/{id}")
+    fun getUser(@Query("id") id: Int): Call<User>
 
     @GET("/orders")
     fun getOrders(): Call<ResponseBody>

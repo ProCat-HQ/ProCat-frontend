@@ -102,13 +102,12 @@ fun StartScreen(
 //            Text("Карта!")
 //        }
         Button(
-            onClick = { //ApiCalls.shared.geocoderApi() },
+            onClick = {
                 ApiCalls.shared.signUpApi("88005553535", "paSSword", "misha evdokimov") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(6.dp)
         ) {
-            //Text("Geocoder")
             Text("Register")
         }
         Button(
@@ -120,6 +119,17 @@ fun StartScreen(
         ) {
             //Text("Geocoder")
             Text("login")
+        }
+
+        Button(
+                onClick = { //ApiCalls.shared.geocoderApi() },
+                    ApiCalls.shared.getUserDataApi(1) },
+                modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp)
+        ) {
+            //Text("Geocoder")
+            Text("getUser")
         }
 
     }

@@ -1,6 +1,7 @@
 package com.example.procatfirst.ui.item
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.data.Tool
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
@@ -43,9 +46,10 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun ToolScreen(
-    toolViewModel: ToolViewModel = viewModel(),
-    onNextButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+        tool : Tool,
+        toolViewModel: ToolViewModel = viewModel(),
+        onNextButtonClicked: () -> Unit,
+        modifier: Modifier = Modifier
     ) {
     val toolUiState by toolViewModel.uiState.collectAsState()
 
@@ -64,7 +68,7 @@ fun ToolScreen(
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.hammer),
+            painter = painterResource(id = tool.imageResId),
             contentDescription = stringResource(id = R.string.hammer),
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,11 +77,12 @@ fun ToolScreen(
         )
 
         Text(
-            text = toolUiState.tool.name,
+            //text = toolUiState.tool.name,
+            text = tool.name,
             style = MaterialTheme.typography.titleLarge
         )
         Text(
-            text = "строительный",
+            text = "",
             style = MaterialTheme.typography.bodySmall
         )
         Divider(thickness = 1.dp, color = md_theme_light_onSurfaceVariant)
@@ -88,7 +93,7 @@ fun ToolScreen(
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            text = toolUiState.tool.description,
+            text = tool.description,
             style = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.height(5.dp))
@@ -97,12 +102,12 @@ fun ToolScreen(
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            text = toolUiState.tool.specifications,
+            text = tool.specifications,
             style = MaterialTheme.typography.bodyMedium
         )
 
         BottomBar(
-            addToCart = { toolViewModel.addToCart() },
+            addToCart = { toolViewModel.addToCart(tool) },
             toolViewModel
         )
 

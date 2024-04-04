@@ -10,6 +10,7 @@ import com.example.procatfirst.intents.sendIntent
 class CatalogCache {
 
     private var toolsStorage: MutableList<Tool> = mutableListOf()
+    private var currentTool: Tool = Tool(1, "?", 1, "?", "?", 1)
 
     companion object {
         val shared = CatalogCache()
@@ -20,12 +21,7 @@ class CatalogCache {
         if (toolsStorage.isEmpty()) {
             val resultList = mutableListOf<Tool>()
             for (i: Item in list) {
-                val img: Int = if(i.name == "Молоток") {
-                    R.drawable.hammer
-                } else {
-                    R.drawable.set
-                }
-                resultList.add(Tool(i.id, i.name, img, i.description, "", i.price))
+                resultList.add(Tool(i.id, i.name, i.imageResId, i.description, i.specifications, i.price))
             }
             toolsStorage.addAll(resultList)
             //intent
@@ -39,6 +35,14 @@ class CatalogCache {
 
     fun getCatalogStuff(): List<Tool> {
         return toolsStorage
+    }
+
+    fun getCurrent(): Tool {
+        return currentTool
+    }
+
+    fun setCurrent(tool : Tool){
+        currentTool = tool
     }
 
 

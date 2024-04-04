@@ -4,12 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataProvider
-import com.example.procatfirst.intents.NotificationCoordinator
-import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.intents.sendIntent
-import com.example.procatfirst.ui.auth.AuthUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -89,7 +84,7 @@ class ProfileViewModel: ViewModel() {
     private fun getUserProfileInfo() {
         val user = UserDataProvider.users[0];
         _uiState.value = _uiState.value.copy(
-            userId = user.userId,
+            userId = user.id,
             fullName = user.fullName,
             email = user.email,
             phoneNumber = user.phoneNumber,

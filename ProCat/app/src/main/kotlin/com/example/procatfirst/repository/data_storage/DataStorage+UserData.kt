@@ -25,7 +25,7 @@ suspend fun DataStorage.getUserDataFromMemory() : User {
     val result: User = try {
         json.decodeFromString(rowJson)
     } catch (e: RuntimeException) {
-        User(0, "?" ,"?", "?" ,"?", false, "?")
+        User(0, "?" ,"?", "?" ,"?", false, "?", "?", "?")
     }
     return result
 }
