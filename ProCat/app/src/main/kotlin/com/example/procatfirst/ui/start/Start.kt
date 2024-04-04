@@ -56,7 +56,8 @@ fun StartScreen(
     ) {
         Text(
             text = stringResource(R.string.welcome),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Text(
@@ -89,9 +90,9 @@ fun StartScreen(
             onClick = { onNextButtonClicked() },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(8.dp)
         ) {
-            Text(stringResource(R.string.next))
+            Text(stringResource(R.string.authorize))
         }
 //        Button(
 //            onClick = { context.startActivity(Intent(controller, MapActivity().javaClass)) },
@@ -106,7 +107,7 @@ fun StartScreen(
                 ApiCalls.shared.signUpApi("88005553535", "paSSword", "misha evdokimov") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(6.dp)
+                .padding(8.dp)
         ) {
             Text("Register")
         }
@@ -115,7 +116,7 @@ fun StartScreen(
                     ApiCalls.shared.signInApi("88005553535", "paSSword") },
                 modifier = Modifier
                         .fillMaxWidth()
-                        .padding(6.dp)
+                        .padding(8.dp)
         ) {
             //Text("Geocoder")
             Text("login")

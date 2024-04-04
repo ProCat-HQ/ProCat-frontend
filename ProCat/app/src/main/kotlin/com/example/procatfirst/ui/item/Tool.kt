@@ -98,11 +98,13 @@ fun ToolScreen(
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = stringResource(R.string.toolSpecifications),
+            //text = stringResource(R.string.toolSpecifications),
+            text = "Цена",
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            text = tool.specifications,
+            //text = tool.specifications,
+            text = tool.price.toString(),
             style = MaterialTheme.typography.bodyMedium
         )
 
@@ -110,6 +112,7 @@ fun ToolScreen(
             addToCart = { toolViewModel.addToCart(tool) },
             toolViewModel
         )
+
 
         ElevatedButton(
             onClick = { onNextButtonClicked() },

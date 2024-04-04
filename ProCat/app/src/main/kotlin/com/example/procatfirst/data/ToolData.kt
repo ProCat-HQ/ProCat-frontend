@@ -7,10 +7,11 @@ import kotlinx.serialization.Serializable
 data class Tool(
     val id: Int,
     val name: String,
-    val imageResId: Int,
     val description: String,
-    val specifications: String, //[]
-    val price: Int
+    val price: Int,
+    val isInStock: Boolean,
+    val categoryId: Int,
+    val imageResId: Int
 )
 
 
@@ -22,23 +23,26 @@ object ToolDataProvider {
             name = "Молоток",
             imageResId = R.drawable.hammer,
             description = "Очень качественный, громкий",
-            specifications = "Материал: пластик",
-            price = 200
+            price = 200,
+            isInStock = true,
+            categoryId = 1
         ),
         Tool(
             id = 2,
             name = "Набор",
             imageResId = R.drawable.set,
             description = "Все что надо - в одном месте",
-            specifications = "Материал: пластик",
-            price = 400
+            isInStock = true,
+            price = 400,
+            categoryId = 2
         ),
         Tool(
             id = 2,
             name = "Набор",
             imageResId = R.drawable.set,
             description = "Все что надо - в одном месте",
-            specifications = "Материал: пластик",
+            isInStock = false,
+            categoryId = 3,
             price = 400
         ),
     )

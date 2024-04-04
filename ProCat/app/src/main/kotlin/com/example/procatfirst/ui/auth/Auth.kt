@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
@@ -73,7 +74,7 @@ fun AuthScreen(
         Text(
             text = stringResource(R.string.app_name),
             style = typography.titleLarge,
-            color = md_theme_light_scrim
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         inputField(
@@ -93,7 +94,7 @@ fun AuthScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { authViewModel.check()}
+            onClick = { authViewModel.signIn()}
         ) {
             Text(
                 text = stringResource(R.string.sign_in),
@@ -102,6 +103,15 @@ fun AuthScreen(
         }
 
         OutlinedButton(
+            onClick = { onToRegistrationClick() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = stringResource(R.string.to_register))
+        }
+
+        TextButton(
 
             onClick = { authViewModel.forgotPassword() },
 
@@ -115,23 +125,6 @@ fun AuthScreen(
             )
         }
 
-        TextButton(
-            onClick = { onToRegistrationClick() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = stringResource(R.string.to_register))
-        }
-
-        Button(
-            onClick = { onNextButtonClicked() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(stringResource(R.string.next))
-        }
     }
 
 }

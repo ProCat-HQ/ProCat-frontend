@@ -1,13 +1,8 @@
 package com.example.procatfirst
 
-import android.app.Application
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,14 +20,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,23 +34,19 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.procatfirst.data.Tool
-import com.example.procatfirst.repository.UserRoleRepository
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.ui.auth.AuthScreen
-
 import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.cart.Cart
 import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.item.ToolViewModel
-import com.example.procatfirst.ui.managment.ManagerScreen
 import com.example.procatfirst.ui.managment.OrdersManagerScreen
+import com.example.procatfirst.ui.ordering.OrderConfirmation
 import com.example.procatfirst.ui.ordering.OrderingScreen
 import com.example.procatfirst.ui.personal.PersonalScreen
 import com.example.procatfirst.ui.personal.chats.ChatScreen
@@ -68,8 +57,6 @@ import com.example.procatfirst.ui.personal.orders.OrdersScreen
 import com.example.procatfirst.ui.personal.profile.ProfileScreen
 import com.example.procatfirst.ui.registration.RegistrationScreen
 import com.example.procatfirst.ui.start.StartScreen
-import com.example.procatfirst.ui.theme.md_theme_light_inversePrimary
-import com.example.procatfirst.ui.theme.md_theme_light_secondaryContainer
 import com.example.procatfirst.ui.tools.ToolsScreen
 
 
@@ -90,6 +77,8 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Delivery(title = R.string.ordering), // damn
     Registration(title = R.string.registration),
     Manager(title = R.string.manager), // damn
+    OrderConfirmation(title = R.string.order_confirmation),
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -137,15 +126,20 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Personal
     )
     BottomNavigation(
-        backgroundColor = md_theme_light_secondaryContainer,
-        contentColor = md_theme_light_secondaryContainer
+        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.secondaryContainer
     ) {
         items.forEach { item ->
             BottomNavigationItem(
                 icon = { Icon(item.icon, contentDescription = item.label) },
-                label = { Text(text = item.label, fontSize = 12.sp) },
-                selectedContentColor = md_theme_light_inversePrimary,
-                unselectedContentColor = Color.White.copy(0.4f),
+                label = {
+                    Text(
+                        text = item.label,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    ) },
+                selectedContentColor = MaterialTheme.colorScheme.inversePrimary,
+                unselectedContentColor = MaterialTheme.colorScheme.inversePrimary,
                 alwaysShowLabel = true,
                 selected = false,
                 onClick = {
@@ -378,7 +372,14 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Ordering.name) {
                 OrderingScreen(
-
+                    onToConfirmationClicked = {
+                        navController.navigate(ProCatScreen.OrderConfirmation.name)
+                    }
+                )
+            }
+            composable(route = ProCatScreen.OrderConfirmation.name) {
+                OrderConfirmation(
+                    orderingViewModel = viewModel()
                 )
             }
         }
