@@ -46,4 +46,7 @@ interface UserService {
     @GET("/cart")
     fun getItemsInCart(): Call<ResponseBody>
 
+    @GET("/users/admin/cluster")
+    fun amina(): Call<ResponseBody>
+
 }
