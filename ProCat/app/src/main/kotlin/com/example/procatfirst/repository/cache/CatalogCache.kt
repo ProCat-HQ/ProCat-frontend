@@ -23,7 +23,7 @@ class CatalogCache {
             for (i: Item in list) {
 
                 //resultList.add(Tool(i.id, i.name, i.imageResId, i.description, i.specifications, i.price))
-                resultList.add(Tool(i.id, i.name, i.description, i.price, false, 0, i.imageResId))
+                resultList.add(Tool(i.id, i.name, i.description, i.price, false, 0, i.images))
 
             }
             toolsStorage.addAll(resultList)

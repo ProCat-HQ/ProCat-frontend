@@ -11,6 +11,7 @@ import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.setUserData
+import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -33,7 +34,7 @@ class ApiCalls {
         const val identifier = "[ApiCalls]"
     }
 
-    fun getItemsApi1() {
+    fun getItemsApi2() {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
             .baseUrl(url)
@@ -65,14 +66,14 @@ class ApiCalls {
         })
     }
 
-    fun getItemsApi() {
-        val t1 = Item(1, "Молоток", R.drawable.hammer, "Надёжный, качественный", "Масса: 0.4 кг", 350)
-        val t2 = Item(1, "Набор", R.drawable.set, "Практичный, прочный", "Масса: 0.45 кг", 800)
-        val toolsList = listOf(t1, t2)
-        CatalogCache.shared.addCatalogStuff(toolsList)
-    }
+//    fun getItemsApi1() {
+//        val t1 = Item(1, "Молоток", R.drawable.hammer, "Надёжный, качественный", "Масса: 0.4 кг", 350)
+//        val t2 = Item(1, "Набор", R.drawable.set, "Практичный, прочный", "Масса: 0.45 кг", 800)
+//        val toolsList = listOf(t1, t2)
+//        CatalogCache.shared.addCatalogStuff(toolsList)
+//    }
 
-    fun getItemsApi2() {
+    fun getItemsApi() {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
                 .baseUrl(url)
@@ -97,7 +98,13 @@ class ApiCalls {
                 Log.i("RESPONSE", response.raw().toString())
                 /* This will print the response of the network call to the Logcat */
                 // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
-                response.body()?.string()?.let { Log.i("RESPONSE", it) }
+                response.body()?.string()?.let {
+                    Log.i("RESPONSE", it)
+                    //val str = "[{id: 1, name: \"Hello\", description: \"world\", price: 10, isInStock: false, images: 2, categoryId: 3}]"
+                    //Log.i("RESPONSE JSON", Json.decodeFromString(str))
+
+                }
+
             }
 
         })
