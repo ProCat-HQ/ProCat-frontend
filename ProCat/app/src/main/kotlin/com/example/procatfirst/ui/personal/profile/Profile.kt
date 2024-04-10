@@ -87,10 +87,7 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(
-                text = "Имя",
-                style = MaterialTheme.typography.titleLarge,
-        )
+        Text(text = "Профиль", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(16.dp))
         mutableField(
                 stringResource(R.string.fullname),
@@ -133,7 +130,6 @@ fun ProfileScreen(
                 )
             }
         }
-    }
         FilledTonalButton(
             modifier = Modifier
                 .fillMaxWidth()
@@ -148,6 +144,8 @@ fun ProfileScreen(
                 fontSize = 16.sp
             )
         }
+    }
+
 
         if (isChangePasswordDialogVisible) {
             ChangePasswordDialog(

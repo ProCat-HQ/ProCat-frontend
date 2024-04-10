@@ -39,7 +39,7 @@ class OrderingViewModel: ViewModel() {
         _uiState.value = _uiState.value.copy(selectedTimeToHour = selectedTimeToHour, selectedTimeToMinute = selectedTimeToMinute)
     }
 
-    fun updateSelectedAddress(address: String) {
+    private fun updateSelectedAddress(address: String) {
         _uiState.value = _uiState.value.copy(address = address)
     }
 
