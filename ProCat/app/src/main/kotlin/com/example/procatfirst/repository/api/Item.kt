@@ -1,5 +1,8 @@
 package com.example.procatfirst.repository.api
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Item(
     //place for Vadim
         val id: Int,

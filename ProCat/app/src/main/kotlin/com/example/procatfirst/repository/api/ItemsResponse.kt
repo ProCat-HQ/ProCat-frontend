@@ -1,7 +1,9 @@
 package com.example.procatfirst.repository.api
 
-//data class ItemsResponse(val items: List<Item>)
+import kotlinx.serialization.Serializable
 
+//data class ItemsResponse(val items: List<Item>)
+@Serializable
 data class ItemsResponse(
 
     val status: String,
