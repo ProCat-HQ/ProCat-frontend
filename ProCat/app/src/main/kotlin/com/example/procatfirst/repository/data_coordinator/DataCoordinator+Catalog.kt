@@ -5,7 +5,7 @@ import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.CatalogCache
 
 fun DataCoordinator.loadCatalog() {
-    ApiCalls.shared.getItems()
+    ApiCalls.shared.getItemsApi()
 }
 
 fun DataCoordinator.getCatalog() : List<Tool> {

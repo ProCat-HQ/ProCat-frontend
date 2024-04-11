@@ -22,6 +22,7 @@ import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 import ru.dublgis.dgismobile.mapsdk.mapObjectsByIds
 import android.content.Intent
+import com.example.procatfirst.repository.cache.AllOrdersCache
 
 
 class MapActivity : AppCompatActivity() {
@@ -61,7 +62,7 @@ class MapActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity().javaClass))
         }
 
-        val orders = OrderDataProvider.deliveryOrders
+        val orders = AllOrdersCache.shared.getAllOrders()//OrderDataProvider.deliveryOrders
         map?.let {
             for (order in orders) {
                 val marker = it.addMarker(

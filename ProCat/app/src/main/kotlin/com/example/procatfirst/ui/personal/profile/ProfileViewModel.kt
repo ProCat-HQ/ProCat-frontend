@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.personal.profile
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,11 +10,15 @@ import com.example.procatfirst.data.UserDataProvider
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
-import com.example.procatfirst.ui.auth.AuthUiState
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getUserData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ProfileViewModel: ViewModel() {
 
@@ -84,18 +89,38 @@ class ProfileViewModel: ViewModel() {
         updateUserEmail(userInputEmail)
     }
 
-
-
     private fun getUserProfileInfo() {
-        val user = UserDataProvider.users[0];
+        var trueUser : User? = null
+
+//        CoroutineScope(Dispatchers.IO).launch {
+//            trueUser = DataCoordinator.shared.getUserData()
+//            val user = UserDataProvider.users[0];
+//            _uiState.value = _uiState.value.copy(
+//                    userId = user.id,
+//                    //fullName = user.fullName,
+//                    fullName = trueUser!!.fullName,
+//                    email = trueUser!!.email,//user.email,
+//                    phoneNumber = user.phoneNumber,
+//                    identificationNumber = user.identificationNumber,
+//                    isConfirmed = user.isConfirmed,
+//                    role = trueUser!!.role//user.role
+//            )
+//            NotificationCoordinator.shared.sendIntent(SystemNotifications.myTestIntent)
+//        }
+
+
+
+
+                val user = UserDataProvider.users[0];
         _uiState.value = _uiState.value.copy(
-            userId = user.userId,
-            fullName = user.fullName,
-            email = user.email,
-            phoneNumber = user.phoneNumber,
-            identificationNumber = user.identificationNumber,
-            isConfirmed = user.isConfirmed,
-            role = user.role
+                userId = user.id,
+                fullName = user.fullName,
+
+                email = user.email,
+                phoneNumber = user.phoneNumber,
+                identificationNumber = user.identificationNumber,
+                isConfirmed = user.isConfirmed,
+                role = user.role
         )
     }
 

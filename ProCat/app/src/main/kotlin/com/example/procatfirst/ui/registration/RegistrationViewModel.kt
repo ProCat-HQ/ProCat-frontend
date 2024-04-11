@@ -4,13 +4,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
+import com.example.procatfirst.repository.api.ApiCalls
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class RegistrationViewModel: ViewModel()  {
     private val _uiState = MutableStateFlow(RegistrationUiState())
@@ -67,32 +70,36 @@ class RegistrationViewModel: ViewModel()  {
 
 
 
-    private fun checkUserPhoneNumber() {
-        if (userInputPhoneNumber == "1111") {
+    private fun checkUserPhoneNumber(): Boolean {
+        if (userInputPhoneNumber.length == 11) {
             //val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
             NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
-        } else {
-            _uiState.update { currentState ->
-                currentState.copy(enteredPhoneNumberWrong = true)
-            }
+            updateUserPhoneNumber("")
+            return true
+        }
+        _uiState.update { currentState ->
+            currentState.copy(enteredPhoneNumberWrong = true)
         }
         updateUserPhoneNumber("")
+        return false
     }
 
-    private fun checkUserPassword() {
-        if (userInputPassword.equals("1111", ignoreCase = true)) {
+    private fun checkUserPassword(): Boolean {
+        if (userInputPassword.length > 5) {
             NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
                     enteredPasswordWrong = false
                 )
             }
-        } else {
-            _uiState.update { currentState ->
-                currentState.copy(enteredPasswordWrong = true)
-            }
+            updateUserPassword("")
+            return true
+        }
+        _uiState.update { currentState ->
+            currentState.copy(enteredPasswordWrong = true)
         }
         updateUserPassword("")
+        return false
     }
 
     private fun checkUserLastName() {
@@ -143,8 +150,13 @@ class RegistrationViewModel: ViewModel()  {
         updateUserFatherName("")
     }
 
-    fun forgotPassword() {
-
+    fun signUp() {
+        if (checkUserPhoneNumber() && checkUserPassword()) {
+            val fullName: String = uiState.value.firstName + uiState.value.lastName + uiState.value.fatherName
+            viewModelScope.launch {
+                ApiCalls.shared.signUpApi(uiState.value.phoneNumber, uiState.value.password, fullName)
+            }
+        }
     }
 
     private fun open(){

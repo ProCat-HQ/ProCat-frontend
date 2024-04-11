@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
@@ -71,7 +72,7 @@ fun RegistrationScreen(
         Text(
             text = stringResource(R.string.app_name),
             style = typography.titleLarge,
-            color = md_theme_light_scrim
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         inputField(
@@ -106,7 +107,7 @@ fun RegistrationScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { registrationViewModel.check()}
+            onClick = { registrationViewModel.signUp()}
         ) {
             Text(
                 text = stringResource(R.string.register),

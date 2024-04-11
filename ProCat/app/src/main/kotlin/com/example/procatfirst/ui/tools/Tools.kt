@@ -57,6 +57,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ToolsScreen(
     onNextButtonClicked: () -> Unit,
+    onNextButtonClicked1: (Tool) -> Unit,
     toolsViewModel: ToolsViewModel = viewModel(),
     modifier: Modifier = Modifier
     ) {
@@ -133,7 +134,7 @@ fun ToolsScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 items(tools) { tool ->
-                    ToolCard(tool = tool, onNextButtonClicked)
+                    ToolCard(tool = tool, onNextButtonClicked1)
                 }
             }
         }
@@ -155,14 +156,14 @@ fun ToolsScreen(
 @Composable
 fun ToolCard(
     tool: Tool,
-    onNextButtonClicked: () -> Unit,
+    onNextButtonClicked: (Tool) -> Unit,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colorScheme.background)
-            .clickable { onNextButtonClicked() }
+            .clickable { onNextButtonClicked(tool) }
     ) {
         Column(
             modifier = Modifier

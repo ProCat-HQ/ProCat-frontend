@@ -40,7 +40,7 @@ class PostApi { //fake, i don't use it. But you can find some useful examples.
 
         CoroutineScope(Dispatchers.IO).launch {
             // Do the POST request and get response
-            val response = service.login(requestBody)
+          //  val response = service.login(requestBody)
 
 
         /*    withContext(Dispatchers.Main) {

@@ -46,10 +46,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.intents.SystemNotifications
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getUserData
+import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import com.example.procatfirst.ui.theme.md_theme_light_scrim
 import com.example.procatfirst.ui.theme.md_theme_light_tertiary
+import java.lang.Thread.sleep
 
 @Composable
 fun ProfileScreen(
@@ -58,6 +63,19 @@ fun ProfileScreen(
 ) {
     var isChangePasswordDialogVisible by remember { mutableStateOf(false) }
 
+    val isActive by remember { mutableStateOf(true) }
+
+//    val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
+//        override fun howToReactOnIntent() {
+//            isActive = false
+//
+//            isActive = true
+//        }
+//    }
+//
+//    receiver.CreateReceiver(intentToReact = SystemNotifications.myTestIntent)
+
+    if (isActive) {
     val profileUiState by profileViewModel.uiState.collectAsState()
 
     Column(
@@ -69,53 +87,49 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(
-            text = "Имя",
-            style = MaterialTheme.typography.titleLarge,
-        )
+        Text(text = "Профиль", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(16.dp))
         mutableField(
-            stringResource(R.string.fullname),
-            profileUiState.fullName,
-            userInput = profileViewModel.userInputFullName,
-            onUserInputChanged = { profileViewModel.updateUserFullName(it) },
-            onKeyboardDone = { profileViewModel.saveUserFullName() },
+                stringResource(R.string.fullname),
+                profileUiState.fullName,
+                userInput = profileViewModel.userInputFullName,
+                onUserInputChanged = { profileViewModel.updateUserFullName(it) },
+                onKeyboardDone = { profileViewModel.saveUserFullName() },
 
-            )
+                )
         mutableField(
-            stringResource(R.string.phone),
-            profileUiState.phoneNumber,
-            userInput = profileViewModel.userInputPhoneNumber,
-            onUserInputChanged = { profileViewModel.updateUserPhoneNumber(it) },
-            onKeyboardDone = { profileViewModel.saveUserPhoneNumber() },
+                stringResource(R.string.phone),
+                profileUiState.phoneNumber,
+                userInput = profileViewModel.userInputPhoneNumber,
+                onUserInputChanged = { profileViewModel.updateUserPhoneNumber(it) },
+                onKeyboardDone = { profileViewModel.saveUserPhoneNumber() },
         )
         mutableField(
-            stringResource(R.string.email),
-            profileUiState.email,
-            userInput = profileViewModel.userInputEmail,
-            onUserInputChanged = { profileViewModel.updateUserEmail(it) },
-            onKeyboardDone = { profileViewModel.saveUserEmail() },
-            )
+                stringResource(R.string.email),
+                profileUiState.email,
+                userInput = profileViewModel.userInputEmail,
+                onUserInputChanged = { profileViewModel.updateUserEmail(it) },
+                onKeyboardDone = { profileViewModel.saveUserEmail() },
+        )
         mutableField(
-            stringResource(R.string.inn),
-            profileUiState.identificationNumber,
-            userInput = profileViewModel.userInputIdentificationNumber,
-            onUserInputChanged = { profileViewModel.updateUserIdentificationNumber(it) },
-            onKeyboardDone = { profileViewModel.saveUserIdentificationNumber() },
+                stringResource(R.string.inn),
+                profileUiState.identificationNumber,
+                userInput = profileViewModel.userInputIdentificationNumber,
+                onUserInputChanged = { profileViewModel.updateUserIdentificationNumber(it) },
+                onKeyboardDone = { profileViewModel.saveUserIdentificationNumber() },
         )
         if (profileViewModel.uiState.value.isConfirmed) {
             Row(
-                modifier = Modifier.padding(16.dp)
-            ){
+                    modifier = Modifier.padding(16.dp)
+            ) {
                 Text(text = stringResource(R.string.inn_confirmed))
                 Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = stringResource(R.string.inn_confirmed),
-                    tint = md_theme_light_tertiary
+                        imageVector = Icons.Default.Check,
+                        contentDescription = stringResource(R.string.inn_confirmed),
+                        tint = md_theme_light_tertiary
                 )
             }
         }
-
         FilledTonalButton(
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,6 +144,8 @@ fun ProfileScreen(
                 fontSize = 16.sp
             )
         }
+    }
+
 
         if (isChangePasswordDialogVisible) {
             ChangePasswordDialog(
