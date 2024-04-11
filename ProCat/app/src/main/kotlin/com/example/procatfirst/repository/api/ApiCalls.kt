@@ -40,38 +40,6 @@ class ApiCalls {
         const val identifier = "[ApiCalls]"
     }
 
-    fun getItemsApi2() {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
-
-
-        service.getItems("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ItemsResponse> {
-
-            /* The HTTP call failed. This method is run on the main thread */
-            override fun onFailure(call: Call<ItemsResponse>, t: Throwable) {
-                t.printStackTrace()
-                Log.i("API", t.toString())
-                //!!!! TODO error intent !!!!
-                NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
-            }
-
-            /* The HTTP call was successful, we should still check status code and response body
-             * on a production app. This method is run on the main thread */
-            override fun onResponse(call: Call<ItemsResponse>, response: Response<ItemsResponse>) {
-                Log.i("RESPONSE", response.raw().toString())
-                /* This will print the response of the network call to the Logcat */
-                // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
-                response.body()?.let { CatalogCache.shared.addCatalogStuff(it.payload) }
-
-            }
-
-        })
-    }
-
 //    fun getItemsApi1() {
 //        val t1 = Item(1, "Молоток", R.drawable.hammer, "Надёжный, качественный", "Масса: 0.4 кг", 350)
 //        val t2 = Item(1, "Набор", R.drawable.set, "Практичный, прочный", "Масса: 0.45 кг", 800)
@@ -88,7 +56,7 @@ class ApiCalls {
                 .create(UserService::class.java)
 
 
-        service.getItems1("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+        service.getItems("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
 
             /* The HTTP call failed. This method is run on the main thread */
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -101,14 +69,12 @@ class ApiCalls {
             /* The HTTP call was successful, we should still check status code and response body
              * on a production app. This method is run on the main thread */
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Log.i("RESPONSE", response.raw().toString())
+                Log.i("RESPONSE ROW", response.raw().toString())
                 /* This will print the response of the network call to the Logcat */
                 // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
                 response.body()?.string()?.let {
                     Log.i("RESPONSE", it)
-                    //val str = "[{id: 1, name: \"Hello\", description: \"world\", price: 10, isInStock: false, images: 2, categoryId: 3}]"
-                    //Log.i("RESPONSE JSON", Json.decodeFromString(str))
-
+                    CatalogCache.shared.addCatalogStuff(Json.decodeFromString<List<Item>>(it))
                 }
 
             }

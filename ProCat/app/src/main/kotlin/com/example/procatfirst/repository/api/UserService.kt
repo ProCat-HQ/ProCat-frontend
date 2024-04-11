@@ -33,10 +33,7 @@ interface UserService {
     fun geocoder(): Call<ResponseBody>
 
     @GET("/items")
-    fun getItems(@Header("Authorization") token: String?): Call<ItemsResponse>
-
-    @GET("/items")
-    fun getItems1(@Header("Authorization") token: String?): Call<ResponseBody>
+    fun getItems(@Header("Authorization") token: String?): Call<ResponseBody>
 
     @GET("/users/{id}")
     fun getUser(@Query("id") id: Int): Call<User>
