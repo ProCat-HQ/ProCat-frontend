@@ -36,7 +36,7 @@ import ru.dublgis.dgismobile.mapsdk.LonLat
 class ApiCalls {
     companion object {
         val shared = ApiCalls()
-        const val BACKEND_URL = "http://10.0.2.2:8080"
+        const val BACKEND_URL = "http://79.137.205.181:8080"
         const val identifier = "[ApiCalls]"
     }
 
