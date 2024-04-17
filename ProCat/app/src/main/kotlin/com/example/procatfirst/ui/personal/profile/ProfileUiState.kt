@@ -7,5 +7,8 @@ data class ProfileUiState(
     val phoneNumber: String = "",
     val identificationNumber: String = "",
     val isConfirmed: Boolean = false,
-    val role: String = "user"
+    val role: String = "user",
+
+    val password: String = ""
+
 )

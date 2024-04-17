@@ -25,140 +25,140 @@ import retrofit2.http.Query
 interface UserService {
 
     @GET("/users")
-    fun getAllUsers(): Call<ResponseBody>
+    suspend fun getAllUsers(): Call<ResponseBody>
 
-    @GET("/users/userId")
-    fun getSimpleUser(): Call<ResponseBody>
+    @GET("/users/{userId}")
+    suspend fun getSimpleUser(@Query("userId") userId: Int): Call<ResponseBody>
 
-    @DELETE("/users/userId")
-    fun deleteUser()
+    @DELETE("/users/{userId}")
+    suspend fun deleteUser(@Query("userId") userId: Int)
 
     @POST("/users/sign-up")
-    fun register(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun register(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/sign-in")
-    fun login(@Body requestBody: RequestBody): Call<TokenResponse>
+    suspend fun login(@Body requestBody: RequestBody): Call<TokenResponse>
 
     @POST("/users/verification/send")
-    fun createNewVerificationCode(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun createNewVerificationCode(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/verification/check")
-    fun checkCode(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun checkCode(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("users/verification/iin")
-    fun postIin(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun postIin(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/change/iin-bin")
-    fun changeIin(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changeIin(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("users/change/fullname")
-    fun changeFullName(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changeFullName(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/change/password")
-    fun changePassword(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changePassword(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/change/phone")
-    fun changePhone(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changePhone(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/change/email")
-    fun changeEmail(@Body requestBody: RequestBody)
+    suspend fun changeEmail(@Body requestBody: RequestBody)
 
     @POST("users/change/role/{userId}")
-    fun changeRole(@Body requestBody: RequestBody)
+    suspend fun changeRole(@Query("userId") userId: Int, @Body requestBody: RequestBody)
 
     @GET("/users/deliverymen")
-    fun getAllDeliverymen(): Call<ResponseBody>
+    suspend fun getAllDeliverymen(): Call<ResponseBody>
 
     @GET("/users/deliverymen/{deliveryId}")
-    fun getDeliveryMan(): Call<ResponseBody>
+    suspend fun getDeliveryMan(@Query("deliveryId") deliveryId: Int): Call<ResponseBody>
 
     @POST("/users/deliverymen/{userId}")
-    fun createDeliveryManFromUser(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun createDeliveryManFromUser(@Query("userId") userId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @PATCH("/users/deliverymen/{deliverymanId}")
-    fun changeDeliverymanData(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changeDeliverymanData(@Query("deliveryId") deliveryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @DELETE("/users/deliverymen/{deliverymanId}")
-    fun deleteDeliveryman(): Call<ResponseBody>
+    suspend fun deleteDeliveryman(@Query("deliveryId") deliveryId: Int): Call<ResponseBody>
 
     @GET("/users/deliverymen/deliveries/")
-    fun getAllDeliveries(): Call<ResponseBody>
+    suspend fun getAllDeliveries(): Call<ResponseBody>
 
     @GET("/users/deliverymen/deliveries/{deliverymanId}")
-    fun getDeliveriesForDeliveryman(): Call<ResponseBody>
+    suspend fun getDeliveriesForDeliveryman(@Query("deliveryId") deliveryId: Int): Call<ResponseBody>
 
     @PATCH("/users/deliverymen/deliveries/{deliverymanId}")
-    fun changeStatusForDeliveryman(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changeStatusForDeliveryman(@Query("deliveryId") deliveryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/deliverymen/deliveries/create-route")
-    fun createRouteFromDeliveryman(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun createRouteFromDeliveryman(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/admin/cluster")
-    fun makeCluster(): Call<ResponseBody>
+    suspend fun makeCluster(): Call<ResponseBody>
 
     @GET("/users/admin/deliveries-to-sort")
-    fun getAllDeliveriesAfterClustering(): Call<ResponseBody>
+    suspend fun getAllDeliveriesAfterClustering(): Call<ResponseBody>
 
     @PATCH("/users/admin/change-delivery")
-    fun changeDelivery(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changeDelivery(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/cart/")
-    fun getItemsInCart(): Call<ResponseBody>
+    suspend fun getItemsInCart(): Call<ResponseBody>
 
     @POST("users/cart")
-    fun postCart(@Body requestBody: RequestBody)
+    suspend fun postCart(@Body requestBody: RequestBody)
 
     @DELETE("/users/cart")
-    fun deleteItemFromCart(@Body requestBody: RequestBody)
+    suspend fun deleteItemFromCart(@Body requestBody: RequestBody)
 
     @GET("/users/orders/")
-    fun getOrders(): Call<ResponseBody>
+    suspend fun getOrders(): Call<ResponseBody>
 
     @GET("/users/orders/{orderId}")
-    fun getOrder(): Call<ResponseBody>
+    suspend fun getOrder(@Query("orderId") orderId: Int): Call<ResponseBody>
 
     @POST("/users/orders/")
-    fun createNewOrder(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun createNewOrder(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/orders/cancel/{orderId}")
-    fun setStatusOfOrder(): Call<ResponseBody>
+    suspend fun setStatusOfOrder(@Query("orderId") orderId: Int): Call<ResponseBody>
 
     @PATCH("/users/orders/status/{orderId}")
-    fun changeStatusOfOrder(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changeStatusOfOrder(@Query("orderId") orderId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/orders/payment/{orderId}")
-    fun getInfoAboutPayments(@Body requestBody: RequestBody)
+    suspend fun getInfoAboutPayments(@Query("orderId") orderId: Int): Call<ResponseBody>
 
     @PATCH("/users/orders/payment/{paymentId}")
-    fun updatePaymentInfo(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun updatePaymentInfo(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/subscriptions/")
-    fun getAllSubsForUser(): Call<ResponseBody>
+    suspend fun getAllSubsForUser(): Call<ResponseBody>
 
     @POST("/users/subscriptions/")
-    fun addItemIdToSubs(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun addItemIdToSubs(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/notifications/")
-    fun getAllNotifications(): Call<ResponseBody>
+    suspend fun getAllNotifications(): Call<ResponseBody>
 
     @POST("/users/notifications/{usersId}")
-    fun sendNotification(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun sendNotification(@Query("usersId") usersId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @PATCH("/users/notifications/{notificationId}")
-    fun setNotificationToViewed(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun setNotificationToViewed(@Query("notificationId") notificationId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @DELETE("/users/notifications/{notificationId}")
-    fun deleteNotification(): Call<ResponseBody>
+    suspend fun deleteNotification(@Query("notificationId") notificationId: Int): Call<ResponseBody>
 
     @GET("geocode?q=Новосибирск, Пирогова 1&fields=items.point&key=${BuildConfig.apiKey}")
     fun geocoder(): Call<ResponseBody>
 
     @GET("/items")
-    fun getItems(@Header("Authorization") token: String?): Call<ResponseBody>
+    suspend fun getItems(@Header("Authorization") token: String?): Call<ResponseBody>
 
-    @GET("/users/{id}")
-    fun getUser(@Query("id") id: Int): Call<User>
+    @GET("/users/{userId}")
+    suspend fun getUser(@Query("userId") userId: Int): Call<User>
 
-    fun amina(): Call<ResponseBody>
+    suspend fun amina(): Call<ResponseBody>
 
 }

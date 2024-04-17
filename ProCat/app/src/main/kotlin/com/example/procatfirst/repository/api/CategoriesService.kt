@@ -8,21 +8,22 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface CategoriesService {
 
-    @POST("/categories/categoryId")
-    fun createCategory(@Body requestBody: RequestBody): Call<ResponseBody>
+    @POST("/categories/{categoryId}")
+    suspend fun createCategory(@Query("categoryId") categoryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
-    @GET("/categories/route/categoryId")
-    fun getCategoryRoute(): Call<ResponseBody>
+    @GET("/categories/route/{categoryId}")
+    suspend fun getCategoryRoute(@Query("categoryId") categoryId: Int): Call<ResponseBody>
 
-    @GET("/categories/categoryId")
-    fun getAllCategories():Call<ResponseBody>
+    @GET("/categories/{categoryId}")
+    suspend fun getAllCategories(@Query("categoryId") categoryId: Int):Call<ResponseBody>
 
-    @PATCH("/categories/categoryId")
-    fun editName(@Body requestBody: RequestBody):Call<ResponseBody>
+    @PATCH("/categories/{categoryId}")
+    suspend fun editName(@Query("categoryId") categoryId: Int, @Body requestBody: RequestBody):Call<ResponseBody>
 
-    @DELETE("/categories/categoryId")
-    fun deleteRoute(@Body requestBody: RequestBody):Call<ResponseBody>
+    @DELETE("/categories/{categoryId}")
+    suspend fun deleteRoute(@Query("categoryId") categoryId: Int):Call<ResponseBody>
 }

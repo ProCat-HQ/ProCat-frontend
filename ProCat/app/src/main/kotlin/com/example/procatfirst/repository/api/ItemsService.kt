@@ -9,43 +9,44 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Query
 
 interface ItemsService {
 
-    @POST("/items/categoryId")
-    fun createCategory(@Body requestBody: RequestBody): Call<ResponseBody>
+    @POST("/items/{categoryId}")
+    suspend fun createCategory(@Query("categoryId") categoryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/items") //query params
-    fun getAllItems(): Call<ResponseBody>
+    suspend fun getAllItems(): Call<ResponseBody>
 
-    @GET("/items/itemId")
-    fun getItemWithInfo(@Body requestBody: RequestBody): Call<ResponseBody>
+    @GET("/items/{itemId}")
+    suspend fun getItemWithInfo(@Query("itemId") itemId: Int): Call<ResponseBody>
 
-    @DELETE("/items/itemId")
-    fun deleteItem(): Call<ResponseBody>
+    @DELETE("/items/{itemId}")
+    suspend fun deleteItem(@Query("itemId") itemId: Int): Call<ResponseBody>
 
-    @PATCH("/items/itemId")
-    fun editItem(@Body requestBody: RequestBody): Call<ResponseBody>
+    @PATCH("/items/{itemId}")
+    suspend fun editItem(@Query("itemId") itemId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/items")
-    fun createItem(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun createItem(@Body requestBody: RequestBody): Call<ResponseBody>
 
-    @PUT("/items/stock/itemId")
-    fun createOrChangeStock(@Body requestBody: RequestBody): Call<ResponseBody>
+    @PUT("/items/stock/{itemId}")
+    suspend fun createOrChangeStock(@Query("itemId") itemId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
-    @POST("/items/infos/itemId")
-    fun addCharacteristics(@Body requestBody: RequestBody): Call<ResponseBody>
+    @POST("/items/infos/{itemId}")
+    suspend fun addCharacteristics(@Query("itemId") itemId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
-    @DELETE("/items/infos/itemId")
-    fun deleteInfos(@Body requestBody: RequestBody): Call<ResponseBody>
+    @DELETE("/items/infos/{itemId}")
+    suspend fun deleteInfos(@Query("itemId") itemId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
-    @PATCH("/items/infos/itemId")
-    fun changeInfo(@Body requestBody: RequestBody): Call<ResponseBody>
+    @PATCH("/items/infos/{itemId}")
+    suspend fun changeInfo(@Query("itemId") itemId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
-    @POST("/items/images/itemId")
-    fun addImagesToItem(@Body requestBody: RequestBody): Call<ResponseBody>
+    @POST("/items/images/{itemId}")
+    suspend fun addImagesToItem(@Query("itemId") itemId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
-    @DELETE("/items/images/itemId")
-    fun deleteImages(@Body requestBody: RequestBody): Call<ResponseBody>
+    @DELETE("/items/images/{itemId}")
+    suspend fun deleteImages(@Query("itemId") itemId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
 }

@@ -47,7 +47,7 @@ class ApiCalls {
 //        CatalogCache.shared.addCatalogStuff(toolsList)
 //    }
 
-    fun getItemsApi() {
+    suspend fun getItemsApi() {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
                 .baseUrl(url)
@@ -82,7 +82,7 @@ class ApiCalls {
         })
     }
 
-    fun getUserDataApi(id : Int) {
+    suspend fun getUserDataApi(id : Int) {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
                 .baseUrl(url)
@@ -114,7 +114,7 @@ class ApiCalls {
         })
     }
 
-    fun aminaApi() {
+    suspend fun aminaApi() {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
                 .baseUrl(url)
@@ -143,7 +143,7 @@ class ApiCalls {
         })
     }
 
-    public fun signUpApi(login: String, password: String, name: String)  {
+    public suspend fun signUpApi(login: String, password: String, name: String)  {
 
         val service = Retrofit.Builder()
             .baseUrl(BACKEND_URL)
@@ -181,7 +181,7 @@ class ApiCalls {
 
     }
 
-    public fun signInApi(login: String, password: String)  {
+    public suspend fun signInApi(login: String, password: String)  {
 
         val service = Retrofit.Builder()
                 .baseUrl(BACKEND_URL)
@@ -221,8 +221,8 @@ class ApiCalls {
 
     }
 
-    public fun courierDistributionApi()  {
 
+    suspend fun changeFullNameApi(fullName: String, password: String)  {
         val service = Retrofit.Builder()
             .baseUrl(BACKEND_URL)
             .addConverterFactory(MoshiConverterFactory.create())
@@ -230,35 +230,22 @@ class ApiCalls {
             .create(UserService::class.java)
 
         val jsonObject = JSONObject()
+        jsonObject.put("password", password)
+        jsonObject.put("fullName", fullName)
+
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
 
-        //-----------------------
-        val deliveries = listOf(
-            Delivery(54.849023, 83.109914, 105),
-            Delivery(54.864174, 83.092518, 106),
-            Delivery(54.850213, 83.046704, 107),
-            Delivery(54.837411, 83.112056, 108)
-        )
-
-        val deliveryMan1 = DeliveryMan(1, deliveries)
-
-        val deliveries2 = listOf(
-            Delivery(55.04868, 82.988786, 101),
-            Delivery(54.98254, 82.814378, 102),
-            Delivery(54.96244, 82.885103, 103),
-            Delivery(54.988017, 83.015966, 104)
-        )
-
-        val deliveryMan2 = DeliveryMan(2, deliveries2)
-
-        val apiResponse = ApiResponseDelivery("ok", listOf(deliveryMan1, deliveryMan2))
-
-        val jsonObject2 = JSONObject(apiResponse.toString())
-        //-------------------
+        service.changeFullName(requestBody).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("RESPONSE", "Fail")
+            }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                response.body()?.string()?.let { Log.i("RESPONSE", it) }
+            }
+        })
 
     }
-
-
 
 
     public fun geocoderApi()  {

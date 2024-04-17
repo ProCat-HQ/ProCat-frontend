@@ -5,11 +5,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataProvider
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
+import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.getUserData
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +22,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+
+// TODO password required for changes
 class ProfileViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -42,6 +46,10 @@ class ProfileViewModel: ViewModel() {
             currentState.copy(phoneNumber = userInputPhoneNumber)
         }
         updateUserPhoneNumber(userInputPhoneNumber)
+
+        viewModelScope.launch {
+            //ApiCalls.shared.
+        }
     }
 
     //FullName
@@ -57,6 +65,10 @@ class ProfileViewModel: ViewModel() {
             currentState.copy(fullName = userInputFullName)
         }
         updateUserFullName(userInputFullName)
+
+        viewModelScope.launch {
+            ApiCalls.shared.changeFullNameApi(_uiState.value.fullName, _uiState.value.password)
+        }
     }
 
     //IdentificationNumber
@@ -72,6 +84,10 @@ class ProfileViewModel: ViewModel() {
             currentState.copy(identificationNumber = userInputIdentificationNumber)
         }
         updateUserIdentificationNumber(userInputIdentificationNumber)
+
+        viewModelScope.launch {
+            //ApiCalls.shared.
+        }
     }
 
     //Email
@@ -87,6 +103,10 @@ class ProfileViewModel: ViewModel() {
             currentState.copy(email = userInputEmail)
         }
         updateUserEmail(userInputEmail)
+
+        viewModelScope.launch {
+            //ApiCalls.shared.
+        }
     }
 
     private fun getUserProfileInfo() {
