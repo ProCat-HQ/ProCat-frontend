@@ -5,9 +5,8 @@ data class UserResponse(
     val phone: String,
     val id: String,
     val fullName: String,
-
 )
 
 data class TokenResponse(
-        val token: String,
+    val token: String,
 )

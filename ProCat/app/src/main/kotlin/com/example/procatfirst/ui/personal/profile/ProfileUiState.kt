@@ -9,6 +9,6 @@ data class ProfileUiState(
     val isConfirmed: Boolean = false,
     val role: String = "user",
 
-    val password: String = ""
+    val password: String = "",
 
 )

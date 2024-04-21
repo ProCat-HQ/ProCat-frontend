@@ -23,7 +23,6 @@ class RegistrationViewModel: ViewModel()  {
         open()
     }
 
-
     var userInputPhoneNumber by mutableStateOf("")
         private set
 
@@ -70,40 +69,38 @@ class RegistrationViewModel: ViewModel()  {
 
 
 
-    private fun checkUserPhoneNumber(): Boolean {
+    fun checkUserPhoneNumber() {
         if (userInputPhoneNumber.length == 11) {
             //val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
             NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
-            updateUserPhoneNumber("")
-            return true
+            _uiState.update { currentState ->
+                currentState.copy(enteredPhoneNumberWrong = false)
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(enteredPhoneNumberWrong = true)
+            }
         }
-        _uiState.update { currentState ->
-            currentState.copy(enteredPhoneNumberWrong = true)
-        }
-        updateUserPhoneNumber("")
-        return false
+
     }
 
-    private fun checkUserPassword(): Boolean {
-        if (userInputPassword.length > 5) {
+     fun checkUserPassword() {
+        if (userInputPassword.length < 3) {
             NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
-                    enteredPasswordWrong = false
+                    enteredPasswordWrong = true
                 )
             }
-            updateUserPassword("")
-            return true
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(enteredPasswordWrong = false)
+            }
         }
-        _uiState.update { currentState ->
-            currentState.copy(enteredPasswordWrong = true)
-        }
-        updateUserPassword("")
-        return false
     }
 
-    private fun checkUserLastName() {
-        if (userInputLastName.equals("LastName", ignoreCase = true)) {
+    fun checkUserLastName() {
+        if (userInputLastName.length < 2) {
             NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
@@ -115,11 +112,10 @@ class RegistrationViewModel: ViewModel()  {
                 currentState.copy(enteredLastNameWrong = true)
             }
         }
-        updateUserLastName("")
     }
 
-    private fun checkUserFirstName() {
-        if (userInputFirstName.equals("FirstName", ignoreCase = true)) {
+    fun checkUserFirstName() {
+        if (userInputFirstName.length < 2) {
             NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
@@ -131,36 +127,54 @@ class RegistrationViewModel: ViewModel()  {
                 currentState.copy(enteredFirstNameWrong = true)
             }
         }
-        updateUserFirstName("")
     }
 
-    private fun checkUserFatherName() {
-        if (userInputFatherName.equals("FatherName", ignoreCase = true)) {
-            NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
-            _uiState.update { currentState ->
-                currentState.copy(
-                    enteredFatherNameWrong = false
-                )
-            }
-        } else {
-            _uiState.update { currentState ->
-                currentState.copy(enteredFatherNameWrong = true)
-            }
+    fun checkUserFatherName() {
+        NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
+        _uiState.update { currentState ->
+            currentState.copy(
+                enteredFatherNameWrong = false
+            )
         }
-        updateUserFatherName("")
+    }
+
+
+    var isInputCodeDialogVisible by mutableStateOf(false)
+        private set
+
+    var userInputCode by mutableStateOf("")
+        private set
+
+    fun updateUserCode(enteredCode: String){
+        userInputCode = enteredCode
+    }
+
+    fun checkCode() {
+
+    }
+    fun closeDialog() {
+        isInputCodeDialogVisible = false
+    }
+    fun sendCodeAgain() {
+
     }
 
     fun signUp() {
-        if (checkUserPhoneNumber() && checkUserPassword()) {
+        if (!_uiState.value.enteredLastNameWrong && !_uiState.value.enteredPhoneNumberWrong
+            && !_uiState.value.enteredFirstNameWrong && !_uiState.value.enteredPasswordWrong) {
             val fullName: String = uiState.value.firstName + uiState.value.lastName + uiState.value.fatherName
-            viewModelScope.launch {
-                ApiCalls.shared.signUpApi(uiState.value.phoneNumber, uiState.value.password, fullName)
-            }
+            //viewModelScope.launch {
+            //    ApiCalls.shared.signUpApi(uiState.value.phoneNumber, uiState.value.password, fullName)
+            //}
+            isInputCodeDialogVisible = true
         }
     }
 
     private fun open(){
         _uiState.value = RegistrationUiState()
     }
+
+
+
 
 }

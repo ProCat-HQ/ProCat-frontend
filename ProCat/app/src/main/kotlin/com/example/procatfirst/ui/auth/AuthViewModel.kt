@@ -87,7 +87,7 @@ class AuthViewModel(
     }
 
     private fun checkUserPassword(): Boolean {
-        if (userInputPassword.length > 5) {
+        if (userInputPassword.length > 2) {
             NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
@@ -107,7 +107,7 @@ class AuthViewModel(
     }
 
     fun signIn() {
-        if (checkUserPassword() && checkUserPhoneNumber()) {
+         if (checkUserPassword() && checkUserPhoneNumber()) {
             viewModelScope.launch {
                 ApiCalls.shared.signInApi(uiState.value.phoneNumber, uiState.value.password)
             }

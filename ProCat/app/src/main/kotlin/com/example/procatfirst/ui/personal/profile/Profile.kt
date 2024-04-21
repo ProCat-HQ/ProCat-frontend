@@ -95,7 +95,7 @@ fun ProfileScreen(
                 userInput = profileViewModel.userInputFullName,
                 onUserInputChanged = { profileViewModel.updateUserFullName(it) },
                 onKeyboardDone = { profileViewModel.saveUserFullName() },
-
+                saveChanges = {profileViewModel.fullSaveUserFullName() }
                 )
         mutableField(
                 stringResource(R.string.phone),
@@ -103,6 +103,7 @@ fun ProfileScreen(
                 userInput = profileViewModel.userInputPhoneNumber,
                 onUserInputChanged = { profileViewModel.updateUserPhoneNumber(it) },
                 onKeyboardDone = { profileViewModel.saveUserPhoneNumber() },
+                saveChanges = {profileViewModel.fullSaveUserPhoneNumber() }
         )
         mutableField(
                 stringResource(R.string.email),
@@ -110,6 +111,7 @@ fun ProfileScreen(
                 userInput = profileViewModel.userInputEmail,
                 onUserInputChanged = { profileViewModel.updateUserEmail(it) },
                 onKeyboardDone = { profileViewModel.saveUserEmail() },
+                saveChanges = {profileViewModel.fullSaveUserEmail() }
         )
         mutableField(
                 stringResource(R.string.inn),
@@ -117,6 +119,7 @@ fun ProfileScreen(
                 userInput = profileViewModel.userInputIdentificationNumber,
                 onUserInputChanged = { profileViewModel.updateUserIdentificationNumber(it) },
                 onKeyboardDone = { profileViewModel.saveUserIdentificationNumber() },
+                saveChanges = {profileViewModel.fullSaveUserIdentificationNumber() }
         )
         if (profileViewModel.uiState.value.isConfirmed) {
             Row(
@@ -168,6 +171,7 @@ fun mutableField(
     userInput: String,
     onUserInputChanged: (String) -> Unit,
     onKeyboardDone: () -> Unit,
+    saveChanges: () -> Unit
 ) {
     var isChangeVisible by remember { mutableStateOf(false) }
 
@@ -222,6 +226,14 @@ fun mutableField(
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = stringResource(R.string.edit)
+                    )
+                }
+                IconButton(
+                    onClick = { saveChanges() },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = stringResource(R.string.save)
                     )
                 }
             }

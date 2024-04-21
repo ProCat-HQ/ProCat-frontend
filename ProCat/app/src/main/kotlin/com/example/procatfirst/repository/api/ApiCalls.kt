@@ -8,6 +8,7 @@ import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryMan
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.data.User
+import com.example.procatfirst.data.UsersResponse
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
@@ -47,7 +48,7 @@ class ApiCalls {
 //        CatalogCache.shared.addCatalogStuff(toolsList)
 //    }
 
-    suspend fun getItemsApi() {
+    fun getItemsApi() {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
                 .baseUrl(url)
@@ -143,7 +144,7 @@ class ApiCalls {
         })
     }
 
-    public suspend fun signUpApi(login: String, password: String, name: String)  {
+    suspend fun signUpApi(login: String, password: String, name: String)  {
 
         val service = Retrofit.Builder()
             .baseUrl(BACKEND_URL)
@@ -181,7 +182,7 @@ class ApiCalls {
 
     }
 
-    public suspend fun signInApi(login: String, password: String)  {
+    suspend fun signInApi(login: String, password: String)  {
 
         val service = Retrofit.Builder()
                 .baseUrl(BACKEND_URL)
@@ -189,38 +190,53 @@ class ApiCalls {
                 .build()
                 .create(UserService::class.java)
 
-        /* Calls the endpoint set on getUsers (/api) from UserService using enqueue method
-         * that creates a new worker thread to make the HTTP call */
-
         val jsonObject = JSONObject()
         jsonObject.put("phoneNumber", login)
         jsonObject.put("password", password)
 
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
-
         service.login(requestBody).enqueue(object : Callback<TokenResponse> { //ResponseBody
-
-            /* The HTTP call failed. This method is run on the main thread */
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("RESPONSE", "Fail")
             }
-
-            /* The HTTP call was successful, we should still check status code and response body
-             * on a production app. This method is run on the main thread */
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-                /* This will print the response of the network call to the Logcat */
                 response.body()?.let {
                     UserDataCache.shared.setUserToken(it.token)
                     Log.i("RESPONSE", it.token)
                 }
-
             }
-
         })
-
+        /*
+        try {
+            val response = service.login(requestBody)
+            UserDataCache.shared.setUserToken(response.token)
+            Log.i("RESPONSE", response.token)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.i("RESPONSE", "Fail")
+        } */
     }
 
+    suspend fun getAllUsersApi()  {
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+        // TODO can use Moshi
+        try {
+            val userResponse = service.getAllUsers()
+            Log.i("RESPONSE", "Status: ${userResponse.status}, Message: ${userResponse.message}")
+            for (user in userResponse.payload.rows) {
+                Log.i("USER", "ID: ${user.id}, Name: ${user.fullName}, Email: ${user.email}")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("RESPONSE", "Error: ${e.message}")
+        }
+
+    }
 
     suspend fun changeFullNameApi(fullName: String, password: String)  {
         val service = Retrofit.Builder()
@@ -246,9 +262,7 @@ class ApiCalls {
         })
 
     }
-
-
-    public fun geocoderApi()  {
+    fun geocoderApi()  {
 
         val service = Retrofit.Builder()
             .baseUrl("https://catalog.api.2gis.com/3.0/items/")

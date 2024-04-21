@@ -33,6 +33,7 @@ class ProfileViewModel: ViewModel() {
         getUserProfileInfo()
     }
 
+
     //Phone Number
     var userInputPhoneNumber by mutableStateOf(_uiState.value.phoneNumber)
         private set
@@ -46,8 +47,11 @@ class ProfileViewModel: ViewModel() {
             currentState.copy(phoneNumber = userInputPhoneNumber)
         }
         updateUserPhoneNumber(userInputPhoneNumber)
+    }
 
+    fun fullSaveUserPhoneNumber() {
         viewModelScope.launch {
+            // password is needed. Idea: load password from local
             //ApiCalls.shared.
         }
     }
@@ -65,9 +69,11 @@ class ProfileViewModel: ViewModel() {
             currentState.copy(fullName = userInputFullName)
         }
         updateUserFullName(userInputFullName)
+    }
 
+    fun fullSaveUserFullName() {
         viewModelScope.launch {
-            ApiCalls.shared.changeFullNameApi(_uiState.value.fullName, _uiState.value.password)
+            //ApiCalls.shared.
         }
     }
 
@@ -84,7 +90,8 @@ class ProfileViewModel: ViewModel() {
             currentState.copy(identificationNumber = userInputIdentificationNumber)
         }
         updateUserIdentificationNumber(userInputIdentificationNumber)
-
+    }
+    fun fullSaveUserIdentificationNumber() {
         viewModelScope.launch {
             //ApiCalls.shared.
         }
@@ -103,7 +110,8 @@ class ProfileViewModel: ViewModel() {
             currentState.copy(email = userInputEmail)
         }
         updateUserEmail(userInputEmail)
-
+    }
+    fun fullSaveUserEmail() {
         viewModelScope.launch {
             //ApiCalls.shared.
         }
@@ -129,9 +137,7 @@ class ProfileViewModel: ViewModel() {
 //        }
 
 
-
-
-                val user = UserDataProvider.users[0];
+        val user = UserDataProvider.users[0];
         _uiState.value = _uiState.value.copy(
                 userId = user.id,
                 fullName = user.fullName,

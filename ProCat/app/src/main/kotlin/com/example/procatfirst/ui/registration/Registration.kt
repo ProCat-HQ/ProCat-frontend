@@ -2,6 +2,7 @@ package com.example.procatfirst.ui.registration
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -9,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -19,13 +21,19 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import androidx.compose.ui.unit.dp
@@ -78,27 +86,27 @@ fun RegistrationScreen(
         inputField(
             userInputLastName = registrationViewModel.userInputLastName,
             onUserLastNameChanged = { registrationViewModel.updateUserLastName(it) },
-            onKeyboardDoneLn = { registrationViewModel.check() },
+            onKeyboardDoneLn = { registrationViewModel.checkUserLastName() },
             isLastNameWrong = registrationUiState.enteredLastNameWrong,
 
             userInputFirstName = registrationViewModel.userInputFirstName,
             onUserFirstNameChanged = { registrationViewModel.updateUserFirstName(it) },
-            onKeyboardDoneFn = { registrationViewModel.check() },
+            onKeyboardDoneFn = { registrationViewModel.checkUserFirstName() },
             isFirstNameWrong = registrationUiState.enteredFirstNameWrong,
 
             userInputFatherName = registrationViewModel.userInputFatherName,
             onUserFatherNameChanged = { registrationViewModel.updateUserFatherName(it) },
-            onKeyboardDoneFan = { registrationViewModel.check() },
+            onKeyboardDoneFan = { registrationViewModel.checkUserFatherName() },
             isFatherNameWrong = registrationUiState.enteredFatherNameWrong,
 
             userInputPhoneNumber = registrationViewModel.userInputPhoneNumber,
             onUserPhoneNumberChanged = { registrationViewModel.updateUserPhoneNumber(it) },
-            onKeyboardDone2 = { registrationViewModel.check() },
+            onKeyboardDone2 = { registrationViewModel.checkUserPhoneNumber() },
             isPhoneNumberWrong = registrationUiState.enteredPhoneNumberWrong,
 
             userInputPassword = registrationViewModel.userInputPassword,
             onUserPasswordChanged = { registrationViewModel.updateUserPassword(it) },
-            onKeyboardDone = { registrationViewModel.check() },
+            onKeyboardDone = { registrationViewModel.checkUserPassword() },
             isPasswordWrong = registrationUiState.enteredPasswordWrong
         )
 
@@ -114,7 +122,19 @@ fun RegistrationScreen(
                 fontSize = 16.sp
             )
         }
+        OutlinedButton(
+            onClick = { onToAuthClick() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = stringResource(R.string.to_auth))
+        }
 
+
+        if (registrationViewModel.isInputCodeDialogVisible) {
+            InputCodeDialog(registrationViewModel, registrationUiState)
+        }
 
     }
 
@@ -288,6 +308,57 @@ fun inputField(
         )
 
     }
+}
+
+
+@Composable
+fun InputCodeDialog(
+    registrationViewModel: RegistrationViewModel,
+    registrationUiState: RegistrationUiState
+) {
+
+    AlertDialog(
+        onDismissRequest = {registrationViewModel.closeDialog() },
+        confirmButton = {
+            Button(
+            onClick = {
+                registrationViewModel.checkCode()
+            }
+        ) {
+            Text("Подтвердить")
+        } },
+        dismissButton = {
+            Button(
+                onClick = {registrationViewModel.closeDialog()}
+            ) {
+                Text("Отмена")
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("Введите код из SMS:")
+                TextField(
+                    value = registrationViewModel.userInputCode,
+                    onValueChange = { registrationViewModel.updateUserCode(it) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TextButton(onClick = {registrationViewModel.sendCodeAgain()}) {
+                        Text("Выслать код повторно")
+                    }
+                }
+            }
+        }
+    )
 }
 
 

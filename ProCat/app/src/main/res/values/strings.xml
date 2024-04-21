@@ -28,8 +28,10 @@
     <string name="wrong_last_name">Неправильная фамилия</string>
     <string name="wrong_first_name">Неправильное имя</string>
     <string name="wrong_father_name">Неправильное отчество</string>
+    <string name="to_auth">Есть аккаунт? Войдите!</string>
 
 
+    <string name="save">Сохранить</string>
 
 
     <string name="hammer">Молоток</string>

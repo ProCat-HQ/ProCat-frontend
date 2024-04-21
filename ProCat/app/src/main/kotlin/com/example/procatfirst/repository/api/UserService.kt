@@ -3,6 +3,7 @@ package com.example.procatfirst.repository.api
 import com.example.procatfirst.BuildConfig
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.DeliveryDistribution
+import com.example.procatfirst.data.UsersResponse
 import com.squareup.moshi.Json
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -25,7 +26,7 @@ import retrofit2.http.Query
 interface UserService {
 
     @GET("/users")
-    suspend fun getAllUsers(): Call<ResponseBody>
+    suspend fun getAllUsers(@Query("limit") limit: Int? = null, @Query("page") page: Int? = null, @Query("role") role: String? = null): UsersResponse
 
     @GET("/users/{userId}")
     suspend fun getSimpleUser(@Query("userId") userId: Int): Call<ResponseBody>
@@ -38,6 +39,8 @@ interface UserService {
 
     @POST("/users/sign-in")
     suspend fun login(@Body requestBody: RequestBody): Call<TokenResponse>
+    //suspend fun login(@Body requestBody: RequestBody): TokenResponse
+
 
     @POST("/users/verification/send")
     suspend fun createNewVerificationCode(@Body requestBody: RequestBody): Call<ResponseBody>
@@ -154,7 +157,7 @@ interface UserService {
     fun geocoder(): Call<ResponseBody>
 
     @GET("/items")
-    suspend fun getItems(@Header("Authorization") token: String?): Call<ResponseBody>
+    fun getItems(@Header("Authorization") token: String?): Call<ResponseBody>
 
     @GET("/users/{userId}")
     suspend fun getUser(@Query("userId") userId: Int): Call<User>

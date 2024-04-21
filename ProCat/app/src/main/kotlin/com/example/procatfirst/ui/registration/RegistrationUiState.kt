@@ -11,4 +11,6 @@ data class RegistrationUiState(
     val enteredFirstNameWrong: Boolean = false,
     val enteredLastNameWrong: Boolean = false,
     val enteredFatherNameWrong: Boolean = false,
+
+    val code: String = "",
     )

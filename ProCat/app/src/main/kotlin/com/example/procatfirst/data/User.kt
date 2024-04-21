@@ -15,6 +15,28 @@ data class User(
         val password_hash : String,
 )
 
+data class UsersResponse(
+    val status: Int,
+    val message: String,
+    val payload: Payload
+) {
+    data class Payload(
+        val count: Int,
+        val rows: List<User>
+    ) {
+        data class User(
+            val id: Int,
+            val fullName: String,
+            val email: String,
+            val phone_number: String,
+            val identification_number: String,
+            val is_confirmed: Boolean,
+            val role: String,
+            val createdAt: String
+        )
+    }
+}
+
 object UserDataProvider {
     val users = listOf(
         User(
