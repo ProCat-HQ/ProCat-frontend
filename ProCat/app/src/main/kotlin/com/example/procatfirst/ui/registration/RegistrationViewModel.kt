@@ -150,7 +150,7 @@ class RegistrationViewModel: ViewModel()  {
     }
 
     fun checkCode() {
-
+        ApiCalls.shared.signUpApi(this.userInputPhoneNumber, this.userInputPassword, this.userInputFirstName + " " + this.userInputLastName)
     }
     fun closeDialog() {
         isInputCodeDialogVisible = false

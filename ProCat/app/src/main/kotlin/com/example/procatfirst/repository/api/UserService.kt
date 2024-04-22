@@ -2,21 +2,16 @@ package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.BuildConfig
 import com.example.procatfirst.data.User
-import com.example.procatfirst.data.DeliveryDistribution
 import com.example.procatfirst.data.UsersResponse
-import com.squareup.moshi.Json
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 /* Retrofit service that maps the different endpoints on the API, you'd create one
@@ -35,12 +30,10 @@ interface UserService {
     suspend fun deleteUser(@Query("userId") userId: Int)
 
     @POST("/users/sign-up")
-    suspend fun register(@Body requestBody: RequestBody): Call<ResponseBody>
+    fun register(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/sign-in")
-    suspend fun login(@Body requestBody: RequestBody): Call<TokenResponse>
-    //suspend fun login(@Body requestBody: RequestBody): TokenResponse
-
+    fun login(@Body requestBody: RequestBody): Call<TokenResponse>
 
     @POST("/users/verification/send")
     suspend fun createNewVerificationCode(@Body requestBody: RequestBody): Call<ResponseBody>

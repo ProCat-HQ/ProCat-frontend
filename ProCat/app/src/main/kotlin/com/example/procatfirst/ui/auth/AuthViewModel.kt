@@ -69,13 +69,13 @@ class AuthViewModel(
             (userInputPhoneNumber != "") {
             //val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
             CoroutineScope(Dispatchers.IO).launch {
-                UserRoleRepository.shared.saveUserRole(userInputPhoneNumber)
-                DataCoordinator.shared.setUserRole()
+                //UserRoleRepository.shared.saveUserRole(userInputPhoneNumber)
+                //DataCoordinator.shared.setUserRole()
                 DataCoordinator.shared.setUserData(User(1, userInputPhoneNumber, userInputPhoneNumber + "@mail.ru", "", "", false, userInputPhoneNumber, "", ""))
             }
 
             NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
-            updateUserPhoneNumber("")
+            //updateUserPhoneNumber("")
             return true
         } else {
             _uiState.update { currentState ->
@@ -95,7 +95,7 @@ class AuthViewModel(
                 )
             }
             //selectRole("user")
-            updateUserPassword("")
+            //updateUserPassword("")
             return true
         }
         _uiState.update { currentState ->
@@ -109,7 +109,7 @@ class AuthViewModel(
     fun signIn() {
          if (checkUserPassword() && checkUserPhoneNumber()) {
             viewModelScope.launch {
-                ApiCalls.shared.signInApi(uiState.value.phoneNumber, uiState.value.password)
+                ApiCalls.shared.signInApi(userInputPhoneNumber, userInputPassword)
             }
         }
     }

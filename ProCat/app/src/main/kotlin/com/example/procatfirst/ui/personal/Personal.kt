@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.repository.UserRoleRepository
+import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.getUserRole
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
@@ -96,6 +97,18 @@ fun PersonalScreen(
         ) {
             Text(
                 text = stringResource(R.string.chats),
+                fontSize = 16.sp
+            )
+        }
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            onClick = { Log.d("TOKEN", UserDataCache.shared.getUserToken()) }
+        ) {
+            Text(
+                text = "token",
                 fontSize = 16.sp
             )
         }

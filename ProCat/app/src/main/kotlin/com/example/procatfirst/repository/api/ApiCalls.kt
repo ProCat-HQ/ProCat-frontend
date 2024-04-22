@@ -144,7 +144,7 @@ class ApiCalls {
         })
     }
 
-    suspend fun signUpApi(login: String, password: String, name: String)  {
+    fun signUpApi(login: String, password: String, name: String)  {
 
         val service = Retrofit.Builder()
             .baseUrl(BACKEND_URL)
@@ -193,6 +193,7 @@ class ApiCalls {
         val jsonObject = JSONObject()
         jsonObject.put("phoneNumber", login)
         jsonObject.put("password", password)
+        //Log.d("JSON --- ", jsonObject.toString())
 
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
         service.login(requestBody).enqueue(object : Callback<TokenResponse> { //ResponseBody
@@ -203,19 +204,11 @@ class ApiCalls {
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                 response.body()?.let {
                     UserDataCache.shared.setUserToken(it.token)
-                    Log.i("RESPONSE", it.token)
+                    Log.i("TOKEN Response", it.token)
                 }
             }
         })
-        /*
-        try {
-            val response = service.login(requestBody)
-            UserDataCache.shared.setUserToken(response.token)
-            Log.i("RESPONSE", response.token)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.i("RESPONSE", "Fail")
-        } */
+
     }
 
     suspend fun getAllUsersApi()  {
