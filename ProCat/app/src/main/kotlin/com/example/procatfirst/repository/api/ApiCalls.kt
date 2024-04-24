@@ -3,9 +3,7 @@ package com.example.procatfirst.repository.api
 import android.util.Log
 import android.widget.Toast
 import com.example.procatfirst.R
-import com.example.procatfirst.data.ApiResponseDelivery
 import com.example.procatfirst.data.Delivery
-import com.example.procatfirst.data.DeliveryMan
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UsersResponse
@@ -83,7 +81,7 @@ class ApiCalls {
         })
     }
 
-    suspend fun getUserDataApi(id : Int) {
+    fun getUserDataApi(id : Int) {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
                 .baseUrl(url)
@@ -255,6 +253,7 @@ class ApiCalls {
         })
 
     }
+
     fun geocoderApi()  {
 
         val service = Retrofit.Builder()

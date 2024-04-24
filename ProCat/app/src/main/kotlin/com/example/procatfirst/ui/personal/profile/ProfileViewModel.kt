@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-// TODO password required for changes
 class ProfileViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -32,6 +31,7 @@ class ProfileViewModel: ViewModel() {
     init {
         getUserProfileInfo()
     }
+
 
 
     //Phone Number
@@ -49,11 +49,13 @@ class ProfileViewModel: ViewModel() {
         updateUserPhoneNumber(userInputPhoneNumber)
     }
 
-    fun fullSaveUserPhoneNumber() {
-        viewModelScope.launch {
-            // password is needed. Idea: load password from local
-            //ApiCalls.shared.
+    fun fullSaveUserPhoneNumber(password: String) {
+        if (checkPassword(password)) {
+            viewModelScope.launch {
+                //ApiCalls.shared.
+            }
         }
+
     }
 
     //FullName
@@ -71,7 +73,7 @@ class ProfileViewModel: ViewModel() {
         updateUserFullName(userInputFullName)
     }
 
-    fun fullSaveUserFullName() {
+    fun fullSaveUserFullName(password: String) {
         viewModelScope.launch {
             //ApiCalls.shared.
         }
@@ -91,7 +93,7 @@ class ProfileViewModel: ViewModel() {
         }
         updateUserIdentificationNumber(userInputIdentificationNumber)
     }
-    fun fullSaveUserIdentificationNumber() {
+    fun fullSaveUserIdentificationNumber(password: String) {
         viewModelScope.launch {
             //ApiCalls.shared.
         }
@@ -111,37 +113,42 @@ class ProfileViewModel: ViewModel() {
         }
         updateUserEmail(userInputEmail)
     }
-    fun fullSaveUserEmail() {
+    fun fullSaveUserEmail(password: String) {
+
         viewModelScope.launch {
             //ApiCalls.shared.
         }
     }
 
+
+    fun checkPassword(password: String): Boolean {
+        return password == "123456"
+    }
     private fun getUserProfileInfo() {
         var trueUser : User? = null
+        /*
+        CoroutineScope(Dispatchers.IO).launch {
+            trueUser = DataCoordinator.shared.getUserData()
+            val user = UserDataProvider.users[0];
+            _uiState.value = _uiState.value.copy(
+                    userId = user.id,
+                    //fullName = user.fullName,
+                    fullName = trueUser!!.fullName,
+                    email = trueUser!!.email,//user.email,
+                    phoneNumber = user.phoneNumber,
+                    identificationNumber = user.identificationNumber,
+                    isConfirmed = user.isConfirmed,
+                    role = trueUser!!.role//user.role
+            )
+            NotificationCoordinator.shared.sendIntent(SystemNotifications.myTestIntent)
+        } */
 
-//        CoroutineScope(Dispatchers.IO).launch {
-//            trueUser = DataCoordinator.shared.getUserData()
-//            val user = UserDataProvider.users[0];
-//            _uiState.value = _uiState.value.copy(
-//                    userId = user.id,
-//                    //fullName = user.fullName,
-//                    fullName = trueUser!!.fullName,
-//                    email = trueUser!!.email,//user.email,
-//                    phoneNumber = user.phoneNumber,
-//                    identificationNumber = user.identificationNumber,
-//                    isConfirmed = user.isConfirmed,
-//                    role = trueUser!!.role//user.role
-//            )
-//            NotificationCoordinator.shared.sendIntent(SystemNotifications.myTestIntent)
-//        }
-
+        val userData = ApiCalls.shared.getUserDataApi(1)
 
         val user = UserDataProvider.users[0];
         _uiState.value = _uiState.value.copy(
                 userId = user.id,
                 fullName = user.fullName,
-
                 email = user.email,
                 phoneNumber = user.phoneNumber,
                 identificationNumber = user.identificationNumber,

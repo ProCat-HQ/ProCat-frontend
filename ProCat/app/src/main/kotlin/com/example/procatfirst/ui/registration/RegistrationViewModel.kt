@@ -70,15 +70,15 @@ class RegistrationViewModel: ViewModel()  {
 
 
     fun checkUserPhoneNumber() {
-        if (userInputPhoneNumber.length == 11) {
+        if (userInputPhoneNumber.length < 11) {
             //val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
-            NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
+            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
-                currentState.copy(enteredPhoneNumberWrong = false)
+                currentState.copy(enteredPhoneNumberWrong = true)
             }
         } else {
             _uiState.update { currentState ->
-                currentState.copy(enteredPhoneNumberWrong = true)
+                currentState.copy(enteredPhoneNumberWrong = false)
             }
         }
 
@@ -86,7 +86,7 @@ class RegistrationViewModel: ViewModel()  {
 
      fun checkUserPassword() {
         if (userInputPassword.length < 3) {
-            NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
+            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
                     enteredPasswordWrong = true
@@ -101,36 +101,36 @@ class RegistrationViewModel: ViewModel()  {
 
     fun checkUserLastName() {
         if (userInputLastName.length < 2) {
-            NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
+            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
-                    enteredLastNameWrong = false
+                    enteredLastNameWrong = true
                 )
             }
         } else {
             _uiState.update { currentState ->
-                currentState.copy(enteredLastNameWrong = true)
+                currentState.copy(enteredLastNameWrong = false)
             }
         }
     }
 
     fun checkUserFirstName() {
         if (userInputFirstName.length < 2) {
-            NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
+            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
-                    enteredFirstNameWrong = false
+                    enteredFirstNameWrong = true
                 )
             }
         } else {
             _uiState.update { currentState ->
-                currentState.copy(enteredFirstNameWrong = true)
+                currentState.copy(enteredFirstNameWrong = false)
             }
         }
     }
 
     fun checkUserFatherName() {
-        NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
+        //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
         _uiState.update { currentState ->
             currentState.copy(
                 enteredFatherNameWrong = false
@@ -150,7 +150,7 @@ class RegistrationViewModel: ViewModel()  {
     }
 
     fun checkCode() {
-        ApiCalls.shared.signUpApi(this.userInputPhoneNumber, this.userInputPassword, this.userInputFirstName + " " + this.userInputLastName)
+        //checkCode
     }
     fun closeDialog() {
         isInputCodeDialogVisible = false
@@ -160,12 +160,16 @@ class RegistrationViewModel: ViewModel()  {
     }
 
     fun signUp() {
+        check()
+
         if (!_uiState.value.enteredLastNameWrong && !_uiState.value.enteredPhoneNumberWrong
             && !_uiState.value.enteredFirstNameWrong && !_uiState.value.enteredPasswordWrong) {
-            val fullName: String = uiState.value.firstName + uiState.value.lastName + uiState.value.fatherName
+            val fullName: String = uiState.value.firstName + " " + uiState.value.lastName + " " + uiState.value.fatherName
             //viewModelScope.launch {
             //    ApiCalls.shared.signUpApi(uiState.value.phoneNumber, uiState.value.password, fullName)
             //}
+            ApiCalls.shared.signUpApi(uiState.value.phoneNumber, uiState.value.password, fullName)
+            //createNewVerificationCode
             isInputCodeDialogVisible = true
         }
     }

@@ -63,6 +63,9 @@ fun ProfileScreen(
 ) {
     var isChangePasswordDialogVisible by remember { mutableStateOf(false) }
 
+    val profileUiState by profileViewModel.uiState.collectAsState()
+
+
     val isActive by remember { mutableStateOf(true) }
 
 //    val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
@@ -90,36 +93,40 @@ fun ProfileScreen(
         Text(text = "Профиль", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(16.dp))
         mutableField(
-                stringResource(R.string.fullname),
-                profileUiState.fullName,
-                userInput = profileViewModel.userInputFullName,
-                onUserInputChanged = { profileViewModel.updateUserFullName(it) },
-                onKeyboardDone = { profileViewModel.saveUserFullName() },
-                saveChanges = {profileViewModel.fullSaveUserFullName() }
-                )
-        mutableField(
-                stringResource(R.string.phone),
-                profileUiState.phoneNumber,
-                userInput = profileViewModel.userInputPhoneNumber,
-                onUserInputChanged = { profileViewModel.updateUserPhoneNumber(it) },
-                onKeyboardDone = { profileViewModel.saveUserPhoneNumber() },
-                saveChanges = {profileViewModel.fullSaveUserPhoneNumber() }
+            stringResource(R.string.fullname),
+            profileUiState.fullName,
+            userInput = profileViewModel.userInputFullName,
+            onUserInputChanged = { profileViewModel.updateUserFullName(it) },
+            onKeyboardDone = { profileViewModel.saveUserFullName() },
+            saveChanges = {profileViewModel.fullSaveUserFullName("") },
+            profileViewModel = profileViewModel
         )
         mutableField(
-                stringResource(R.string.email),
-                profileUiState.email,
-                userInput = profileViewModel.userInputEmail,
-                onUserInputChanged = { profileViewModel.updateUserEmail(it) },
-                onKeyboardDone = { profileViewModel.saveUserEmail() },
-                saveChanges = {profileViewModel.fullSaveUserEmail() }
+            stringResource(R.string.phone),
+            profileUiState.phoneNumber,
+            userInput = profileViewModel.userInputPhoneNumber,
+            onUserInputChanged = { profileViewModel.updateUserPhoneNumber(it) },
+            onKeyboardDone = { profileViewModel.saveUserPhoneNumber() },
+            saveChanges = {profileViewModel.fullSaveUserPhoneNumber("") },
+            profileViewModel = profileViewModel
         )
         mutableField(
-                stringResource(R.string.inn),
-                profileUiState.identificationNumber,
-                userInput = profileViewModel.userInputIdentificationNumber,
-                onUserInputChanged = { profileViewModel.updateUserIdentificationNumber(it) },
-                onKeyboardDone = { profileViewModel.saveUserIdentificationNumber() },
-                saveChanges = {profileViewModel.fullSaveUserIdentificationNumber() }
+            stringResource(R.string.email),
+            profileUiState.email,
+            userInput = profileViewModel.userInputEmail,
+            onUserInputChanged = { profileViewModel.updateUserEmail(it) },
+            onKeyboardDone = { profileViewModel.saveUserEmail() },
+            saveChanges = {profileViewModel.fullSaveUserEmail("") },
+            profileViewModel = profileViewModel
+        )
+        mutableField(
+            stringResource(R.string.inn),
+            profileUiState.identificationNumber,
+            userInput = profileViewModel.userInputIdentificationNumber,
+            onUserInputChanged = { profileViewModel.updateUserIdentificationNumber(it) },
+            onKeyboardDone = { profileViewModel.saveUserIdentificationNumber() },
+            saveChanges = {profileViewModel.fullSaveUserIdentificationNumber("") },
+            profileViewModel = profileViewModel
         )
         if (profileViewModel.uiState.value.isConfirmed) {
             Row(
@@ -158,6 +165,7 @@ fun ProfileScreen(
                 }
             )
         }
+
     }
 
 
@@ -171,9 +179,14 @@ fun mutableField(
     userInput: String,
     onUserInputChanged: (String) -> Unit,
     onKeyboardDone: () -> Unit,
-    saveChanges: () -> Unit
+    saveChanges: (String) -> Unit,
+
+    profileViewModel: ProfileViewModel
 ) {
     var isChangeVisible by remember { mutableStateOf(false) }
+
+    var isInputPasswordDialogVisible by remember { mutableStateOf(false) }
+
 
     Column (
         modifier = Modifier
@@ -229,7 +242,10 @@ fun mutableField(
                     )
                 }
                 IconButton(
-                    onClick = { saveChanges() },
+                    onClick = {
+                        isInputPasswordDialogVisible = true
+                        saveChanges("")
+                              },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check,
@@ -240,9 +256,57 @@ fun mutableField(
 
         }
         HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
+
+        if (isInputPasswordDialogVisible) {
+            EnterPasswordDialog(
+                onConfirm = { saveChanges("") },
+                onDismiss = { isInputPasswordDialogVisible = false},
+                profileViewModel
+            )
+        }
     }
 
 }
+
+@Composable
+fun EnterPasswordDialog(
+    onConfirm: (String) -> Unit,
+    onDismiss: () -> Unit,
+    profileViewModel: ProfileViewModel
+) {
+    var password by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text("Введите пароль") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = {
+                            password = it
+                    },
+                    label = { Text("Пароль для подтверждения") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier
+                        .padding(0.dp, 8.dp)
+                        .fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirm(password)
+                    onDismiss()
+                }
+            ) {
+                Text("Изменить")
+            }
+        }
+    )
+}
+
 @Composable
 fun ChangePasswordDialog(
     onDismiss: () -> Unit,

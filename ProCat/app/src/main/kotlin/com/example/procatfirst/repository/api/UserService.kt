@@ -1,6 +1,17 @@
 package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.BuildConfig
+import com.example.procatfirst.data.CartPayload
+import com.example.procatfirst.data.ClusterPayload
+import com.example.procatfirst.data.Delivery
+import com.example.procatfirst.data.DeliveryPayload
+import com.example.procatfirst.data.Deliveryman
+import com.example.procatfirst.data.OrderFull
+import com.example.procatfirst.data.OrderRequest
+import com.example.procatfirst.data.OrdersPayload
+import com.example.procatfirst.data.PaymentPayload
+import com.example.procatfirst.data.RoutePayload
+import com.example.procatfirst.data.SimpleDeliveryman
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UsersResponse
 import okhttp3.RequestBody
@@ -36,7 +47,7 @@ interface UserService {
     fun login(@Body requestBody: RequestBody): Call<TokenResponse>
 
     @POST("/users/verification/send")
-    suspend fun createNewVerificationCode(@Body requestBody: RequestBody): Call<ResponseBody>
+    fun createNewVerificationCode(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/verification/check")
     suspend fun checkCode(@Body requestBody: RequestBody): Call<ResponseBody>
@@ -63,43 +74,43 @@ interface UserService {
     suspend fun changeRole(@Query("userId") userId: Int, @Body requestBody: RequestBody)
 
     @GET("/users/deliverymen")
-    suspend fun getAllDeliverymen(): Call<ResponseBody>
+    suspend fun getAllDeliverymen(): Call<Deliveryman>
 
     @GET("/users/deliverymen/{deliveryId}")
-    suspend fun getDeliveryMan(@Query("deliveryId") deliveryId: Int): Call<ResponseBody>
+    suspend fun getDeliveryMan(@Query("deliveryId") deliveryId: Int): Call<SimpleDeliveryman>
 
     @POST("/users/deliverymen/{userId}")
-    suspend fun createDeliveryManFromUser(@Query("userId") userId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun createDeliveryManFromUser(@Query("userId") userId: Int, @Body requestBody: SimpleDeliveryman)
 
     @PATCH("/users/deliverymen/{deliverymanId}")
-    suspend fun changeDeliverymanData(@Query("deliveryId") deliveryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changeDeliverymanData(@Query("deliveryId") deliveryId: Int, @Body requestBody: SimpleDeliveryman)
 
     @DELETE("/users/deliverymen/{deliverymanId}")
     suspend fun deleteDeliveryman(@Query("deliveryId") deliveryId: Int): Call<ResponseBody>
 
     @GET("/users/deliverymen/deliveries/")
-    suspend fun getAllDeliveries(): Call<ResponseBody>
+    suspend fun getAllDeliveries(): Call<DeliveryPayload>
 
     @GET("/users/deliverymen/deliveries/{deliverymanId}")
-    suspend fun getDeliveriesForDeliveryman(@Query("deliveryId") deliveryId: Int): Call<ResponseBody>
+    suspend fun getDeliveriesForDeliveryman(@Query("deliveryId") deliveryId: Int): Call<DeliveryPayload>
 
     @PATCH("/users/deliverymen/deliveries/{deliverymanId}")
     suspend fun changeStatusForDeliveryman(@Query("deliveryId") deliveryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/deliverymen/deliveries/create-route")
-    suspend fun createRouteFromDeliveryman(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun createRouteFromDeliveryman(@Body requestBody: RequestBody): Call<RoutePayload>
 
     @POST("/users/admin/cluster")
-    suspend fun makeCluster(): Call<ResponseBody>
+    suspend fun makeCluster(): Call<ClusterPayload>
 
     @GET("/users/admin/deliveries-to-sort")
-    suspend fun getAllDeliveriesAfterClustering(): Call<ResponseBody>
+    suspend fun getAllDeliveriesAfterClustering(): Call<ClusterPayload>
 
     @PATCH("/users/admin/change-delivery")
     suspend fun changeDelivery(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/cart/")
-    suspend fun getItemsInCart(): Call<ResponseBody>
+    suspend fun getItemsInCart(): Call<CartPayload>
 
     @POST("users/cart")
     suspend fun postCart(@Body requestBody: RequestBody)
@@ -108,13 +119,13 @@ interface UserService {
     suspend fun deleteItemFromCart(@Body requestBody: RequestBody)
 
     @GET("/users/orders/")
-    suspend fun getOrders(): Call<ResponseBody>
+    suspend fun getOrders(): Call<OrdersPayload>
 
     @GET("/users/orders/{orderId}")
-    suspend fun getOrder(@Query("orderId") orderId: Int): Call<ResponseBody>
+    suspend fun getOrder(@Query("orderId") orderId: Int): Call<OrderFull>
 
     @POST("/users/orders/")
-    suspend fun createNewOrder(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun createNewOrder(@Body requestBody: OrderRequest): Call<ResponseBody>
 
     @POST("/users/orders/cancel/{orderId}")
     suspend fun setStatusOfOrder(@Query("orderId") orderId: Int): Call<ResponseBody>
@@ -123,7 +134,7 @@ interface UserService {
     suspend fun changeStatusOfOrder(@Query("orderId") orderId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/orders/payment/{orderId}")
-    suspend fun getInfoAboutPayments(@Query("orderId") orderId: Int): Call<ResponseBody>
+    suspend fun getInfoAboutPayments(@Query("orderId") orderId: Int): Call<PaymentPayload>
 
     @PATCH("/users/orders/payment/{paymentId}")
     suspend fun updatePaymentInfo(@Body requestBody: RequestBody): Call<ResponseBody>
@@ -153,7 +164,7 @@ interface UserService {
     fun getItems(@Header("Authorization") token: String?): Call<ResponseBody>
 
     @GET("/users/{userId}")
-    suspend fun getUser(@Query("userId") userId: Int): Call<User>
+    fun getUser(@Query("userId") userId: Int): Call<User>
 
     suspend fun amina(): Call<ResponseBody>
 
