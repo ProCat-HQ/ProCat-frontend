@@ -55,11 +55,7 @@ fun AuthScreen(
     val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
         var counter = 0
         override fun howToReactOnIntent() {
-            if (counter == 0) {
-                counter++
-            } else {
-                onNextButtonClicked()
-            }
+            onNextButtonClicked()
         }
     }
 

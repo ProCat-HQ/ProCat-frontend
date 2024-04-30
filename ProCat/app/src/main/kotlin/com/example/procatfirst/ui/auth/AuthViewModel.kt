@@ -68,14 +68,11 @@ class AuthViewModel(
         if //(userInputPhoneNumber.length == 11) {
             (userInputPhoneNumber != "") {
             //val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
-            CoroutineScope(Dispatchers.IO).launch {
-                //UserRoleRepository.shared.saveUserRole(userInputPhoneNumber)
-                //DataCoordinator.shared.setUserRole()
+            CoroutineScope(Dispatchers.IO).launch {//TODO не на том этапе пишем данные юзера - они ещё не полные.
                 DataCoordinator.shared.setUserData(User(1, userInputPhoneNumber, userInputPhoneNumber + "@mail.ru", "", "", false, userInputPhoneNumber, "", ""))
             }
 
-            NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
-            //updateUserPhoneNumber("")
+            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             return true
         } else {
             _uiState.update { currentState ->
@@ -88,13 +85,12 @@ class AuthViewModel(
 
     private fun checkUserPassword(): Boolean {
         if (userInputPassword.length > 2) {
-            NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
+            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
                     enteredPasswordWrong = false
                 )
             }
-            //selectRole("user")
             //updateUserPassword("")
             return true
         }
@@ -109,7 +105,13 @@ class AuthViewModel(
     fun signIn() {
          if (checkUserPassword() && checkUserPhoneNumber()) {
             viewModelScope.launch {
-                ApiCalls.shared.signInApi(userInputPhoneNumber, userInputPassword)
+                val response = ApiCalls.shared.signInApi(userInputPhoneNumber, userInputPassword)
+                if (response) {
+                    NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent, "Response", "SUCCESS")
+                }
+                else {
+                    NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent, "Response", "FAIL")
+                }
             }
         }
     }

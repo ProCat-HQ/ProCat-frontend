@@ -180,7 +180,7 @@ class ApiCalls {
 
     }
 
-    suspend fun signInApi(login: String, password: String)  {
+    suspend fun signInApi(login: String, password: String) : Boolean {
 
         val service = Retrofit.Builder()
                 .baseUrl(BACKEND_URL)
@@ -206,7 +206,7 @@ class ApiCalls {
                 }
             }
         })
-
+        return UserDataCache.shared.getUserToken().isNotBlank()
     }
 
     suspend fun getAllUsersApi()  {
