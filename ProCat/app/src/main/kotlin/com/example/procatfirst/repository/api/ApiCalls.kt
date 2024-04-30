@@ -39,13 +39,6 @@ class ApiCalls {
         const val identifier = "[ApiCalls]"
     }
 
-//    fun getItemsApi1() {
-//        val t1 = Item(1, "Молоток", R.drawable.hammer, "Надёжный, качественный", "Масса: 0.4 кг", 350)
-//        val t2 = Item(1, "Набор", R.drawable.set, "Практичный, прочный", "Масса: 0.45 кг", 800)
-//        val toolsList = listOf(t1, t2)
-//        CatalogCache.shared.addCatalogStuff(toolsList)
-//    }
-
     fun getItemsApi() {
         val url = BACKEND_URL
         val service = Retrofit.Builder()

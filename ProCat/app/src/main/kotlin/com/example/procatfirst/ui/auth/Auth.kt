@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,14 +29,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
-
-import com.example.procatfirst.ui.theme.md_theme_light_scrim
-import com.example.procatfirst.ui.theme.md_theme_light_tertiary
 
 
 @Composable
@@ -53,9 +48,13 @@ fun AuthScreen(
     val authUiState by authViewModel.uiState.collectAsState()
 
     val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
-        var counter = 0
         override fun howToReactOnIntent() {
-            onNextButtonClicked()
+            if (getExtra("Response") == "SUCCESS") {
+                onNextButtonClicked()
+            }
+            else {
+                authViewModel.wrongPassword()
+            }
         }
     }
 

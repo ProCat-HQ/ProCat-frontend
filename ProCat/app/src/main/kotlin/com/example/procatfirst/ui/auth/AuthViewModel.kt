@@ -1,26 +1,18 @@
 package com.example.procatfirst.ui.auth
 
+//import com.example.procatfirst.ProCatApplication
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.procatfirst.MainActivity
 import com.example.procatfirst.data.User
-//import com.example.procatfirst.ProCatApplication
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
-import com.example.procatfirst.repository.UserRoleRepository
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.getUserData
 import com.example.procatfirst.repository.data_coordinator.setUserData
-import com.example.procatfirst.repository.data_coordinator.setUserRole
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,7 +61,8 @@ class AuthViewModel(
             (userInputPhoneNumber != "") {
             //val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
             CoroutineScope(Dispatchers.IO).launch {//TODO не на том этапе пишем данные юзера - они ещё не полные.
-                DataCoordinator.shared.setUserData(User(1, userInputPhoneNumber, userInputPhoneNumber + "@mail.ru", "", "", false, userInputPhoneNumber, "", ""))
+                DataCoordinator.shared.setUserData(User(1, userInputPhoneNumber,
+                    "$userInputPhoneNumber@mail.ru", "", "", false, userInputPhoneNumber, "", ""))
             }
 
             //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
@@ -81,6 +74,14 @@ class AuthViewModel(
         }
         updateUserPhoneNumber("")
         return false
+    }
+
+    fun wrongPassword() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                enteredPasswordWrong = true
+            )
+        }
     }
 
     private fun checkUserPassword(): Boolean {
@@ -107,7 +108,7 @@ class AuthViewModel(
             viewModelScope.launch {
                 val response = ApiCalls.shared.signInApi(userInputPhoneNumber, userInputPassword)
                 if (response) {
-                    NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent, "Response", "SUCCESS")
+                    NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent, "Response","SUCCESS")
                 }
                 else {
                     NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent, "Response", "FAIL")

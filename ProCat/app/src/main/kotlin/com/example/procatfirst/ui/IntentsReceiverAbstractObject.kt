@@ -5,11 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
-import com.example.procatfirst.intents.SystemNotificationsExtras
 
 /**
  * Абстрактный класс для работы с intents (сигналы).
@@ -28,6 +28,8 @@ import com.example.procatfirst.intents.SystemNotificationsExtras
  */
 abstract class IntentsReceiverAbstractObject {
 
+    var extras : Bundle? = null
+
     @Composable
     fun CreateReceiver(intentToReact: String) {
         // MARK: Variables
@@ -35,7 +37,7 @@ abstract class IntentsReceiverAbstractObject {
         val context = LocalContext.current
 
         // MARK: BROADCAST / Notifications
-        DisposableEffect(context, effect = {
+        DisposableEffect(context) {
             // Declare Intents and Receiver
             val broadCast = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
@@ -54,12 +56,9 @@ abstract class IntentsReceiverAbstractObject {
                                 "got Intent"
                             )
                             // Check for Extras
-                            val extra = intent.extras?.getString(SystemNotificationsExtras.myExtra)
-                            Log.i(
-                                identifier,
-                                " onSampleIntent extra: $extra."
-                            )
-                        }
+                            extras = intent.extras
+                            //val extra = intent.extras?.getString(SystemNotificationsExtras.myExtra)
+                            }
                     }
                 }
             }
@@ -76,9 +75,13 @@ abstract class IntentsReceiverAbstractObject {
             onDispose {
                 context.unregisterReceiver(broadCast)
             }
-        })
+        }
     }
 
     open fun howToReactOnIntent() {}
+
+    fun getExtra(extra : String) : String? {
+        return extras?.getString(extra)
+    }
 
 }
