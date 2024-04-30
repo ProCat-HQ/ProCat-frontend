@@ -11,6 +11,18 @@ data class Notification(
     val userId: Int
 )
 
+data class NotificationItem(
+    val id: Int,
+    val title: String,
+    val description: String,
+    val isViewed: Boolean,
+    val createdAt: String
+)
+
+data class NotificationPayload(
+    val notifications: List<Notification>
+)
+
 object NotificationDataProvider {
     val notifications = listOf(
         Notification(

@@ -1,5 +1,7 @@
 package com.example.procatfirst.repository.api
 
+import com.example.procatfirst.data.ItemFullPayload
+import com.example.procatfirst.data.ItemResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -17,10 +19,10 @@ interface ItemsService {
     suspend fun createCategory(@Query("categoryId") categoryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/items") //query params
-    suspend fun getAllItems(): Call<ResponseBody>
+    suspend fun getAllItems(): Call<ItemResponse>
 
     @GET("/items/{itemId}")
-    suspend fun getItemWithInfo(@Query("itemId") itemId: Int): Call<ResponseBody>
+    suspend fun getItemWithInfo(@Query("itemId") itemId: Int): Call<ItemFullPayload>
 
     @DELETE("/items/{itemId}")
     suspend fun deleteItem(@Query("itemId") itemId: Int): Call<ResponseBody>

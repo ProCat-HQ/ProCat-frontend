@@ -2,16 +2,21 @@ package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.BuildConfig
 import com.example.procatfirst.data.CartPayload
+import com.example.procatfirst.data.ChangeDeliveryRequest
 import com.example.procatfirst.data.ClusterPayload
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryPayload
 import com.example.procatfirst.data.Deliveryman
+import com.example.procatfirst.data.Notification
+import com.example.procatfirst.data.NotificationItem
+import com.example.procatfirst.data.NotificationPayload
 import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.PaymentPayload
 import com.example.procatfirst.data.RoutePayload
 import com.example.procatfirst.data.SimpleDeliveryman
+import com.example.procatfirst.data.SubscriptionResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UsersResponse
 import okhttp3.RequestBody
@@ -107,7 +112,7 @@ interface UserService {
     suspend fun getAllDeliveriesAfterClustering(): Call<ClusterPayload>
 
     @PATCH("/users/admin/change-delivery")
-    suspend fun changeDelivery(@Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changeDelivery(@Body requestBody: ChangeDeliveryRequest): Call<ResponseBody>
 
     @GET("/users/cart/")
     suspend fun getItemsInCart(): Call<CartPayload>
@@ -140,19 +145,19 @@ interface UserService {
     suspend fun updatePaymentInfo(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/subscriptions/")
-    suspend fun getAllSubsForUser(): Call<ResponseBody>
+    suspend fun getAllSubsForUser(): Call<SubscriptionResponse>
 
     @POST("/users/subscriptions/")
     suspend fun addItemIdToSubs(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/notifications/")
-    suspend fun getAllNotifications(): Call<ResponseBody>
+    suspend fun getAllNotifications(): Call<NotificationPayload>
 
     @POST("/users/notifications/{usersId}")
     suspend fun sendNotification(@Query("usersId") usersId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @PATCH("/users/notifications/{notificationId}")
-    suspend fun setNotificationToViewed(@Query("notificationId") notificationId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun setNotificationToViewed(@Query("notificationId") notificationId: Int, @Body requestBody: NotificationItem): Call<ResponseBody>
 
     @DELETE("/users/notifications/{notificationId}")
     suspend fun deleteNotification(@Query("notificationId") notificationId: Int): Call<ResponseBody>
