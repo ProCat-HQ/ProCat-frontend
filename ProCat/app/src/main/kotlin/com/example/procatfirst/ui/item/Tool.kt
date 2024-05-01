@@ -53,14 +53,6 @@ fun ToolScreen(
     ) {
     val toolUiState by toolViewModel.uiState.collectAsState()
 
-    //val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
-    //    override fun howToReactOnIntent() {
-    //        toolViewModel.removeFromCart()
-    //    }
-    //}
-
-    //receiver.CreateReceiver(intentToReact = SystemNotifications.shakalno)
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
