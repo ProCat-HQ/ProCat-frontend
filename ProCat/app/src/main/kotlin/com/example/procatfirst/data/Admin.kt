@@ -16,3 +16,8 @@ data class DeliveryLocation(
     val deliveryId: Int
 )
 
+data class ChangeDeliveryRequest(
+    val deliverymanId: Int,
+    val deliveryId: Int
+)
+

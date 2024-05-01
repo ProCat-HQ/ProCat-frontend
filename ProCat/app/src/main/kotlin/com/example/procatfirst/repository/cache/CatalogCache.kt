@@ -1,7 +1,7 @@
 package com.example.procatfirst.repository.cache
 
 import com.example.procatfirst.R
-import com.example.procatfirst.repository.api.Item
+import com.example.procatfirst.data.Item
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
