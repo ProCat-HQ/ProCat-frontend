@@ -26,6 +26,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.dublgis.dgismobile.mapsdk.LonLat
+import java.lang.Thread.sleep
 
 /**
  * Тут из полезного пока только getItems() - делает GET запрос, результат пишет в кэш.
@@ -184,7 +185,6 @@ class ApiCalls {
         val jsonObject = JSONObject()
         jsonObject.put("phoneNumber", login)
         jsonObject.put("password", password)
-        //Log.d("JSON --- ", jsonObject.toString())
 
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
         service.login(requestBody).enqueue(object : Callback<TokenResponse> { //ResponseBody

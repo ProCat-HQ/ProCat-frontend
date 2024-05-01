@@ -30,11 +30,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.data.CartItem
+import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.Tool
 
 @Composable
 fun ToolsScreenCart(
-    tools: List<Tool>
+    tools: CartPayload
 ) {
         Column(
             modifier = Modifier
@@ -42,7 +44,7 @@ fun ToolsScreenCart(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            for (tool in tools)
+            for (tool in tools.items)
                 ToolCardCart(tool = tool)
         }
 }
@@ -50,7 +52,7 @@ fun ToolsScreenCart(
 @Composable
 fun ToolCardCart(
     toolViewModel: ToolViewModel = viewModel(),
-    tool: Tool
+    tool: CartItem
 ) {
     Card(
         modifier = Modifier
@@ -83,10 +85,10 @@ fun ToolCardCart(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = tool.description,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+//                Text(
+//                    text = tool.description,
+//                    style = MaterialTheme.typography.bodyMedium
+//                )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = (stringResource(id = R.string.tool_price, tool.price)),
@@ -109,7 +111,7 @@ fun ToolCardCart(
             ){
                 Spacer(modifier = Modifier.height(10.dp))
                 Image(
-                    painter = painterResource(id = tool.imageResId),//(id = tool.imageResId),
+                    painter = painterResource(id = tool.image.toInt()),//(id = tool.imageResId),
                     contentDescription = tool.name,
                     modifier = Modifier
                         .fillMaxWidth()

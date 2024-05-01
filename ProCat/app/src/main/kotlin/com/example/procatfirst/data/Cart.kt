@@ -2,7 +2,7 @@ package com.example.procatfirst.data
 
 
 data class CartPayload(
-    val items: List<CartItem>
+    val items: Set<CartItem>
 )
 
 data class CartItem(

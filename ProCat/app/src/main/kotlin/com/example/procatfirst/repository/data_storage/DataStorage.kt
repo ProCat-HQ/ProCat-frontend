@@ -21,7 +21,7 @@ class DataStorage {
     private var context: Context? = null
     public var filesDir: File? = null
 
-    suspend fun getUserCartFromMemory(): MutableList<Tool> {
+    suspend fun getUserCartFromMemory(): MutableMap<Tool, Int> {
         var rowJsonUserCart = "{}"
         try {
             rowJsonUserCart = File(filesDir, FILEPATH).readText()
@@ -31,15 +31,16 @@ class DataStorage {
             }
         }
         val json = Json { prettyPrint = true }
-        val result: MutableList<Tool> = try {
+        val result: MutableMap<Tool, Int> = try {
             json.decodeFromString(rowJsonUserCart)
         } catch (e: RuntimeException) {
-            mutableListOf()
+            HashMap()
         }
         return result
     }
 
-    suspend fun setUserCartToMemory(cart: MutableList<Tool>) {
+    suspend fun setUserCartToMemory(cart: Map<Tool, Int>) {
+        Log.d("CART_DATA", cart.toString())
         val json = Json { prettyPrint = true }
         if(!(File(filesDir, FILEPATH).exists())) {
             withContext(Dispatchers.IO) {
@@ -49,9 +50,9 @@ class DataStorage {
         try {
             File(filesDir, FILEPATH).writeText(json.encodeToString(cart))
         } catch (e: RuntimeException) {
-            Log.i(
+            Log.e(
                 identifier,
-                "Error to write data into file"
+                "Error to write data into file: " + e.message
             )
         }
     }

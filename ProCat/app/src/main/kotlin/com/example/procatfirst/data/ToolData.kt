@@ -11,7 +11,7 @@ data class Tool(
     val price: Int,
     val isInStock: Boolean,
     val categoryId: Int,
-    val imageResId: Int
+    val imageResId: Int,
 )
 
 

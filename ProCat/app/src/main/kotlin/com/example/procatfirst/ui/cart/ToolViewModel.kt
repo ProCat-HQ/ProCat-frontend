@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.procatfirst.data.CartItem
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
@@ -31,14 +32,14 @@ class ToolViewModel: ViewModel()  {
         open()
     }
 
-    fun removeFromCart(tool : Tool) {
+    fun removeFromCart(tool : CartItem) {
         _uiState.update { currentState ->
             currentState.copy(
             )
         }
         this.viewModelScope.launch {
             withContext(Dispatchers.Default) {
-                DataCoordinator.shared.removeToolFromUserCart(tool)
+                DataCoordinator.shared.removeToolFromUserCart(tool.id)
             }
             NotificationCoordinator.shared.sendIntent(SystemNotifications.delInCartIntent)
         }

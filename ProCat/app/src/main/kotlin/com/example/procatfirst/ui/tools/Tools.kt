@@ -63,8 +63,7 @@ fun ToolsScreen(
     ) {
     val searchUiState by toolsViewModel.uiState.collectAsState()
     loadCatalog(toolsViewModel)
-    //ToolDataProvider.tools
-    //DataCoordinator.shared.addToolToUserCart(Tool(2, "Молоток", 1, "ddjdjjd", "sksks", 30))
+
     var tools by remember {
         mutableStateOf(DataCoordinator.shared.getCatalog())
     }
