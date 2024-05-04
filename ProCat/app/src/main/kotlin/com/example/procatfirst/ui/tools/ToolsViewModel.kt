@@ -70,7 +70,9 @@ class ToolsViewModel: ViewModel() {
     }
 
     private fun open() {
-        _uiState.value = SearchUiState("", DataCoordinator.shared.getCatalog())
+        _uiState.value = SearchUiState("", DataCoordinator.shared.getCatalog(),
+            DataCoordinator.shared.getCatalog().isNotEmpty()
+        )
         loadCatalog()
     }
 

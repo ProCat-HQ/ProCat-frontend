@@ -20,8 +20,6 @@ class ToolViewModel(tool : CartItem): ViewModel()  {
     private val _uiState = MutableStateFlow(ToolUiState(tool.count))
     val uiState: StateFlow<ToolUiState> = _uiState.asStateFlow()
 
-//    var quantity by mutableStateOf(1)
-//        private set
 
     init{
         open(tool)

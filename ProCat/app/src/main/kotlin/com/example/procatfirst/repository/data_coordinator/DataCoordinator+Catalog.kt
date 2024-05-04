@@ -8,6 +8,9 @@ fun DataCoordinator.loadCatalog(callback : () -> Unit) {
     if (CatalogCache.shared.getCatalogStuff().isEmpty()) {
         ApiCalls.shared.getItemsApi(callback)
     }
+    else {
+        callback
+    }
 }
 
 fun DataCoordinator.getCatalog() : List<Tool> {
