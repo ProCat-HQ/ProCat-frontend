@@ -37,19 +37,8 @@ fun StartScreen(
     controller : Context,
     modifier: Modifier = Modifier,
     onNextButtonClicked: () -> Unit,
-    //userRoleRepository: UserRoleRepository = LocalContext.current.myComponent.getUserRoleRepository(),
 
 ) {
-
-    val context = LocalContext.current
-    //val userRoleRepository = UserRoleRepository(context)
-
-    val userRoleText by UserRoleRepository.shared.getUserRole().collectAsState(initial = "")
-
-    val userRoleInputValue = remember {
-        mutableStateOf(TextFieldValue())
-    }
-
 
     Column(
         modifier = modifier,
@@ -61,32 +50,7 @@ fun StartScreen(
             color = MaterialTheme.colorScheme.onSurface
         )
 
-//        Text(
-//            text = userRoleText
-//        )
-//        TextField(
-//            value = userRoleInputValue.value,
-//            onValueChange = { userRoleInputValue.value = it },
-//        )
-//        Button(
-//            onClick = {
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    UserRoleRepository.shared.saveUserRole(userRoleInputValue.value.text)
-//                    DataCoordinator.shared.setUserRole()
-//                }
-//            }
-//        ) {
-//            Text(text = "Изменить пользователя")
-//        }
 
-//        Image(
-//            painter = painterResource(id = R.drawable.logo),
-//            contentDescription = stringResource(id = R.string.logo),
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
-//                .padding(top = 5.dp, bottom = 5.dp)
-//        )
         Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = stringResource(id = R.string.logo),

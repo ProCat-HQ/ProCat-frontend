@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DontMemoize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.sp
@@ -13,7 +14,7 @@ import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 
 @Composable
 fun ToolCard(
-    toolViewModel: ToolCartViewModel = viewModel()
+    toolViewModel: ToolCartViewModel = viewModel(),
 ) {
 
     val toolUiState by toolViewModel.uiState.collectAsState()

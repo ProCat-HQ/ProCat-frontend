@@ -14,7 +14,7 @@ import com.example.procatfirst.repository.data_storage.DataStorage
         }
         return UserCartCache.shared.getUserCartStuff()
     }
-    /*suspend*/ fun DataCoordinator.getUserCartPayload(): CartPayload {
+    suspend fun DataCoordinator.getUserCartPayload(): CartPayload {
 //        if (UserCartCache.shared.getUserCartStuff().isEmpty()) {
 //            UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
 //        }
@@ -24,7 +24,7 @@ import com.example.procatfirst.repository.data_storage.DataStorage
 
     suspend fun DataCoordinator.addToolToUserCart(tool : Tool){
         UserCartCache.shared.addUserCartStuff(tool)
-        //NotificationCoordinator.shared.sendIntent(SystemNotifications.cartLoaded)
+        NotificationCoordinator.shared.sendIntent(SystemNotifications.cartLoaded)
         //DataStorage.shared.setUserCartToMemory(UserCartCache.shared.getUserCartStuff())
     }
 

@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.cart
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
@@ -20,7 +21,7 @@ class ToolCartViewModel: ViewModel()  {
 
     private fun open(){
         //_uiState.value = ToolUiState()
-
+        Log.d("CartOpen", "CartOpen")
         viewModelScope.launch {
             _uiState.value = ToolsUiState(true, DataCoordinator.shared.getUserCartPayload())
         }

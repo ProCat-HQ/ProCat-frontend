@@ -33,7 +33,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     ProCatApp(
-                        this)
+                        this
+                    )
                 }
             }
         }

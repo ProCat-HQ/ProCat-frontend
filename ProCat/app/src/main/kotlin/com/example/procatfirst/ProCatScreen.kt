@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -41,11 +41,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.ui.auth.AuthScreen
-import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.cart.Cart
 import com.example.procatfirst.ui.courier.orders.CourierOrdersScreen
 import com.example.procatfirst.ui.item.ToolScreen
-import com.example.procatfirst.ui.item.ToolViewModel
 import com.example.procatfirst.ui.managment.OrdersManagerScreen
 import com.example.procatfirst.ui.ordering.OrderConfirmation
 import com.example.procatfirst.ui.ordering.OrderingScreen
@@ -53,7 +51,6 @@ import com.example.procatfirst.ui.personal.PersonalScreen
 import com.example.procatfirst.ui.personal.chats.ChatScreen
 import com.example.procatfirst.ui.personal.chats.ListOfChatsScreen
 import com.example.procatfirst.ui.personal.notifications.NotificationsScreen
-import com.example.procatfirst.ui.personal.orders.OrdersDeliveryScreen
 import com.example.procatfirst.ui.personal.orders.OrdersScreen
 import com.example.procatfirst.ui.personal.profile.ProfileScreen
 import com.example.procatfirst.ui.registration.RegistrationScreen
@@ -100,7 +97,7 @@ fun ProCatAppBar(
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back_button)
                     )
                 }
@@ -151,7 +148,7 @@ fun BottomNavigationBar(navController: NavController) {
                             }
                         }
                         launchSingleTop = true
-                        restoreState = true
+                        restoreState = false//true
                     }
                 }
             )
@@ -168,9 +165,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProCatApp (
-    controller : Context,
-    authViewModel: AuthViewModel = viewModel(),
-    toolViewModel: ToolViewModel = viewModel(),
+    controller: Context,
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -193,7 +188,7 @@ fun ProCatApp (
         }
 
     ) { innerPadding ->
-        //val uiState by viewModel.uiState.collectAsState()
+
 
         NavHost(
             navController = navController,
@@ -262,16 +257,6 @@ fun ProCatApp (
                         .padding(16.dp)
                 )
             }
-      /*      composable(route = ProCatScreen.Misha.name) {
-                TestButtons(
-                    onNextButtonClicked = {
-                        navController.navigate(ProCatScreen.Cart.name)
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                )
-            }*/
             composable(route = ProCatScreen.Cart.name) {
                 Cart(
                     modifier = Modifier
@@ -323,17 +308,11 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Orders.name) {
                 OrdersScreen(
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
+
                 )
             }
             composable(route = ProCatScreen.Delivery.name) {
-//                OrdersDeliveryScreen(
-//                    controller
-//                )
+
                 CourierOrdersScreen(controller)
             }
             composable(route = ProCatScreen.Manager.name) {
@@ -355,21 +334,11 @@ fun ProCatApp (
                     onToChatClicked = {
                         navController.navigate(ProCatScreen.Chat.name)
                     },
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
                 )
             }
             composable(route = ProCatScreen.Chat.name) {
                 ChatScreen(
 
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
                 )
             }
             composable(route = ProCatScreen.Ordering.name) {
