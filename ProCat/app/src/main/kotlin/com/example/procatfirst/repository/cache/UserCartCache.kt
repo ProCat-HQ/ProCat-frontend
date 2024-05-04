@@ -41,7 +41,7 @@ class UserCartCache {
         val set : MutableSet<CartItem> = mutableSetOf()
         for (tool in toolsStorage) {
             val key = tool.value
-            set.add(CartItem(key.id, key.name, key.price, tool.key, key.imageResId.toString())) //??
+            set.add(CartItem(key.id, key.name, key.price, key.cnt, key.imageResId.toString())) //??
         }
         return CartPayload(set)
     }

@@ -1,12 +1,8 @@
 package com.example.procatfirst.ui.cart
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.CartItem
-import com.example.procatfirst.data.Tool
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
@@ -20,16 +16,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import removeToolFromUserCart
 
-class ToolViewModel: ViewModel()  {
-    private val _uiState = MutableStateFlow(ToolUiState())
+class ToolViewModel(tool : CartItem): ViewModel()  {
+    private val _uiState = MutableStateFlow(ToolUiState(tool.count))
     val uiState: StateFlow<ToolUiState> = _uiState.asStateFlow()
 
-
-    var quantity by mutableStateOf(1)
-        private set
+//    var quantity by mutableStateOf(1)
+//        private set
 
     init{
-        open()
+        open(tool)
     }
 
     fun removeFromCart(tool : CartItem) {
@@ -46,17 +41,30 @@ class ToolViewModel: ViewModel()  {
     }
 
     fun increaseAmount() {
-        quantity++
-    }
-
-    fun decreaseAmount() {
-        if (quantity > 1) {
-            quantity--
+        //quantity++
+        _uiState.update { currentState ->
+            currentState.copy(
+                amount = uiState.value.amount + 1
+            )
         }
     }
 
-    private fun open(){
-        _uiState.value = ToolUiState()
+    fun decreaseAmount() {
+//        if (quantity > 1) {
+//            quantity--
+//        }
+        if (uiState.value.amount > 1) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    amount = uiState.value.amount - 1
+                )
+            }
+        }
+
+    }
+
+    private fun open(tool: CartItem){
+        _uiState.value = ToolUiState(tool.count)
     }
 
 }

@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ToolCartViewModel: ViewModel()  {
-    private val _uiState = MutableStateFlow(ToolUiState())
-    val uiState: StateFlow<ToolUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ToolsUiState())
+    val uiState: StateFlow<ToolsUiState> = _uiState.asStateFlow()
 
     init{
         open()
@@ -22,7 +22,7 @@ class ToolCartViewModel: ViewModel()  {
         //_uiState.value = ToolUiState()
 
         viewModelScope.launch {
-            _uiState.value = ToolUiState(true, DataCoordinator.shared.getUserCartPayload())
+            _uiState.value = ToolsUiState(true, DataCoordinator.shared.getUserCartPayload())
         }
     }
 

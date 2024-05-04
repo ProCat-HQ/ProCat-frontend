@@ -52,8 +52,8 @@ fun ToolsScreenCart(
 
 @Composable
 fun ToolCardCart(
-    toolViewModel: ToolViewModel = viewModel(),
-    tool: CartItem
+    tool: CartItem,
+    toolViewModel: ToolViewModel = ToolViewModel(tool),
 ) {
     Card(
         modifier = Modifier
@@ -98,7 +98,7 @@ fun ToolCardCart(
                     modifier = Modifier.fillMaxWidth()
                 )
                 QuantityButton(
-                    quantity = toolViewModel.quantity,
+                    quantity =  toolViewModel.uiState.value.amount,
                     onIncrease = { toolViewModel.increaseAmount() },
                     onDecrease = { toolViewModel.decreaseAmount() }
                 )

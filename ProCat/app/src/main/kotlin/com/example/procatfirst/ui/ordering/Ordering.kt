@@ -73,24 +73,12 @@ fun OrderingScreen(
     orderingViewModel.viewModelScope.launch {
         tools = withContext(Dispatchers.IO) {
             DataCoordinator.shared.getUserCart().values.toList() }
-//        withContext(Dispatchers.IO) {
-//            val list = mutableListOf<Tool>()
-//            for (t in DataCoordinator.shared.getUserCart()) {
-//                list.add(Tool(t.value.id, t.value.name, t.value.description, t.value.price, t.value.isInStock, t.value.categoryId, t.value.imageResId))
-//            }
-//            tools = list
-//        }
     }
 
     val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
         override fun howToReactOnIntent() {
             isActive = false
             orderingViewModel.viewModelScope.launch { tools = DataCoordinator.shared.getUserCart().values.toList() }
-//            orderingViewModel.viewModelScope.launch { val list = mutableListOf<Tool>()
-//                for (t in DataCoordinator.shared.getUserCart()) {
-//                    list.add(Tool(t.value.id, t.value.name, t.value.description, t.value.price, t.value.isInStock, t.value.categoryId, t.value.imageResId))
-//                }
-//                tools = list }
             isActive = true
         }
     }
