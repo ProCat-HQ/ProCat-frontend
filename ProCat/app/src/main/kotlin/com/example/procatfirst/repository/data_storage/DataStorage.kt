@@ -3,6 +3,7 @@ package com.example.procatfirst.repository.data_storage
 import android.content.Context
 import android.util.Log
 import com.example.procatfirst.data.Tool
+import com.example.procatfirst.data.ToolWithCnt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
@@ -21,7 +22,7 @@ class DataStorage {
     private var context: Context? = null
     public var filesDir: File? = null
 
-    suspend fun getUserCartFromMemory(): MutableMap<Tool, Int> {
+    suspend fun getUserCartFromMemory(): MutableMap<Int, ToolWithCnt> {
         var rowJsonUserCart = "{}"
         try {
             rowJsonUserCart = File(filesDir, FILEPATH).readText()
@@ -31,7 +32,7 @@ class DataStorage {
             }
         }
         val json = Json { prettyPrint = true }
-        val result: MutableMap<Tool, Int> = try {
+        val result: MutableMap<Int, ToolWithCnt> = try {
             json.decodeFromString(rowJsonUserCart)
         } catch (e: RuntimeException) {
             HashMap()
@@ -39,7 +40,7 @@ class DataStorage {
         return result
     }
 
-    suspend fun setUserCartToMemory(cart: Map<Tool, Int>) {
+    suspend fun setUserCartToMemory(cart: Map<Int, ToolWithCnt>) {
         Log.d("CART_DATA", cart.toString())
         val json = Json { prettyPrint = true }
         if(!(File(filesDir, FILEPATH).exists())) {

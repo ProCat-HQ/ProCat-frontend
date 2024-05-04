@@ -2,9 +2,6 @@ package com.example.procatfirst.ui.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.procatfirst.intents.NotificationCoordinator
-import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import getUserCartPayload
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,13 +19,15 @@ class ToolCartViewModel: ViewModel()  {
     }
 
     private fun open(){
-       // viewModelScope.launch {
+        //_uiState.value = ToolUiState()
+
+        viewModelScope.launch {
             _uiState.value = ToolUiState(true, DataCoordinator.shared.getUserCartPayload())
-       // }
+        }
     }
 
     fun updateTools() {
-        //viewModelScope.launch {
+        viewModelScope.launch {
             changeIsActive(false)
             _uiState.update { currentState ->
                 currentState.copy(
@@ -36,7 +35,7 @@ class ToolCartViewModel: ViewModel()  {
                 )
             }
             changeIsActive(true)
-        //}
+        }
     }
 
     private fun changeIsActive(fi : Boolean) {

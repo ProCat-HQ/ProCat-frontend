@@ -47,7 +47,7 @@ class OrderingViewModel: ViewModel() {
         // send request to make order with date, time, address and items!
         updateSelectedAddress(address)
         AllOrdersCache.shared.addOrder(order)
-        ApiCalls.shared.geocoderApi()
+        //ApiCalls.shared.geocoderApi()
         viewModelScope.launch {
             //ApiCalls.shared.postCart()
             //ApiCalls.shared.postOrder()

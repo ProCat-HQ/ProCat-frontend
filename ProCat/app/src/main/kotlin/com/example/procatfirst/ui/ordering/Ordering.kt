@@ -44,6 +44,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.Tool
+import com.example.procatfirst.data.ToolWithCnt
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
@@ -64,29 +65,32 @@ fun OrderingScreen(
 
     //------------------------------------------------------
     var tools by remember {
-        mutableStateOf(emptyList<Tool>())
+        mutableStateOf(emptyList<ToolWithCnt>())
     }
 
     var isActive by remember { mutableStateOf(true) }
 
     orderingViewModel.viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            val list = mutableListOf<Tool>()
-            for (t in DataCoordinator.shared.getUserCart()) {
-                list.add(t.key)
-            }
-            tools = list
-        }
+        tools = withContext(Dispatchers.IO) {
+            DataCoordinator.shared.getUserCart().values.toList() }
+//        withContext(Dispatchers.IO) {
+//            val list = mutableListOf<Tool>()
+//            for (t in DataCoordinator.shared.getUserCart()) {
+//                list.add(Tool(t.value.id, t.value.name, t.value.description, t.value.price, t.value.isInStock, t.value.categoryId, t.value.imageResId))
+//            }
+//            tools = list
+//        }
     }
 
     val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
         override fun howToReactOnIntent() {
             isActive = false
-            orderingViewModel.viewModelScope.launch { val list = mutableListOf<Tool>()
-                for (t in DataCoordinator.shared.getUserCart()) {
-                    list.add(t.key)
-                }
-                tools = list }
+            orderingViewModel.viewModelScope.launch { tools = DataCoordinator.shared.getUserCart().values.toList() }
+//            orderingViewModel.viewModelScope.launch { val list = mutableListOf<Tool>()
+//                for (t in DataCoordinator.shared.getUserCart()) {
+//                    list.add(Tool(t.value.id, t.value.name, t.value.description, t.value.price, t.value.isInStock, t.value.categoryId, t.value.imageResId))
+//                }
+//                tools = list }
             isActive = true
         }
     }
@@ -159,7 +163,7 @@ fun OrderingScreen(
         }
 
         Column(
-            
+
         ) {
             Row (){
                 Text(
@@ -185,7 +189,7 @@ fun OrderingScreen(
                 Text(text = stringResource(R.string.order))
             }
         }
-        
+
 
 
     }
@@ -235,7 +239,7 @@ fun SingleSelectionCard(selectionOption: SelectionOption, onOptionClicked: (Sele
 
 @Composable
 fun ToolsScreenCartSmall(
-    tools: List<Tool>
+    tools: List<ToolWithCnt>
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -249,7 +253,7 @@ fun ToolsScreenCartSmall(
 
 @Composable
 fun ToolCardCartSmall(
-    tool: Tool
+    tool: ToolWithCnt
 ) {
     Card(
         modifier = Modifier
