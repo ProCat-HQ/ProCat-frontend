@@ -34,7 +34,7 @@ class ApiCalls {
         const val identifier = "[ApiCalls]"
     }
 
-    fun getItemsApi() {
+    fun getItemsApi(callback : () -> Unit) {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
                 .baseUrl(url)
@@ -50,7 +50,8 @@ class ApiCalls {
                 t.printStackTrace()
                 Log.i("API", t.toString())
                 //!!!! TODO error intent !!!!
-                NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
+                callback()
+                //NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
             }
 
             /* The HTTP call was successful, we should still check status code and response body
@@ -61,7 +62,7 @@ class ApiCalls {
                 // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
                 response.body()?.string()?.let {
                     Log.i("RESPONSE", it)
-                    CatalogCache.shared.addCatalogStuff(Json.decodeFromString<List<Item>>(it))
+                    CatalogCache.shared.addCatalogStuff(Json.decodeFromString<List<Item>>(it), callback)
                 }
 
             }

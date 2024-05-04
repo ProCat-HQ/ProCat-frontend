@@ -14,7 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -26,9 +26,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,21 +35,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Tool
-import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.getCatalog
-import com.example.procatfirst.repository.data_coordinator.loadCatalog
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun ToolsScreen(
@@ -62,28 +50,14 @@ fun ToolsScreen(
     modifier: Modifier = Modifier
     ) {
     val searchUiState by toolsViewModel.uiState.collectAsState()
-    loadCatalog(toolsViewModel)
 
-    var tools by remember {
-        mutableStateOf(DataCoordinator.shared.getCatalog())
-    }
-    var loadText by remember {
-        mutableStateOf("Loading...")
-    }
-    var isActive by remember { mutableStateOf(tools.isNotEmpty())}
     val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
         override fun howToReactOnIntent() {
-            if(CatalogCache.shared.getCatalogStuff().isEmpty()) {
-                loadText = "Нет соединения с сервером"
-            }
-            else {
-                tools = CatalogCache.shared.getCatalogStuff()
-                isActive = true
-            }
+            toolsViewModel.updateTools()
         }
     }
     receiver1.CreateReceiver(intentToReact = SystemNotifications.stuffAddedIntent)
-    if (isActive) {
+    if (searchUiState.isActive) {
         Column (
 
         ){
@@ -111,7 +85,7 @@ fun ToolsScreen(
                 )
                 IconButton(onClick = {}) {
                     Icon(
-                        imageVector = Icons.Outlined.List,
+                        imageVector = Icons.AutoMirrored.Outlined.List,
                         contentDescription = stringResource(R.string.filter)
                     )
                 }
@@ -132,14 +106,14 @@ fun ToolsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                items(tools) { tool ->
+                items(searchUiState.tools) { tool ->
                     ToolCard(tool = tool, onNextButtonClicked1)
                 }
             }
         }
     }
     else {
-        Text(text = loadText)
+        Text(text = searchUiState.loadText)
         Button(
             onClick = { onNextButtonClicked() },
             modifier = Modifier
@@ -207,11 +181,3 @@ fun ToolPreview() {
     }
 }
 
-/**
- *  На самом деле тут корутина не понадобилась, но для примера пусть пока будет
- */
-fun loadCatalog(toolsViewModel : ViewModel) {
-    toolsViewModel.viewModelScope.launch {
-        DataCoordinator.shared.loadCatalog()
-    }
-}

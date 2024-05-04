@@ -17,7 +17,7 @@ class CatalogCache {
         const val identifier = "[CatalogCache]"
     }
 
-    fun addCatalogStuff(list: List<Item>) {
+    fun addCatalogStuff(list: List<Item>, callback : () -> Unit) {
         if (toolsStorage.isEmpty()) {
             val resultList = mutableListOf<Tool>()
             for (i: Item in list) {
@@ -25,7 +25,7 @@ class CatalogCache {
             }
             toolsStorage.addAll(resultList)
             //intent
-            NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
+            callback()
         }
     }
 
