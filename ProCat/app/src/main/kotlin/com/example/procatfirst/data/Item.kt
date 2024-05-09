@@ -13,6 +13,8 @@ data class Item(
         val isInStock: Boolean,
         val images: Int?,
         val categoryId: Int?,
+
+
 )
 
 @Serializable

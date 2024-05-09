@@ -2,6 +2,8 @@ package com.example.procatfirst.repository.api
 
 import android.util.Log
 import com.example.procatfirst.data.Item
+import com.example.procatfirst.data.ItemResponse
+import com.example.procatfirst.data.ItemsResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.intents.NotificationCoordinator
@@ -30,7 +32,7 @@ import java.lang.Thread.sleep
 class ApiCalls {
     companion object {
         val shared = ApiCalls()
-        const val BACKEND_URL = "http://79.137.205.181:8080"
+        const val BACKEND_URL = "http://79.137.205.181:8081"
         const val identifier = "[ApiCalls]"
     }
 
@@ -43,26 +45,24 @@ class ApiCalls {
                 .create(UserService::class.java)
 
 
-        service.getItems("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+        service.getItems("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ItemResponse> {
 
             /* The HTTP call failed. This method is run on the main thread */
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            override fun onFailure(call: Call<ItemResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("API", t.toString())
-                //!!!! TODO error intent !!!!
                 callback()
-                //NotificationCoordinator.shared.sendIntent(SystemNotifications.stuffAddedIntent)
             }
 
             /* The HTTP call was successful, we should still check status code and response body
              * on a production app. This method is run on the main thread */
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            override fun onResponse(call: Call<ItemResponse>, response: Response<ItemResponse>) {
                 Log.i("RESPONSE ROW", response.raw().toString())
                 /* This will print the response of the network call to the Logcat */
                 // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
-                response.body()?.string()?.let {
-                    Log.i("RESPONSE", it)
-                    CatalogCache.shared.addCatalogStuff(Json.decodeFromString<List<Item>>(it), callback)
+                response.let {
+                    Log.i("RESPONSE", it.toString())
+                    CatalogCache.shared.addCatalogStuff(it.body()!!.payload.rows, callback)
                 }
 
             }
@@ -169,7 +169,7 @@ class ApiCalls {
 
     }
 
-    suspend fun signInApi(login: String, password: String) : Boolean {
+    suspend fun signInApi(login: String, password: String, callback: (String) -> Unit) {
 
         val service = Retrofit.Builder()
                 .baseUrl(BACKEND_URL)
@@ -182,19 +182,26 @@ class ApiCalls {
         jsonObject.put("password", password)
 
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
-        service.login(requestBody).enqueue(object : Callback<TokenResponse> { //ResponseBody
+        service.login(requestBody).enqueue(object : Callback<TokenResponse> {
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("RESPONSE", "Fail")
+                callback("FAIL")
             }
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-                response.body()?.let {
-                    UserDataCache.shared.setUserToken(it.token)
-                    Log.i("TOKEN Response", it.token)
+                if (response.code() == 200) {
+                    response.body()?.let {
+                        UserDataCache.shared.setUserToken(it.payload.token)
+                        Log.i("TOKEN Response", it.payload.token)
+                        callback("SUCCESS")
+                    }
+                }
+                else {
+                    callback("FAIL")
                 }
             }
         })
-        return UserDataCache.shared.getUserToken().isNotBlank()
+
     }
 
     suspend fun getAllUsersApi()  {

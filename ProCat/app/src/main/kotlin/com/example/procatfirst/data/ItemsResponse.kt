@@ -1,15 +1,14 @@
 package com.example.procatfirst.data
 
-import com.example.procatfirst.data.Item
 import kotlinx.serialization.Serializable
 
-//data class ItemsResponse(val items: List<Item>)
+
 @Serializable
 data class ItemsResponse(
 
-    //val status: String,
-    //val message: String,
-        val payload : List<Item>
+    val status: String,
+    val message: String,
+    val payload : List<Item>
 )
 
 data class ItemResponse(

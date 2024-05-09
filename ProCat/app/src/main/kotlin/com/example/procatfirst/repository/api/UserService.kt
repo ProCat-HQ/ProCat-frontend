@@ -7,6 +7,8 @@ import com.example.procatfirst.data.ClusterPayload
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryPayload
 import com.example.procatfirst.data.Deliveryman
+import com.example.procatfirst.data.ItemResponse
+import com.example.procatfirst.data.ItemsResponse
 import com.example.procatfirst.data.Notification
 import com.example.procatfirst.data.NotificationItem
 import com.example.procatfirst.data.NotificationPayload
@@ -166,7 +168,7 @@ interface UserService {
     fun geocoder(): Call<ResponseBody>
 
     @GET("/items")
-    fun getItems(@Header("Authorization") token: String?): Call<ResponseBody>
+    fun getItems(@Header("Authorization") token: String?): Call<ItemResponse>
 
     @GET("/users/{userId}")
     fun getUser(@Query("userId") userId: Int): Call<User>

@@ -20,7 +20,6 @@ class ToolCartViewModel: ViewModel()  {
     }
 
     private fun open(){
-        //_uiState.value = ToolUiState()
         Log.d("CartOpen", "CartOpen")
         viewModelScope.launch {
             _uiState.value = ToolsUiState(true, DataCoordinator.shared.getUserCartPayload())

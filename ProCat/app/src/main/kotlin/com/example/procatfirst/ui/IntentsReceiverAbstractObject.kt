@@ -81,6 +81,7 @@ abstract class IntentsReceiverAbstractObject {
     open fun howToReactOnIntent() {}
 
     fun getExtra(extra : String) : String? {
+        Log.d("WTF?!", extras?.getString(null).toString())
         return extras?.getString(extra)
     }
 

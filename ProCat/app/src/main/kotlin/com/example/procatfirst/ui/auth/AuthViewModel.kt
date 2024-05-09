@@ -1,6 +1,5 @@
 package com.example.procatfirst.ui.auth
 
-//import com.example.procatfirst.ProCatApplication
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -59,18 +58,14 @@ class AuthViewModel(
     private fun checkUserPhoneNumber(): Boolean {
         if //(userInputPhoneNumber.length == 11) {
             (userInputPhoneNumber != "") {
-            //val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
             CoroutineScope(Dispatchers.IO).launch {//TODO не на том этапе пишем данные юзера - они ещё не полные.
                 DataCoordinator.shared.setUserData(User(1, userInputPhoneNumber,
                     "$userInputPhoneNumber@mail.ru", "", "", false, userInputPhoneNumber, "", ""))
             }
 
-            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             return true
         } else {
-            _uiState.update { currentState ->
-                currentState.copy(enteredPhoneNumberWrong = true)
-            }
+            wrongPassword()
         }
         updateUserPhoneNumber("")
         return false
@@ -86,33 +81,31 @@ class AuthViewModel(
 
     private fun checkUserPassword(): Boolean {
         if (userInputPassword.length > 2) {
-            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
+
             _uiState.update { currentState ->
                 currentState.copy(
                     enteredPasswordWrong = false
                 )
             }
-            //updateUserPassword("")
             return true
         }
-        _uiState.update { currentState ->
-            currentState.copy(enteredPasswordWrong = true)
-        }
+        wrongPassword()
 
         updateUserPassword("")
         return false
     }
 
-    fun signIn() {
+    fun signIn(onNextButtonClicked : () -> Unit) {
          if (checkUserPassword() && checkUserPhoneNumber()) {
             viewModelScope.launch {
-                val response = ApiCalls.shared.signInApi(userInputPhoneNumber, userInputPassword)
-                if (response) {
-                    NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent, "Response","SUCCESS")
+                val callback = {status : String ->
+                    if(status == "SUCCESS") {
+                        onNextButtonClicked()
+                    } else {
+                        wrongPassword()
+                    }
                 }
-                else {
-                    NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent, "Response", "FAIL")
-                }
+                ApiCalls.shared.signInApi(userInputPhoneNumber, userInputPassword, callback)
             }
         }
     }

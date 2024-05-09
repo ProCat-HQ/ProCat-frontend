@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.auth
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,7 +40,6 @@ import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 fun AuthScreen(
     onNextButtonClicked: () -> Unit,
     onToRegistrationClick: () -> Unit,
-    //authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory),
     authViewModel: AuthViewModel = viewModel(),
 
     modifier: Modifier = Modifier
@@ -49,15 +49,9 @@ fun AuthScreen(
 
     val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
         override fun howToReactOnIntent() {
-            if (getExtra("Response") == "SUCCESS") {
-                onNextButtonClicked()
-            }
-            else {
-                authViewModel.wrongPassword()
-            }
+            authViewModel.wrongPassword()
         }
     }
-
     receiver.CreateReceiver(intentToReact = SystemNotifications.loginIntent)
 
     Column(
@@ -89,7 +83,7 @@ fun AuthScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { authViewModel.signIn()}
+            onClick = { authViewModel.signIn(onNextButtonClicked)}
         ) {
             Text(
                 text = stringResource(R.string.sign_in),

@@ -8,5 +8,11 @@ data class UserResponse(
 )
 
 data class TokenResponse(
+    val status: Int,
+    val message: String,
+    val payload: Token,
+)
+
+data class Token(
     val token: String,
 )
