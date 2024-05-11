@@ -11,6 +11,7 @@ import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.setTokenAndRole
 import com.example.procatfirst.repository.data_coordinator.setUserData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -98,8 +99,9 @@ class AuthViewModel(
     fun signIn(onNextButtonClicked : () -> Unit) {
          if (checkUserPassword() && checkUserPhoneNumber()) {
             viewModelScope.launch {
-                val callback = {status : String ->
+                val callback = {status : String, token: String ->
                     if(status == "SUCCESS") {
+                        DataCoordinator.shared.setTokenAndRole(token)
                         onNextButtonClicked()
                     } else {
                         wrongPassword()

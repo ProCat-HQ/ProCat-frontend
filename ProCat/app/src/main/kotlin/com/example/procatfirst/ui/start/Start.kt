@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getUserRole
 import com.example.procatfirst.repository.data_coordinator.setUserRole
 
 

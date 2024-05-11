@@ -16,3 +16,8 @@ data class TokenResponse(
 data class Token(
     val token: String,
 )
+
+data class JwtToken(
+    val header: String,
+    val payload: String,
+)

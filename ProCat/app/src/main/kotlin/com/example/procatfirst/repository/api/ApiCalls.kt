@@ -11,6 +11,9 @@ import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.cache.UserDataCache
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.setTokenAndRole
+import com.example.procatfirst.repository.data_coordinator.setUserRole
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -169,7 +172,7 @@ class ApiCalls {
 
     }
 
-    suspend fun signInApi(login: String, password: String, callback: (String) -> Unit) {
+    suspend fun signInApi(login: String, password: String, callback: (String, String) -> Unit) {
 
         val service = Retrofit.Builder()
                 .baseUrl(BACKEND_URL)
@@ -186,18 +189,17 @@ class ApiCalls {
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("RESPONSE", "Fail")
-                callback("FAIL")
+                callback("FAIL", "none")
             }
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                 if (response.code() == 200) {
                     response.body()?.let {
-                        UserDataCache.shared.setUserToken(it.payload.token)
-                        Log.i("TOKEN Response", it.payload.token)
-                        callback("SUCCESS")
+                        //Log.i("TOKEN Response", it.payload.token)
+                        callback("SUCCESS", it.payload.token)
                     }
                 }
                 else {
-                    callback("FAIL")
+                    callback("FAIL", "none")
                 }
             }
         })

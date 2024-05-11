@@ -41,7 +41,6 @@ fun PersonalScreen(
     onToDeliveryClicked:() -> Unit,
     onToManagerClicked:() -> Unit,
 ) {
-    val userRole = remember { mutableStateOf(DataCoordinator.shared.getUserRole())}
 
     Column(
         modifier = Modifier
@@ -105,17 +104,17 @@ fun PersonalScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { Log.d("TOKEN", UserDataCache.shared.getUserToken()) }
+            onClick = { Log.d("ROLE", UserDataCache.shared.getUserRole()) }
         ) {
             Text(
-                text = "token",
+                text = "role",
                 fontSize = 16.sp
             )
         }
 
-       // Log.d("UserRole", userRole.toString())
+        val userRole = UserDataCache.shared.getUserRole()
 
-        if(userRole.value == "delivery" || userRole.value == "admin") {
+        if(userRole == "delivery" || userRole == "admin") {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -129,7 +128,7 @@ fun PersonalScreen(
             }
         }
 
-        if(userRole.value == "manager" || userRole.value == "admin") {
+        if(userRole == "manager" || userRole == "admin") {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
