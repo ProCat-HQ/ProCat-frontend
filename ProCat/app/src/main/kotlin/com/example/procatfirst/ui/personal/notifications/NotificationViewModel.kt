@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.procatfirst.data.NotificationDataProvider
 import com.example.procatfirst.data.NotificationItem
+import com.example.procatfirst.repository.api.ApiCalls
 import kotlinx.coroutines.flow.MutableStateFlow
 
 
@@ -17,11 +18,13 @@ class NotificationViewModel: ViewModel() {
         NotificationDataProvider.notifications)
 
     init {
+        //ApiCalls.shared.getAllNotificationsApi()
         updateNotifications()
     }
 
     fun markAsRead(notification: NotificationItem) {
         notification.isViewed = true
+        //ApiCalls.shared.sentNotificationToViewedApi(notification.id)
     }
 
     private fun updateNotifications() {
