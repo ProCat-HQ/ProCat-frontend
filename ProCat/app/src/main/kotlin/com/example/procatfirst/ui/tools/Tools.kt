@@ -55,6 +55,7 @@ fun ToolsScreen(
     ) {
     val searchUiState by toolsViewModel.uiState.collectAsState()
     val (showFilterDialog, setShowFilterDialog) = remember { mutableStateOf(false) }
+    val (groupByCategory, setGroupByCategory) = remember { mutableStateOf(false) }
 
 
     val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
@@ -109,17 +110,42 @@ fun ToolsScreen(
             ) {
                 Text(stringResource(R.string.search))
             }
-            LazyColumn(
-                modifier = Modifier
-                    //.verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                items(searchUiState.tools) { tool ->
-                    ToolCard(tool = tool, onNextButtonClicked1)
+            if (groupByCategory) {
+                LazyColumn(
+                    modifier = Modifier
+                        //.verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    val groupedTools = searchUiState.tools.groupBy { it.categoryId }
+                    groupedTools.forEach { (categoryId, tools) ->
+                        item {
+                            Text(
+                                text = categoryId.toString(),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        items(tools) { tool ->
+                            ToolCard(tool = tool, onNextButtonClicked1)
+                        }
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        //.verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(searchUiState.tools) { tool ->
+                        ToolCard(tool = tool, onNextButtonClicked1)
+                    }
                 }
             }
+
         }
         if (showFilterDialog) {
             FilterDialog(
@@ -130,6 +156,15 @@ fun ToolsScreen(
                 },
                 onSortByPriceDescending = {
                     toolsViewModel.sortByPriceDescending()
+                    setShowFilterDialog(false)
+                },
+                onCategoryGroupRequest = {
+                    setGroupByCategory(true)
+                    setShowFilterDialog(false)
+                },
+                resetRequest = {
+                    setGroupByCategory(false)
+                    toolsViewModel.resetFilters()
                     setShowFilterDialog(false)
                 }
             )
@@ -203,6 +238,8 @@ fun FilterDialog(
     onDismissRequest: () -> Unit,
     onSortByPriceAscending: () -> Unit,
     onSortByPriceDescending: () -> Unit,
+    onCategoryGroupRequest: () -> Unit,
+    resetRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AlertDialog(
@@ -227,14 +264,20 @@ fun FilterDialog(
                 ) {
                     Text(stringResource(R.string.descending))
                 }
+                Button(
+                    onClick = onCategoryGroupRequest,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.category_group))
+                }
             }
         },
         confirmButton = {
             Button(
-                onClick = onDismissRequest,
+                onClick = resetRequest,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(R.string.apply))
+                Text(stringResource(R.string.reset))
             }
         },
         dismissButton = {

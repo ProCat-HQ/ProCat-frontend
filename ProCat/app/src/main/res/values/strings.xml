@@ -76,6 +76,8 @@
 
     <string name="cancel">Закрыть</string>
     <string name="apply">Применить</string>
+    <string name="category_group">По категориям</string>
+    <string name="reset">Сбросить</string>
 
 
     <string name="personal">Меню</string>
