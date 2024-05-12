@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -289,21 +290,12 @@ fun ProCatApp (
                     },
                     onToManagerClicked = {
                         navController.navigate(ProCatScreen.Manager.name)
-                    },
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
+                    }
+
                 )
             }
             composable(route = ProCatScreen.Profile.name) {
                 ProfileScreen(
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
                 )
             }
             composable(route = ProCatScreen.Orders.name) {
@@ -322,12 +314,8 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Notifications.name) {
                 NotificationsScreen(
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
-                )
+                    context = LocalContext.current,
+                    )
             }
             composable(route = ProCatScreen.ListOfChatsScreen.name) {
                 ListOfChatsScreen(
