@@ -4,27 +4,32 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.procatfirst.data.NotificationDataProvider
-import com.example.procatfirst.data.Notification
+import com.example.procatfirst.data.NotificationItem
+import com.example.procatfirst.repository.api.ApiCalls
 import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class NotificationViewModel: ViewModel() {
 
-    val notifications: MutableStateFlow<List<Notification>> = MutableStateFlow(
+    private var isFirstTime = true
+
+
+    val notifications: MutableStateFlow<List<NotificationItem>> = MutableStateFlow(
         NotificationDataProvider.notifications)
 
     init {
-
+        //ApiCalls.shared.getAllNotificationsApi()
+        updateNotifications()
     }
 
-    fun markAsRead(notification: Notification) {
+    fun markAsRead(notification: NotificationItem) {
         notification.isViewed = true
-        updateNotifications()
+        //ApiCalls.shared.sentNotificationToViewedApi(notification.id)
     }
 
     private fun updateNotifications() {
         notifications.value = notifications.value.toMutableList()
-            .sortedByDescending { it.isViewed }
+            .sortedByDescending { it.createdAt }
             .toList()
     }
 }

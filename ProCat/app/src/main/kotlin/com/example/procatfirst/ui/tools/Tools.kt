@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -26,6 +28,8 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +54,9 @@ fun ToolsScreen(
     modifier: Modifier = Modifier
     ) {
     val searchUiState by toolsViewModel.uiState.collectAsState()
+    val (showFilterDialog, setShowFilterDialog) = remember { mutableStateOf(false) }
+    val (groupByCategory, setGroupByCategory) = remember { mutableStateOf(false) }
+
 
     val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
         override fun howToReactOnIntent() {
@@ -64,6 +71,8 @@ fun ToolsScreen(
             Row(
                 modifier = Modifier
                     .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ){
                 OutlinedTextField(
                     value = toolsViewModel.userInputSearch,
@@ -81,9 +90,11 @@ fun ToolsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
-
+                        .weight(1f)
                 )
-                IconButton(onClick = {}) {
+                Spacer(modifier = Modifier.width(8.dp))
+
+                IconButton(onClick = {setShowFilterDialog(true)}) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.List,
                         contentDescription = stringResource(R.string.filter)
@@ -92,24 +103,71 @@ fun ToolsScreen(
 
             }
             Button(
-                onClick = { onNextButtonClicked() },
+                onClick = { toolsViewModel.search() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text(stringResource(R.string.next))
+                Text(stringResource(R.string.search))
             }
-            LazyColumn(
-                modifier = Modifier
-                    //.verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                items(searchUiState.tools) { tool ->
-                    ToolCard(tool = tool, onNextButtonClicked1)
+            if (groupByCategory) {
+                LazyColumn(
+                    modifier = Modifier
+                        //.verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    val groupedTools = searchUiState.tools.groupBy { it.categoryId }
+                    groupedTools.forEach { (categoryId, tools) ->
+                        item {
+                            Text(
+                                text = categoryId.toString(),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        items(tools) { tool ->
+                            ToolCard(tool = tool, onNextButtonClicked1)
+                        }
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        //.verticalScroll(rememberScrollState())
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(searchUiState.tools) { tool ->
+                        ToolCard(tool = tool, onNextButtonClicked1)
+                    }
                 }
             }
+
+        }
+        if (showFilterDialog) {
+            FilterDialog(
+                onDismissRequest = { setShowFilterDialog(false) },
+                onSortByPriceAscending = {
+                    toolsViewModel.sortByPriceAscending()
+                    setShowFilterDialog(false)
+                },
+                onSortByPriceDescending = {
+                    toolsViewModel.sortByPriceDescending()
+                    setShowFilterDialog(false)
+                },
+                onCategoryGroupRequest = {
+                    setGroupByCategory(true)
+                    setShowFilterDialog(false)
+                },
+                resetRequest = {
+                    setGroupByCategory(false)
+                    toolsViewModel.resetFilters()
+                    setShowFilterDialog(false)
+                }
+            )
         }
     }
     else {
@@ -171,6 +229,66 @@ fun ToolCard(
             )
         }
     }
+}
+
+
+
+@Composable
+fun FilterDialog(
+    onDismissRequest: () -> Unit,
+    onSortByPriceAscending: () -> Unit,
+    onSortByPriceDescending: () -> Unit,
+    onCategoryGroupRequest: () -> Unit,
+    resetRequest: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(stringResource(R.string.sort_by_price))
+        },
+        text = {
+            Column(
+                modifier = modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = onSortByPriceAscending,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.ascending))
+                }
+                Button(
+                    onClick = onSortByPriceDescending,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.descending))
+                }
+                Button(
+                    onClick = onCategoryGroupRequest,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.category_group))
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = resetRequest,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.reset))
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismissRequest,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.cancel))
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)

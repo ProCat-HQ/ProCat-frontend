@@ -80,6 +80,8 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
+    //implementation("androidx.core:core-ktx:2.2.0")
+
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0-alpha02")
 

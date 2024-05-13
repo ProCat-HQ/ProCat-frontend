@@ -68,8 +68,16 @@
 
     <string name="order_confirmation">Подтверждение заказа</string>
 
+    <string name="send_notification">Послать уведомление</string>
 
+    <string name="sort_by_price">Сортировать по цене</string>
+    <string name="ascending">По возрастанию</string>
+    <string name="descending">По убыванию</string>
 
+    <string name="cancel">Закрыть</string>
+    <string name="apply">Применить</string>
+    <string name="category_group">По категориям</string>
+    <string name="reset">Сбросить</string>
 
 
     <string name="personal">Меню</string>

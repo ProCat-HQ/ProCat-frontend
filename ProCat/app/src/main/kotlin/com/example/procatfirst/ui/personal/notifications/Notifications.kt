@@ -1,6 +1,7 @@
 package com.example.procatfirst.ui.personal.notifications
 
 import android.app.Notification
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
@@ -39,6 +42,7 @@ import com.example.procatfirst.ui.theme.md_theme_light_tertiaryContainer
 
 @Composable
 fun NotificationsScreen(
+    context: Context,
     notificationViewModel: NotificationViewModel = viewModel(),
     ) {
 
@@ -60,7 +64,7 @@ fun NotificationsScreen(
         notifications.forEach { notification ->
             notification(
                 title = notification.title,
-                date = "12.02.2024",
+                date = notification.createdAt,
                 description = notification.description,
                 isViewed = notification.isViewed,
                 onClick = {
@@ -73,6 +77,17 @@ fun NotificationsScreen(
         FilledTonalButton(onClick = {  }) {
             Text(
                 text = stringResource(R.string.ask_question)
+            )
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            onClick = { makeNotification(context = context, "Уведомление!", "Нажми и посмотри") }
+        ) {
+            Text(
+                text = stringResource(R.string.send_notification),
+                fontSize = 16.sp
             )
         }
 
@@ -89,9 +104,9 @@ fun notification(
 ) {
     OutlinedCard(
         colors = CardDefaults.cardColors(
-            containerColor = if (isViewed) md_theme_light_surface else md_theme_light_surfaceVariant,
+            containerColor = if (isViewed) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primaryContainer,
         ),
-        border = BorderStroke(1.dp, md_theme_light_scrim),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme. scrim),
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
@@ -116,7 +131,7 @@ fun notification(
                 text = date,
                 textAlign = TextAlign.Right,
                 style = MaterialTheme.typography.bodyMedium,
-                color = md_theme_light_outline
+                color = MaterialTheme.colorScheme.outline
             )
         }
         Text(
@@ -129,13 +144,5 @@ fun notification(
         )
 
 
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PersonalPreview() {
-    ProCatFirstTheme {
-        NotificationsScreen()
     }
 }

@@ -33,7 +33,33 @@ class ToolsViewModel: ViewModel() {
     }
 
     fun search() {
+        val searchQuery = userInputSearch.trim().lowercase()
+        _uiState.update { currentState ->
+            currentState.copy(
+                tools = DataCoordinator.shared.getCatalog().filter { tool ->
+                    tool.name.lowercase().contains(searchQuery) || tool.description.lowercase().contains(searchQuery)
+                }
+            )
+        }
+    }
+    fun sortByPriceAscending() {
+        _uiState.update { it.copy(tools = it.tools.sortedBy { tool -> tool.price }) }
+    }
 
+    fun sortByPriceDescending() {
+        _uiState.update { it.copy(tools = it.tools.sortedByDescending { tool -> tool.price }) }
+    }
+
+    fun groupByCategory() {
+    }
+
+    fun resetFilters() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                tools = DataCoordinator.shared.getCatalog(),
+                isActive = true,
+            )
+        }
     }
 
     fun updateTools() {

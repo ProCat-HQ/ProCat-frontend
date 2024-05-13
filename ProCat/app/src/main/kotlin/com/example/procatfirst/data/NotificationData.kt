@@ -8,14 +8,14 @@ data class Notification(
     val title: String,
     val description: String,
     var isViewed: Boolean,
-    val userId: Int
+    val createdAt: Int
 )
 
 data class NotificationItem(
     val id: Int,
     val title: String,
     val description: String,
-    val isViewed: Boolean,
+    var isViewed: Boolean,
     val createdAt: String
 )
 
@@ -25,33 +25,33 @@ data class NotificationPayload(
 
 object NotificationDataProvider {
     val notifications = listOf(
-        Notification(
-            notificationId = 1,
+        NotificationItem(
+            id = 1,
             title = "Новое сообщение в чате",
             description = "He'll want to use your yacht, and I don't want this thing smelling like fish.",
             isViewed = true,
-            userId = 1
+            createdAt = "11.02.2024"
         ),
-        Notification(
-            notificationId = 2,
+        NotificationItem(
+            id = 2,
             title = "Инструмент из подписки в продаже",
             description = "He'll want to use your yacht, and I don't want this thing smelling like fish.",
             isViewed = false,
-            userId = 1
+            createdAt = "12.02.2024"
         ),
-        Notification(
-            notificationId = 2,
+        NotificationItem(
+            id = 2,
             title = "Заказ в доставке",
             description = "He'll want to use your yacht, and I don't want this thing smelling like fish.",
             isViewed = true,
-            userId = 1
+            createdAt = "10.02.2024"
         ),
-        Notification(
-            notificationId = 4,
+        NotificationItem(
+            id = 4,
             title = "Оплата не прошла",
             description = "He'll want to use your yacht, and I don't want this thing smelling like fish.",
             isViewed = false,
-            userId = 1
+            createdAt = "09.02.2024"
         ),
     )
 }
