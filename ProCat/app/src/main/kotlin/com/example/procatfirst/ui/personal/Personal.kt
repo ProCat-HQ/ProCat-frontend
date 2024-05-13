@@ -103,18 +103,6 @@ fun PersonalScreen(
             )
         }
 
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            onClick = { Log.d("ROLE", UserDataCache.shared.getUserRole()) }
-        ) {
-            Text(
-                text = "role",
-                fontSize = 16.sp
-            )
-        }
-
         val userRole = UserDataCache.shared.getUserRole()
 
         if(userRole == "delivery" || userRole == "admin") {

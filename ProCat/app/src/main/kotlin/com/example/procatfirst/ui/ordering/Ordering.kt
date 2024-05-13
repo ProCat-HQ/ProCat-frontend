@@ -43,12 +43,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Order
-import com.example.procatfirst.data.Tool
 import com.example.procatfirst.data.ToolWithCnt
-import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import getUserCart
 import kotlinx.coroutines.Dispatchers
@@ -62,28 +59,6 @@ fun OrderingScreen(
     onToConfirmationClicked: (OrderingViewModel) -> Unit,
 
     ) {
-
-    //------------------------------------------------------
-    var tools by remember {
-        mutableStateOf(emptyList<ToolWithCnt>())
-    }
-
-    var isActive by remember { mutableStateOf(true) }
-
-    orderingViewModel.viewModelScope.launch {
-        tools = withContext(Dispatchers.IO) {
-            DataCoordinator.shared.getUserCart().values.toList() }
-    }
-
-    val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
-        override fun howToReactOnIntent() {
-            isActive = false
-            orderingViewModel.viewModelScope.launch { tools = DataCoordinator.shared.getUserCart().values.toList() }
-            isActive = true
-        }
-    }
-    receiver1.CreateReceiver(intentToReact = SystemNotifications.delInCartIntent)
-    receiver1.CreateReceiver(intentToReact = SystemNotifications.cartLoaded)
 
     //-----------------------------------------------------
 
@@ -138,16 +113,16 @@ fun OrderingScreen(
 
         DateTimePickerComponent(orderingViewModel)
 
-        if(tools.isNotEmpty() && isActive) {
-            ToolsScreenCartSmall(tools)
+        if(orderingViewModel.uiState.value.tools.isNotEmpty()) {
+            ToolsScreenCartSmall(orderingViewModel.uiState.value.tools)
         } else {
             Text(text = "Ваша корзина пуста", fontSize = 18.sp)
         }
 
         Spacer(modifier = Modifier.weight(1f))
         var sum = 0
-        for (t in tools) {
-            sum += t.price
+        for (t in orderingViewModel.uiState.value.tools) {
+            sum += t.price * t.cnt
         }
 
         Column(
@@ -157,7 +132,6 @@ fun OrderingScreen(
                 Text(
                     text = stringResource(R.string.final_price),
                     modifier = Modifier.weight(5f)
-
                 )
 
                 Text(
@@ -177,9 +151,6 @@ fun OrderingScreen(
                 Text(text = stringResource(R.string.order))
             }
         }
-
-
-
     }
 }
 
@@ -273,7 +244,10 @@ fun ToolCardCartSmall(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
+            Text(
+                text = ("Кол-во: ${tool.cnt}"),
+                textAlign = TextAlign.End,
+            )
         }
 
     }

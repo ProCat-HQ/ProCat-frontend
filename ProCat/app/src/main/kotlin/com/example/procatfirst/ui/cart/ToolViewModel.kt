@@ -7,6 +7,8 @@ import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import decreaseToolCount
+import increaseToolCount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +19,7 @@ import kotlinx.coroutines.withContext
 import removeToolFromUserCart
 
 class ToolViewModel(tool : CartItem): ViewModel()  {
-    private val _uiState = MutableStateFlow(ToolUiState(tool.count))
+    private val _uiState = MutableStateFlow(ToolUiState(tool))
     val uiState: StateFlow<ToolUiState> = _uiState.asStateFlow()
 
 
@@ -30,7 +32,7 @@ class ToolViewModel(tool : CartItem): ViewModel()  {
             currentState.copy(
             )
         }
-        this.viewModelScope.launch {
+        viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 DataCoordinator.shared.removeToolFromUserCart(tool.id)
             }
@@ -39,30 +41,29 @@ class ToolViewModel(tool : CartItem): ViewModel()  {
     }
 
     fun increaseAmount() {
-        //quantity++
-        _uiState.update { currentState ->
-            currentState.copy(
-                amount = uiState.value.amount + 1
-            )
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                DataCoordinator.shared.increaseToolCount(uiState.value.tool.id)
+            }
+            NotificationCoordinator.shared.sendIntent(SystemNotifications.delInCartIntent)
         }
     }
 
     fun decreaseAmount() {
-//        if (quantity > 1) {
-//            quantity--
-//        }
-        if (uiState.value.amount > 1) {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    amount = uiState.value.amount - 1
-                )
+
+        if (uiState.value.tool.count > 1) {
+            viewModelScope.launch {
+                withContext(Dispatchers.Default) {
+                    DataCoordinator.shared.decreaseToolCount(uiState.value.tool.id)
+                }
+                NotificationCoordinator.shared.sendIntent(SystemNotifications.delInCartIntent)
             }
         }
 
     }
 
     private fun open(tool: CartItem){
-        _uiState.value = ToolUiState(tool.count)
+        _uiState.value = ToolUiState(tool)
     }
 
 }

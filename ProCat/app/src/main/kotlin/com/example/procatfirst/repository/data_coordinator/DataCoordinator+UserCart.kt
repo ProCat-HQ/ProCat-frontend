@@ -32,3 +32,13 @@ import com.example.procatfirst.repository.data_storage.DataStorage
         UserCartCache.shared.removeUserCartStuff(id)
         DataStorage.shared.setUserCartToMemory(UserCartCache.shared.getUserCartStuff())
     }
+
+    suspend fun DataCoordinator.increaseToolCount(id : Int) {
+        UserCartCache.shared.increaseAmount(id)
+        DataStorage.shared.setUserCartToMemory(UserCartCache.shared.getUserCartStuff())
+    }
+
+    suspend fun DataCoordinator.decreaseToolCount(id : Int) {
+        UserCartCache.shared.decreaseAmount(id)
+        DataStorage.shared.setUserCartToMemory(UserCartCache.shared.getUserCartStuff())
+    }

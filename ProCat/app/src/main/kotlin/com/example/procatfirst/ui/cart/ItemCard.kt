@@ -20,7 +20,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,11 +28,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.CartItem
 import com.example.procatfirst.data.CartPayload
-import com.example.procatfirst.data.Tool
 
 @Composable
 fun ToolsScreenCart(
@@ -86,10 +83,6 @@ fun ToolCardCart(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-//                Text(
-//                    text = tool.description,
-//                    style = MaterialTheme.typography.bodyMedium
-//                )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = (stringResource(id = R.string.tool_price, tool.price)),
@@ -98,7 +91,7 @@ fun ToolCardCart(
                     modifier = Modifier.fillMaxWidth()
                 )
                 QuantityButton(
-                    quantity =  toolViewModel.uiState.value.amount,
+                    quantity =  toolViewModel.uiState.value.tool.count,
                     onIncrease = { toolViewModel.increaseAmount() },
                     onDecrease = { toolViewModel.decreaseAmount() }
                 )

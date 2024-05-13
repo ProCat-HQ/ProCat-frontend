@@ -1,5 +1,7 @@
 package com.example.procatfirst.ui.cart
 
+import com.example.procatfirst.data.CartItem
+
 data class ToolUiState(
-    var amount: Int
+    val tool: CartItem
 )
