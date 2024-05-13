@@ -1,9 +1,7 @@
 package com.example.procatfirst.ui.personal.notifications
 
-import android.app.Notification
 import android.content.Context
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -102,16 +103,23 @@ fun notification(
     isViewed: Boolean,
     onClick: () -> Unit
 ) {
+    var isCardClicked by remember { mutableStateOf(false) }
+
+    val cardColor = if (isCardClicked) MaterialTheme.colorScheme.surfaceVariant else if (isViewed) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primaryContainer
+
     OutlinedCard(
         colors = CardDefaults.cardColors(
-            containerColor = if (isViewed) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primaryContainer,
+            containerColor = cardColor,
         ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme. scrim),
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .padding(8.dp)
-            .clickable{onClick()}
+            .clickable{
+                isCardClicked = !isCardClicked
+                onClick()
+            }
 
     ) {
         Row(

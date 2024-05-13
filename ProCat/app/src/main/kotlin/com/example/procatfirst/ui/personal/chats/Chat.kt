@@ -4,11 +4,14 @@ import androidx.compose.runtime.Composable
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,17 +32,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Chat
 import com.example.procatfirst.data.Message
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataProvider.users
-import com.example.procatfirst.data.messageList
+import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import com.example.procatfirst.ui.theme.md_theme_light_background
 import com.example.procatfirst.ui.theme.md_theme_light_inversePrimary
@@ -50,10 +55,12 @@ import com.example.procatfirst.ui.theme.md_theme_light_tertiaryContainer
 
 
 @Composable
-fun ChatScreen(
+fun ChatScreen (
+    chatViewModel: ChatViewModel = viewModel()
 ) {
+    val chatUiState by chatViewModel.uiState.collectAsState()
 
-    var message by remember { mutableStateOf("") }
+    //var message by remember { mutableStateOf("") }
     val companion = users[2]
 
     Box(
@@ -66,14 +73,14 @@ fun ChatScreen(
         ) {
             UserNameRow(
                 user = companion,
-                name = "Поломка инструмента",
+                name = chatUiState.chatTheme,
                 modifier = Modifier.padding(top = 60.dp, start = 20.dp, end = 20.dp, bottom = 20.dp)
             )
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        md_theme_light_background, RoundedCornerShape(
+                        MaterialTheme.colors.background, RoundedCornerShape(
                             topStart = 30.dp, topEnd = 30.dp
                         )
                     )
@@ -88,7 +95,7 @@ fun ChatScreen(
                         bottom = 75.dp
                     )
                 ) {
-                    items(messageList, key = { it.messageId }) {
+                    items(chatViewModel.messages, key = { it.messageId }) {
                         ChatRow(message = it, currentUserId = 2)
                     }
                 }
@@ -96,10 +103,11 @@ fun ChatScreen(
         }
 
         CustomTextField(
-            text = message, onValueChange = { message = it },
+            text = chatViewModel.userInputMessage, onValueChange = { chatViewModel.updateTextMessage(it) },
             modifier = Modifier
                 .padding(horizontal = 20.dp, vertical = 20.dp)
-                .align(BottomCenter)
+                .align(BottomCenter),
+            chatViewModel = chatViewModel
         )
     }
 
@@ -149,7 +157,8 @@ fun ChatRow(
 fun CustomTextField(
     text: String,
     modifier: Modifier = Modifier,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    chatViewModel: ChatViewModel
 ) {
     TextField(
         value = text, onValueChange = { onValueChange(it) },
@@ -168,44 +177,46 @@ fun CustomTextField(
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent
         ),
-        leadingIcon = { CommonIconButton(imageVector = Icons.Default.Add) },
+        leadingIcon = { CommonIconButton(imageVector = Icons.Default.Add) {
+            chatViewModel.sendMessage(
+                text
+            )
+        }
+        },
         modifier = modifier.fillMaxWidth(),
-        shape = CircleShape
+        shape = CircleShape,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            imeAction = ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = { chatViewModel.sendMessage(text) }
+        )
     )
 
 }
 
 @Composable
 fun CommonIconButton(
-    imageVector: ImageVector
+    imageVector: ImageVector,
+    onClick: () -> Unit
 ) {
-
     Box(
         modifier = Modifier
+            .clickable(onClick = onClick)
             .background(md_theme_light_inversePrimary, CircleShape)
-            .size(33.dp), contentAlignment = Center
-    ) {
-    }
-
-}
-
-@Composable
-fun CommonIconButtonDrawable(
-    @DrawableRes icon: Int
-) {
-    Box(
-        modifier = Modifier
-            .background(Color.Yellow, CircleShape)
-            .size(33.dp), contentAlignment = Center
+            .size(33.dp),
+        contentAlignment = Center,
     ) {
         Icon(
-            painter = painterResource(id = icon), contentDescription = "",
-            tint = Color.Black,
-            modifier = Modifier.size(15.dp)
+            imageVector = imageVector,
+            contentDescription = null,
+            tint = Color.White
         )
     }
-
 }
+
+
+
 
 @Composable
 fun UserNameRow(
