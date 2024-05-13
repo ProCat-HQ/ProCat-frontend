@@ -25,21 +25,11 @@ fun ToolCard(
         }
     }
     receiver1.CreateReceiver(intentToReact = SystemNotifications.delInCartIntent)
-    receiver1.CreateReceiver(intentToReact = SystemNotifications.cartLoaded)
 
     if(toolUiState.tools.items.isNotEmpty() && toolUiState.isActive) {
         ToolsScreenCart(toolUiState.tools)
     } else {
         Text(text = "Ваша корзина пуста", fontSize = 18.sp)
     }
-    Button(onClick = {
-        Log.d("CART_UI", toolUiState.tools.items.toString())
-
-        toolViewModel.updateTools()
-
-    }) {
-        Text(text = "Update", fontSize = 18.sp)
-    }
-
 
 }

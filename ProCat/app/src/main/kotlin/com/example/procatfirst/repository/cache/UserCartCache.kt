@@ -50,4 +50,18 @@ class UserCartCache {
         toolsStorage.remove(id)
     }
 
+    fun increaseAmount(id : Int) {
+        val tool = toolsStorage[id]
+        if (tool != null) {
+            toolsStorage[id] = tool.copy(cnt = tool.cnt + 1)
+        }
+    }
+
+    fun decreaseAmount(id : Int) {
+        val tool = toolsStorage[id]
+        if (tool != null) {
+            toolsStorage[id] = tool.copy(cnt = tool.cnt - 1)
+        }
+    }
+
 }
