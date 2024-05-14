@@ -5,21 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.procatfirst.data.User
-import com.example.procatfirst.intents.NotificationCoordinator
-import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.setTokenAndRole
-import com.example.procatfirst.repository.data_coordinator.setUserData
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AuthViewModel(
     //private val userRoleRepository: UserRoleRepository
@@ -59,10 +54,6 @@ class AuthViewModel(
     private fun checkUserPhoneNumber(): Boolean {
         if //(userInputPhoneNumber.length == 11) {
             (userInputPhoneNumber != "") {
-            CoroutineScope(Dispatchers.IO).launch {//TODO не на том этапе пишем данные юзера - они ещё не полные.
-                DataCoordinator.shared.setUserData(User(1, userInputPhoneNumber,
-                    "$userInputPhoneNumber@mail.ru", "", "", false, userInputPhoneNumber, "", ""))
-            }
 
             return true
         } else {
@@ -99,15 +90,19 @@ class AuthViewModel(
     fun signIn(onNextButtonClicked : () -> Unit) {
          if (checkUserPassword() && checkUserPhoneNumber()) {
             viewModelScope.launch {
-                val callback = {status : String, token: String ->
+                val callback = {status : String, token: String, refresh: String ->
                     if(status == "SUCCESS") {
-                        DataCoordinator.shared.setTokenAndRole(token)
+                        viewModelScope.launch {
+                            withContext(Dispatchers.IO) {
+                                DataCoordinator.shared.setTokenAndRole(token, refresh)
+                            }
+                        }
                         onNextButtonClicked()
                     } else {
                         wrongPassword()
                     }
                 }
-                ApiCalls.shared.signInApi(userInputPhoneNumber, userInputPassword, callback)
+                ApiCalls.shared.signInApi(userInputPhoneNumber, userInputPassword, DataCoordinator.shared.getFingerPrint(), callback)
             }
         }
     }

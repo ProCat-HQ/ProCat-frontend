@@ -10,11 +10,12 @@ data class UserResponse(
 data class TokenResponse(
     val status: Int,
     val message: String,
-    val payload: Token,
+    val payload: Tokens,
 )
 
-data class Token(
-    val token: String,
+data class Tokens(
+    val accessToken: String,
+    val refreshToken: String,
 )
 
 data class JwtToken(

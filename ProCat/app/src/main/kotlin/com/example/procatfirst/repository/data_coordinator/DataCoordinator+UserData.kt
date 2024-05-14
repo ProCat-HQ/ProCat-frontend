@@ -6,6 +6,7 @@ import com.example.procatfirst.repository.api.JwtToken
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage.DataStorage
 import com.example.procatfirst.repository.data_storage.getUserDataFromMemory
+import com.example.procatfirst.repository.data_storage.setRefresh
 import com.example.procatfirst.repository.data_storage.setUserDataToMemory
 import org.json.JSONObject
 import java.util.Base64
@@ -52,8 +53,9 @@ fun DataCoordinator.setUserRole(token : String)  {
 
 }
 
-fun DataCoordinator.setTokenAndRole(token : String)  {
+suspend fun DataCoordinator.setTokenAndRole(token : String, refresh : String)  {
 
+    DataStorage.shared.setRefresh(refresh)
     UserDataCache.shared.setUserToken(token)
     setUserRole(token)
 

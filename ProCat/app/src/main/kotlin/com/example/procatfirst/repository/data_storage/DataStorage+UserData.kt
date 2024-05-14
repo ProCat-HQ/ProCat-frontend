@@ -10,6 +10,7 @@ import java.io.File
 import java.io.FileNotFoundException
 
 private const val FILEPATH = "user_data.json"
+private const val SESSIONPATH = "session.json"
 
 suspend fun DataStorage.getUserDataFromMemory() : User {
 
@@ -45,4 +46,40 @@ suspend fun DataStorage.setUserDataToMemory(user : User) {
             "Error to write data into file"
         )
     }
+}
+
+suspend fun DataStorage.setRefresh(token : String) {
+    val json = Json { prettyPrint = true }
+    if(!(File(filesDir, SESSIONPATH).exists())) {
+        withContext(Dispatchers.IO) {
+            File(filesDir, SESSIONPATH).createNewFile()
+        }
+    }
+    try {
+        File(filesDir, FILEPATH).writeText(json.encodeToString(token))
+    } catch (e: RuntimeException) {
+        Log.i(
+            DataStorage.identifier,
+            "Error to write token into file"
+        )
+    }
+}
+
+suspend fun DataStorage.getRefresh() : String {
+
+    var rowJson = "{}"
+    try {
+        rowJson = File(filesDir, SESSIONPATH).readText()
+    } catch (e: FileNotFoundException) {
+        withContext(Dispatchers.IO) {
+            File(filesDir, SESSIONPATH).createNewFile()
+        }
+    }
+    val json = Json { prettyPrint = true }
+    val result: String = try {
+        json.decodeFromString(rowJson)
+    } catch (e: RuntimeException) {
+        "?"
+    }
+    return result
 }

@@ -172,7 +172,7 @@ class ApiCalls {
 
     }
 
-    suspend fun signInApi(login: String, password: String, callback: (String, String) -> Unit) {
+    suspend fun signInApi(login: String, password: String, fingerprint: String, callback: (String, String, String) -> Unit) {
 
         val service = Retrofit.Builder()
                 .baseUrl(BACKEND_URL)
@@ -183,23 +183,24 @@ class ApiCalls {
         val jsonObject = JSONObject()
         jsonObject.put("phoneNumber", login)
         jsonObject.put("password", password)
+        jsonObject.put("fingerprint", fingerprint)
 
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
         service.login(requestBody).enqueue(object : Callback<TokenResponse> {
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("RESPONSE", "Fail")
-                callback("FAIL", "none")
+                callback("FAIL", "none", "none")
             }
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                 if (response.code() == 200) {
                     response.body()?.let {
                         //Log.i("TOKEN Response", it.payload.token)
-                        callback("SUCCESS", it.payload.token)
+                        callback("SUCCESS", it.payload.accessToken, it.payload.refreshToken)
                     }
                 }
                 else {
-                    callback("FAIL", "none")
+                    callback("FAIL", "none", "none")
                 }
             }
         })
