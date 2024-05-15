@@ -1,8 +1,6 @@
 package com.example.procatfirst
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -163,7 +161,6 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
 )
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProCatApp (
     controller: Context,
@@ -212,6 +209,7 @@ fun ProCatApp (
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Tools.name)
                     },
+                    context = controller,
                     onToRegistrationClick = {
                         navController.navigate(ProCatScreen.Registration.name)
                     },

@@ -41,7 +41,7 @@ suspend fun DataStorage.setUserDataToMemory(user : User) {
     try {
         File(filesDir, FILEPATH).writeText(json.encodeToString(user))
     } catch (e: RuntimeException) {
-        Log.i(
+        Log.e(
             DataStorage.identifier,
             "Error to write data into file"
         )
@@ -56,9 +56,10 @@ suspend fun DataStorage.setRefresh(token : String) {
         }
     }
     try {
+        Log.d(DataStorage.identifier, "Write refresh: $token")
         File(filesDir, FILEPATH).writeText(json.encodeToString(token))
     } catch (e: RuntimeException) {
-        Log.i(
+        Log.e(
             DataStorage.identifier,
             "Error to write token into file"
         )
@@ -70,16 +71,19 @@ suspend fun DataStorage.getRefresh() : String {
     var rowJson = "{}"
     try {
         rowJson = File(filesDir, SESSIONPATH).readText()
+        Log.d(DataStorage.identifier, "row refresh: $rowJson")
     } catch (e: FileNotFoundException) {
         withContext(Dispatchers.IO) {
             File(filesDir, SESSIONPATH).createNewFile()
         }
+        Log.d(DataStorage.identifier, "No session file")
     }
     val json = Json { prettyPrint = true }
     val result: String = try {
         json.decodeFromString(rowJson)
     } catch (e: RuntimeException) {
-        "?"
+        ""
     }
+    Log.d(DataStorage.identifier, "Result: $result")
     return result
 }

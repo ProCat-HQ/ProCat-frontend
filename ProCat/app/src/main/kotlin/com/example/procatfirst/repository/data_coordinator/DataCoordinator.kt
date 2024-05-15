@@ -3,10 +3,19 @@ package com.example.procatfirst.repository.data_coordinator
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import androidx.datastore.preferences.protobuf.Api
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserCartCache
 import com.example.procatfirst.repository.data_storage.DataStorage
+import com.example.procatfirst.repository.data_storage.getRefresh
+import com.example.procatfirst.repository.data_storage.setRefresh
+import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
+import com.example.procatfirst.repository.data_storage_deprecated.getUserEmailDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
 import java.security.MessageDigest
@@ -35,9 +44,21 @@ class DataCoordinator {
     suspend fun initialize(con: Context) {
         DataStorage.shared.initialize(con)
         fingerprint = setFingerPrint(con)
+
         //Чтобы корзина работала до её открытия (когда добавляем инструмент)
         withContext(Dispatchers.IO) {
             UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
+        }
+    }
+
+    suspend fun refresh(callback : (String, String, String) -> Unit, context: Context) {
+        //val refresh = DataStorage.shared.getRefresh()
+        val refresh = DataCoordinatorOLD.shared.getUserEmailDataStore(context)
+        if (refresh != "") {
+            ApiCalls.shared.refresh(refresh, fingerprint, callback)
+        }
+        else {
+            callback("No refresh", "", "")
         }
     }
 

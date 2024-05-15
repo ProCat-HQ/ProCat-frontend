@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.auth
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,7 +42,7 @@ fun AuthScreen(
     onNextButtonClicked: () -> Unit,
     onToRegistrationClick: () -> Unit,
     authViewModel: AuthViewModel = viewModel(),
-
+    context: Context,
     modifier: Modifier = Modifier
 ) {
 
@@ -83,7 +84,7 @@ fun AuthScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { authViewModel.signIn(onNextButtonClicked)}
+            onClick = { authViewModel.signIn(onNextButtonClicked, context = context)}
         ) {
             Text(
                 text = stringResource(R.string.sign_in),

@@ -1,5 +1,6 @@
 package com.example.procatfirst.repository.data_coordinator
 
+import android.content.Context
 import android.util.Log
 import com.example.procatfirst.data.User
 import com.example.procatfirst.repository.api.JwtToken
@@ -8,6 +9,8 @@ import com.example.procatfirst.repository.data_storage.DataStorage
 import com.example.procatfirst.repository.data_storage.getUserDataFromMemory
 import com.example.procatfirst.repository.data_storage.setRefresh
 import com.example.procatfirst.repository.data_storage.setUserDataToMemory
+import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
+import com.example.procatfirst.repository.data_storage_deprecated.setUserEmailDataStore
 import org.json.JSONObject
 import java.util.Base64
 
@@ -53,9 +56,10 @@ fun DataCoordinator.setUserRole(token : String)  {
 
 }
 
-suspend fun DataCoordinator.setTokenAndRole(token : String, refresh : String)  {
+suspend fun DataCoordinator.setTokenAndRole(token : String, refresh : String, context: Context)  {
 
-    DataStorage.shared.setRefresh(refresh)
+    //DataStorage.shared.setRefresh(refresh)
+    DataCoordinatorOLD.shared.setUserEmailDataStore(value = refresh, context = context)
     UserDataCache.shared.setUserToken(token)
     setUserRole(token)
 

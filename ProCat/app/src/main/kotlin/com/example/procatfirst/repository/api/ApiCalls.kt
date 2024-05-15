@@ -172,6 +172,37 @@ class ApiCalls {
 
     }
 
+    suspend fun refresh(refresh: String, fingerprint: String, callback: (String, String, String) -> Unit) {
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        val jsonObject = JSONObject()
+        jsonObject.put("refreshToken", refresh)
+        jsonObject.put("fingerprint", fingerprint)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+        service.refresh(requestBody).enqueue(object : Callback<TokenResponse> {
+            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("RESPONSE", "Fail")
+                callback("FAIL", "none", "none")
+            }
+            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                if (response.code() == 200) {
+                    response.body()?.let {
+                        callback("SUCCESS", it.payload.accessToken, it.payload.refreshToken)
+                    }
+                }
+                else {
+                    callback("FAKE", "none", "none")
+                }
+            }
+        })
+    }
+
     suspend fun signInApi(login: String, password: String, fingerprint: String, callback: (String, String, String) -> Unit) {
 
         val service = Retrofit.Builder()

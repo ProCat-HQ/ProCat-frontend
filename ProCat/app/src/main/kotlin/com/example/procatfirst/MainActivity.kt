@@ -52,14 +52,15 @@ class MainActivity : ComponentActivity() {
     private fun initBackground() {
         UserRoleRepository.shared.init(baseContext)
         NotificationCoordinator.shared.initialize(baseContext)
-        lifecycleScope.launch { DataCoordinator.shared.initialize(baseContext) }
+        lifecycleScope.launch {
+            DataCoordinator.shared.initialize(baseContext)
+            DataCoordinatorOLD.shared.initialize(
+                context = baseContext,
+                onLoad = {
 
-        DataCoordinatorOLD.shared.initialize(
-            context = baseContext,
-            onLoad = {
-                //DataCoordinator.shared.updateUserEmail(DataCoordinator.shared.defaultUserEmailPreferenceValue)
-            }
-        )
+                }
+            )
+        }
     }
     
 }

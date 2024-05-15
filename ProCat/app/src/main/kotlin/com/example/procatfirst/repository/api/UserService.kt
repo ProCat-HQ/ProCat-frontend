@@ -173,6 +173,9 @@ interface UserService {
     @GET("/users/{userId}")
     fun getUser(@Query("userId") userId: Int): Call<User>
 
+    @POST("/users/refresh")
+    fun refresh(@Body requestBody: RequestBody): Call<TokenResponse>
+
     suspend fun amina(): Call<ResponseBody>
 
 }
