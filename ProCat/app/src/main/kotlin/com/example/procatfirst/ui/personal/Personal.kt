@@ -3,6 +3,8 @@ package com.example.procatfirst.ui.personal
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -10,22 +12,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
@@ -38,16 +37,15 @@ fun PersonalScreen(
     onToChatsClicked:() -> Unit,
     onToDeliveryClicked:() -> Unit,
     onToManagerClicked:() -> Unit,
-    personalViewModel: PersonalViewModel = PersonalViewModel(),
-    uiState: State<PersonalUiState> = personalViewModel.uiState.collectAsState()
+    personalViewModel: PersonalViewModel = viewModel()
 ) {
 
-    var showDialog by remember { mutableStateOf(false) }
+    val personalUiState by personalViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -131,13 +129,20 @@ fun PersonalScreen(
                 )
             }
         }
-        Button(
-            colors = ButtonColors(Color.Red, Color.White, Color.Cyan, Color.Magenta),
+        Spacer(modifier = Modifier.weight(1f))
+    }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom
+    ){
+        TextButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { showDialog = true}
-        ) {
+            onClick = { personalViewModel.openLogoutDialog() },
+            colors = ButtonColors(MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.onPrimary, MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.onErrorContainer),
+
+            ) {
             Text(
                 text = "Выйти из аккаунта",
                 fontSize = 16.sp
@@ -145,12 +150,13 @@ fun PersonalScreen(
         }
     }
 
-    if (showDialog) {
+
+
+    if (personalUiState.logout) {
         ConfirmLogoutDialog(
-            onCancel = { showDialog = false},
+            onCancel = { personalViewModel.cancelLogout() },
             onContinue = {
                 personalViewModel.confirmLogout()
-                showDialog = false
                          },
         )
     }

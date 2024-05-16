@@ -9,13 +9,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 class PersonalViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow(PersonalUiState())
     val uiState: StateFlow<PersonalUiState> = _uiState.asStateFlow()
 
-    fun logoutDialog() {
+    init {
+        _uiState.value = PersonalUiState()
+    }
+
+
+    fun openLogoutDialog() {
         _uiState.update { currentState ->
             currentState.copy(
                 logout = true
@@ -25,6 +31,7 @@ class PersonalViewModel: ViewModel() {
 
     fun cancelLogout() {
         Log.d("logout", "F")
+
         _uiState.update { currentState ->
             currentState.copy(
                 logout = false
@@ -37,12 +44,14 @@ class PersonalViewModel: ViewModel() {
         viewModelScope.launch {
             DataCoordinator.shared.logout()
         }
+
         _uiState.update { currentState ->
             currentState.copy(
                 logout = false
             )
         }
         Log.d("Logout", "EXIT")
+        exitProcess(0)
     }
 
 }
