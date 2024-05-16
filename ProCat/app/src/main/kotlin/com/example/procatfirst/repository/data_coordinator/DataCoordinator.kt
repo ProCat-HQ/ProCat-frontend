@@ -3,12 +3,14 @@ package com.example.procatfirst.repository.data_coordinator
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserCartCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage.DataStorage
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.example.procatfirst.repository.data_storage_deprecated.getRefreshTokenDataStore
+import com.example.procatfirst.repository.data_storage_deprecated.updateRefreshToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
@@ -41,7 +43,8 @@ class DataCoordinator {
 
         //Чтобы корзина работала до её открытия (когда добавляем инструмент)
         withContext(Dispatchers.IO) {
-            UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
+            //ApiCalls.shared.getCartApi { payload: CartPayload -> UserCartCache.shared.setUserCartStuff(payload) }
+            //UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
         }
     }
 
@@ -115,10 +118,10 @@ class DataCoordinator {
         return str.toString();
     }
 
-    suspend fun logout() {
+    suspend fun logout(context: Context) {
         UserDataCache.shared.setUserToken("")
         UserDataCache.shared.setUserRole("User")
-        //DataCoordinatorOLD.shared.setUserEmailDataStore(context, "")
+        DataCoordinatorOLD.shared.updateRefreshToken(context, "")
         ApiCalls.shared.logout()
     }
 

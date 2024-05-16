@@ -26,9 +26,13 @@ class UserCartCache {
         Log.v("TOOLCache", toolsStorage.toString())
     }
 
-    fun setUserCartStuff(cart: MutableMap<Int, ToolWithCnt>) {
-        if (cart.isNotEmpty()) {
-            toolsStorage = cart
+    fun setUserCartStuff(cart: CartPayload) {
+        if (cart.items != null) {
+            if (cart.items.isNotEmpty()) {
+                for (item in cart.items) {
+                    toolsStorage[item.id] = ToolWithCnt(item.id, item.name, "", item.price, true, 0, 0, item.count)
+                }
+            }
         }
     }
 
@@ -40,8 +44,8 @@ class UserCartCache {
         Log.d("Cache", toolsStorage.toString())
         val set : MutableSet<CartItem> = mutableSetOf()
         for (tool in toolsStorage) {
-            val key = tool.value
-            set.add(CartItem(key.id, key.name, key.price, key.cnt, key.imageResId.toString())) //??
+            val item = tool.value
+            set.add(CartItem(item.id, item.name, item.price, item.cnt, item.imageResId.toString())) //??
         }
         return CartPayload(set)
     }

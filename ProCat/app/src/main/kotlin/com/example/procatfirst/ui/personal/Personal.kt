@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.personal
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import com.example.procatfirst.ui.theme.ProCatFirstTheme
 
 @Composable
 fun PersonalScreen(
+    context: Context,
     onToProfileClicked: () -> Unit,
     onToOrdersClicked: () -> Unit,
     onToNotificationsClicked: () -> Unit,
@@ -156,7 +158,7 @@ fun PersonalScreen(
         ConfirmLogoutDialog(
             onCancel = { personalViewModel.cancelLogout() },
             onContinue = {
-                personalViewModel.confirmLogout()
+                personalViewModel.confirmLogout(context)
                          },
         )
     }

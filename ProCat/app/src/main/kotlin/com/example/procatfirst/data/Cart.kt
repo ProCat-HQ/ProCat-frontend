@@ -1,10 +1,21 @@
 package com.example.procatfirst.data
 
+import com.squareup.moshi.Json
+import kotlinx.serialization.Serializable
 
+@Serializable
+data class CartResponse(
+    val status: Int,
+    val message: String,
+    val payload: CartPayload
+)
+
+@Serializable
 data class CartPayload(
     val items: Set<CartItem>
 )
 
+@Serializable
 data class CartItem(
     val id: Int,
     val name: String,

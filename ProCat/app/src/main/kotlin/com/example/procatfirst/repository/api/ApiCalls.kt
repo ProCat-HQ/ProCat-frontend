@@ -1,16 +1,15 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
+import com.example.procatfirst.data.CartPayload
+import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ItemResponse
-import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
-import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.repository.cache.AllOrdersCache
+import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.repository.cache.UserDataCache
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
-import com.example.procatfirst.repository.data_storage_deprecated.getRefreshTokenDataStore
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -22,11 +21,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
-/**
- * Тут из полезного пока только getItems() - делает GET запрос, результат пишет в кэш.
- * Есть ещё postApi() - шлёт данные по указанному url, но пока не понятно, работает ли оно вообще.
- * Короче над Api ещё много работы.
- */
 class ApiCalls {
     companion object {
         val shared = ApiCalls()
@@ -187,7 +181,7 @@ class ApiCalls {
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("RESPONSE", "Fail")
-                callback("FAIL", "none", "none")
+                callback("FAIL", "", "")
             }
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                 if (response.code() == 200) {
@@ -197,7 +191,7 @@ class ApiCalls {
                     }
                 }
                 else {
-                    callback("FAIL", "none", "none")
+                    callback("FAIL", "", "")
                 }
             }
         })
@@ -219,7 +213,77 @@ class ApiCalls {
         service.logout("Bearer " + UserDataCache.shared.getUserToken(), requestBody).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 Log.d("RESPONSE", response.raw().toString())
-                Log.d("RESPONSE", response.body().toString())
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d("RESPONSE", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getCartApi(callback : (CartPayload) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.getItemsInCart("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<CartResponse> {
+
+            override fun onFailure(call: Call<CartResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.e("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<CartResponse>, response: Response<CartResponse>) {
+                Log.i("RESPONSE ROW", response.raw().toString())
+                response.let {
+                    Log.i("RESPONSE", it.toString())
+                    it.body()?.let { it1 -> callback(it1.payload) }
+                }
+
+            }
+
+        })
+    }
+
+    fun postCart(itemId : Int, count: Int) {
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        val jsonObject = JSONObject()
+        jsonObject.put("itemId", itemId)
+        jsonObject.put("count", count)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+        service.postCart( requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.d("RESPONSE", response.raw().toString())
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d("RESPONSE", t.message.toString())
+            }
+
+        })
+    }
+
+    fun deleteInCart(itemId : Int, cnt: Int) {
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.deleteItemFromCart( itemId, cnt, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.d("RESPONSE", response.raw().toString())
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

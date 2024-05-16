@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.personal
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,10 +40,11 @@ class PersonalViewModel: ViewModel() {
         }
     }
 
-    fun confirmLogout() {
+    fun confirmLogout(context: Context) {
         Log.d("Logout", "Conf")
         viewModelScope.launch {
-            DataCoordinator.shared.logout()
+            DataCoordinator.shared.logout(context)
+            exitProcess(0)
         }
 
         _uiState.update { currentState ->
@@ -51,7 +53,7 @@ class PersonalViewModel: ViewModel() {
             )
         }
         Log.d("Logout", "EXIT")
-        exitProcess(0)
+
     }
 
 }

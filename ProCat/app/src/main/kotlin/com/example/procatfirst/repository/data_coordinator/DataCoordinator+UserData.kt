@@ -2,8 +2,11 @@ package com.example.procatfirst.repository.data_coordinator
 
 import android.content.Context
 import android.util.Log
+import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.User
+import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.api.JwtToken
+import com.example.procatfirst.repository.cache.UserCartCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage.DataStorage
 import com.example.procatfirst.repository.data_storage.getUserDataFromMemory
@@ -11,6 +14,8 @@ import com.example.procatfirst.repository.data_storage.setUserDataToMemory
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.example.procatfirst.repository.data_storage_deprecated.setRefreshTokenDataStore
 import com.example.procatfirst.repository.data_storage_deprecated.updateRefreshToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Base64
 
@@ -62,5 +67,9 @@ suspend fun DataCoordinator.setTokenAndRole(token : String, refresh : String, co
     DataCoordinatorOLD.shared.updateRefreshToken(value = refresh, context = context)
     UserDataCache.shared.setUserToken(token)
     setUserRole(token)
+    //Чтобы корзина работала до её открытия (когда добавляем инструмент)
+    withContext(Dispatchers.IO) {
+        ApiCalls.shared.getCartApi { payload: CartPayload -> UserCartCache.shared.setUserCartStuff(payload) }
+    }
 
 }
