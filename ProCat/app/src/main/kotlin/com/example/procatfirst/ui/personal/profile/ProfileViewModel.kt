@@ -8,14 +8,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataProvider
+import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.setUserData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ProfileViewModel: ViewModel() {
@@ -141,22 +145,31 @@ class ProfileViewModel: ViewModel() {
             NotificationCoordinator.shared.sendIntent(SystemNotifications.myTestIntent)
         } */
         viewModelScope.launch {
-            val callback = {status : String ->
+            
+            val callback = {status : String, userR: UserDataResponse ->
                 if (status == "SUCCESS") {
-                    val temp = UserDataCache.shared.getUserData()
-                    if (temp != null) {
-                        user = temp
-                    }
+//                    val temp = UserDataCache.shared.getUserData()
+//                    if (temp != null) {
+//                        user = temp
+//                    }
+                    user = User(userR.id, userR.fullName, userR.email, userR.phoneNumber, userR.identificationNumber, userR.isConfirmed, userR.role, "bad", "hash")
+                    viewModelScope.launch { DataCoordinator.shared.setUserData(user) }
+                    _uiState.value = _uiState.value.copy(
+                        userId = user.id,
+                        fullName = user.fullName,
+                        email = user.email,
+                        phoneNumber = user.phoneNumber,
+                        identificationNumber = user.identificationNumber,
+                        isConfirmed = user.isConfirmed,
+                        role = user.role
+                    )
                 } else {
                     //TODO Show error
                 }
             }
             val idUser = UserDataCache.shared.getUserData()?.id
-            if (idUser == null) {
-                Log.i("UserId", "NULL")
-                ApiCalls.shared.getUserDataApi(id, callback)
-            } else {
-                Log.i("UserId", "idUser")
+            if (idUser != null) {
+                Log.i("UserId", idUser.toString())
                 ApiCalls.shared.getUserDataApi(idUser, callback)
             }
         }

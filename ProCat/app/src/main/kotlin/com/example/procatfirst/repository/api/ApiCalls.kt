@@ -3,6 +3,7 @@ package com.example.procatfirst.repository.api
 import android.util.Log
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.User
+import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.repository.cache.AllOrdersCache
@@ -64,7 +65,7 @@ class ApiCalls {
         })
     }
 
-    fun getUserDataApi(id: Int, callback: (String) -> Unit) {
+    fun getUserDataApi(id: Int, callback: (String, UserDataResponse) -> Unit) {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
                 .baseUrl(url)
@@ -72,28 +73,23 @@ class ApiCalls {
                 .build()
                 .create(UserService::class.java)
 
+        Log.d("CHECK!!!", id.toString() + " " + UserDataCache.shared.getUserToken())
 
         service.getUser("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<UserResponse> {
 
-            /* The HTTP call failed. This method is run on the main thread */
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("API", t.toString())
-                //!!!! TODO error intent !!!!
-
             }
 
-            /* The HTTP call was successful, we should still check status code and response body
-             * on a production app. This method is run on the main thread */
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 Log.i("RESPONSE", response.raw().toString())
-                /* This will print the response of the network call to the Logcat */
-                // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к верхнему)
                 //response.body()?.let { UserDataCache.shared.setUserData(it) }
-                response.body()?.let { UserDataCache.shared.setUserData(User(it.payload.id, it.payload.fullName, it.payload.email, it.payload.phoneNumber, it.payload.identificationNumber, it.payload.isConfirmed, it.payload.role, it.payload.created_at, "hash")) }
-
-                Log.i("UserData", UserDataCache.shared.getUserData().toString())
-                callback("SUCCESS")
+                //response.body()?.let { UserDataCache.shared.setUserData(User(it.payload.id, it.payload.fullName, it.payload.email, it.payload.phoneNumber, it.payload.identificationNumber, it.payload.isConfirmed, it.payload.role, it.payload.created_at, "hash")) }
+                response.body()?.let {
+                    Log.d("USER_DATA", it.payload.toString())
+                    callback("SUCCESS", it.payload) }
+                //Log.i("UserData", UserDataCache.shared.getUserData().toString())
             }
 
         })

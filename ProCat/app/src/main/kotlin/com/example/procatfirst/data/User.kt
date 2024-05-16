@@ -23,7 +23,7 @@ data class UserDataResponse(
     val identificationNumber: String,
     val isConfirmed: Boolean,
     val role: String,
-    val created_at : String,
+    val created_at : String?,
 )
 
 data class UserResponse(

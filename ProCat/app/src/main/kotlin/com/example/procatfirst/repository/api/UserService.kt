@@ -31,6 +31,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /* Retrofit service that maps the different endpoints on the API, you'd create one
@@ -42,8 +43,8 @@ interface UserService {
     @GET("/users")
     suspend fun getAllUsers(@Query("limit") limit: Int? = null, @Query("page") page: Int? = null, @Query("role") role: String? = null): UsersResponse
 
-    @GET("/users/{userId}")
-    suspend fun getSimpleUser(@Query("userId") userId: Int): Call<ResponseBody>
+    //@GET("/users/{userId}")
+    //suspend fun getSimpleUser(@Query("userId") userId: Int): Call<ResponseBody>
 
     @DELETE("/users/{userId}")
     suspend fun deleteUser(@Query("userId") userId: Int)
@@ -172,7 +173,7 @@ interface UserService {
     fun getItems(): Call<ItemResponse>
 
     @GET("/users/{userId}")
-    fun getUser(@Header("Authorization") token: String?, @Query("userId") userId: Int): Call<UserResponse>
+    fun getUser(@Header("Authorization") token: String?, @Path("userId") userId: Int): Call<UserResponse>
 
     @POST("/users/refresh")
     fun refresh(@Body requestBody: RequestBody): Call<TokenResponse>
