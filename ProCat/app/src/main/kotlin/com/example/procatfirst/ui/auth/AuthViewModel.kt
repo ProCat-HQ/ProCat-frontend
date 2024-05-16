@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.auth
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +20,6 @@ import kotlinx.coroutines.withContext
 class AuthViewModel(
     //private val userRoleRepository: UserRoleRepository
 ): ViewModel()  {
-
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
@@ -87,14 +87,14 @@ class AuthViewModel(
         return false
     }
 
-    fun signIn(onNextButtonClicked : () -> Unit) {
+    fun signIn(onNextButtonClicked : () -> Unit, context: Context) {
          if (checkUserPassword() && checkUserPhoneNumber()) {
             viewModelScope.launch {
                 val callback = {status : String, token: String, refresh: String ->
                     if(status == "SUCCESS") {
                         viewModelScope.launch {
                             withContext(Dispatchers.IO) {
-                                DataCoordinator.shared.setTokenAndRole(token, refresh)
+                                DataCoordinator.shared.setTokenAndRole(token, refresh, context = context)
                             }
                         }
                         onNextButtonClicked()
@@ -110,26 +110,6 @@ class AuthViewModel(
     fun forgotPassword() {
 
     }
-
-
-    /*
-    fun selectRole(userRole: String) {
-        viewModelScope.launch {
-            userRoleRepository.saveUserRole(userRole)
-        }
-    }
-
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as ProCatApplication)
-                AuthViewModel(application.userRoleRepository)
-            }
-        }
-    } */
-
-
 
     private fun open(){
         _uiState.value = AuthUiState()

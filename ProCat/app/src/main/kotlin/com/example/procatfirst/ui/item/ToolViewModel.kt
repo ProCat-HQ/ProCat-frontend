@@ -3,12 +3,9 @@ package com.example.procatfirst.ui.item
 import addToolToUserCart
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.procatfirst.R
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.data.ToolDataProvider
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
-import com.example.procatfirst.repository.data_storage_deprecated.updateAddToolsInCart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

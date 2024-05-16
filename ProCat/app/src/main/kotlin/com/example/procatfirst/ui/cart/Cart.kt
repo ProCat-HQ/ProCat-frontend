@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.cart
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,9 +35,13 @@ import com.example.procatfirst.R
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_storage.DataStorage
+import com.example.procatfirst.repository.data_storage.getRefresh
 import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.theme.md_theme_light_scrim
 import com.example.procatfirst.ui.theme.md_theme_light_tertiary
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -93,6 +98,7 @@ fun Cart(
         ) {
             Text(text = stringResource(R.string.checkout))
         }
+
     }
 
 }
