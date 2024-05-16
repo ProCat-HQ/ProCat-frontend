@@ -57,7 +57,7 @@ fun DataCoordinator.setUserRole(token : String)  {
 }
 
 suspend fun DataCoordinator.setTokenAndRole(token : String, refresh : String, context: Context)  {
-
+    Log.v("TOKEN", token)
     DataCoordinatorOLD.shared.setRefreshTokenDataStore(value = refresh, context = context)
     UserDataCache.shared.setUserToken(token)
     setUserRole(token)
