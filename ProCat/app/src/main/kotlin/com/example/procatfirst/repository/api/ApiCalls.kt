@@ -1,20 +1,12 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
-import com.example.procatfirst.data.Item
 import com.example.procatfirst.data.ItemResponse
-import com.example.procatfirst.data.ItemsResponse
 import com.example.procatfirst.data.User
+import com.example.procatfirst.data.UserResponse
 import com.example.procatfirst.repository.cache.CatalogCache
-import com.example.procatfirst.intents.NotificationCoordinator
-import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.cache.UserDataCache
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.setTokenAndRole
-import com.example.procatfirst.repository.data_coordinator.setUserRole
-import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -25,7 +17,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.dublgis.dgismobile.mapsdk.LonLat
-import java.lang.Thread.sleep
 
 /**
  * Тут из полезного пока только getItems() - делает GET запрос, результат пишет в кэш.
@@ -73,7 +64,7 @@ class ApiCalls {
         })
     }
 
-    fun getUserDataApi(id : Int) {
+    fun getUserDataApi(id: Int, callback: (String) -> Unit) {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
                 .baseUrl(url)
@@ -82,10 +73,10 @@ class ApiCalls {
                 .create(UserService::class.java)
 
 
-        service.getUser(id).enqueue(object : Callback<User> {
+        service.getUser("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<UserResponse> {
 
             /* The HTTP call failed. This method is run on the main thread */
-            override fun onFailure(call: Call<User>, t: Throwable) {
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("API", t.toString())
                 //!!!! TODO error intent !!!!
@@ -94,45 +85,20 @@ class ApiCalls {
 
             /* The HTTP call was successful, we should still check status code and response body
              * on a production app. This method is run on the main thread */
-            override fun onResponse(call: Call<User>, response: Response<User>) {
+            override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 Log.i("RESPONSE", response.raw().toString())
                 /* This will print the response of the network call to the Logcat */
-                // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к вернему)
-                response.body()?.let { UserDataCache.shared.setUserData(it) }
+                // TODO вот здесь похоже на нарушение архитектуры (нижний слой обращается к верхнему)
+                //response.body()?.let { UserDataCache.shared.setUserData(it) }
+                response.body()?.let { UserDataCache.shared.setUserData(User(it.payload.id, it.payload.fullName, it.payload.email, it.payload.phoneNumber, it.payload.identificationNumber, it.payload.isConfirmed, it.payload.role, it.payload.created_at, "hash")) }
+
                 Log.i("UserData", UserDataCache.shared.getUserData().toString())
+                callback("SUCCESS")
             }
 
         })
     }
 
-    suspend fun aminaApi() {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build()
-                .create(UserService::class.java)
-
-
-        service.amina().enqueue(object : Callback<ResponseBody> {
-
-            /* The HTTP call failed. This method is run on the main thread */
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                t.printStackTrace()
-                Log.i("AMINA", t.toString())
-            }
-
-            /* The HTTP call was successful, we should still check status code and response body
-             * on a production app. This method is run on the main thread */
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Log.i("RESPONSE", response.raw().toString())
-                /* This will print the response of the network call to the Logcat */
-                response.body()?.let { Log.d("AMINA", it.toString()) }
-
-            }
-
-        })
-    }
 
     fun signUpApi(login: String, password: String, name: String)  {
 
@@ -290,5 +256,35 @@ class ApiCalls {
         })
 
     }
+
+    suspend fun aminaApi() {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+
+        service.amina().enqueue(object : Callback<ResponseBody> {
+
+            /* The HTTP call failed. This method is run on the main thread */
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("AMINA", t.toString())
+            }
+
+            /* The HTTP call was successful, we should still check status code and response body
+             * on a production app. This method is run on the main thread */
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                /* This will print the response of the network call to the Logcat */
+                response.body()?.let { Log.d("AMINA", it.toString()) }
+
+            }
+
+        })
+    }
+
 
 }

@@ -8,14 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataProvider
-import com.example.procatfirst.intents.NotificationCoordinator
-import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.api.ApiCalls
+import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.getUserData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -126,6 +121,9 @@ class ProfileViewModel: ViewModel() {
     }
     private fun getUserProfileInfo() {
         var trueUser : User? = null
+        var user = UserDataProvider.users[0];
+        var id = 1
+
         /*
         CoroutineScope(Dispatchers.IO).launch {
             trueUser = DataCoordinator.shared.getUserData()
@@ -142,10 +140,27 @@ class ProfileViewModel: ViewModel() {
             )
             NotificationCoordinator.shared.sendIntent(SystemNotifications.myTestIntent)
         } */
+        viewModelScope.launch {
+            val callback = {status : String ->
+                if (status == "SUCCESS") {
+                    val temp = UserDataCache.shared.getUserData()
+                    if (temp != null) {
+                        user = temp
+                    }
+                } else {
+                    //TODO Show error
+                }
+            }
+            val idUser = UserDataCache.shared.getUserData()?.id
+            if (idUser == null) {
+                Log.i("UserId", "NULL")
+                ApiCalls.shared.getUserDataApi(id, callback)
+            } else {
+                Log.i("UserId", "idUser")
+                ApiCalls.shared.getUserDataApi(idUser, callback)
+            }
+        }
 
-        val userData = ApiCalls.shared.getUserDataApi(1)
-
-        val user = UserDataProvider.users[0];
         _uiState.value = _uiState.value.copy(
                 userId = user.id,
                 fullName = user.fullName,

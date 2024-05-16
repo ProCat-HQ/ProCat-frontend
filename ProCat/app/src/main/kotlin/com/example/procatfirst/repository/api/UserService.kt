@@ -20,6 +20,7 @@ import com.example.procatfirst.data.RoutePayload
 import com.example.procatfirst.data.SimpleDeliveryman
 import com.example.procatfirst.data.SubscriptionResponse
 import com.example.procatfirst.data.User
+import com.example.procatfirst.data.UserResponse
 import com.example.procatfirst.data.UsersResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -171,7 +172,7 @@ interface UserService {
     fun getItems(@Header("Authorization") token: String?): Call<ItemResponse>
 
     @GET("/users/{userId}")
-    fun getUser(@Query("userId") userId: Int): Call<User>
+    fun getUser(@Header("Authorization") token: String?, @Query("userId") userId: Int): Call<UserResponse>
 
     suspend fun amina(): Call<ResponseBody>
 

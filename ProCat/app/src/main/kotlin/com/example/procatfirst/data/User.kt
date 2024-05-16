@@ -15,6 +15,23 @@ data class User(
         val password_hash : String,
 )
 
+data class UserDataResponse(
+    val id: Int,
+    val fullName: String,
+    val email: String,
+    val phoneNumber: String,
+    val identificationNumber: String,
+    val isConfirmed: Boolean,
+    val role: String,
+    val created_at : String,
+)
+
+data class UserResponse(
+    val status: Int,
+    val message: String,
+    val payload: UserDataResponse
+)
+
 data class UsersResponse(
     val status: Int,
     val message: String,
