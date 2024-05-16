@@ -48,7 +48,7 @@ class ApiCalls {
                 .create(UserService::class.java)
 
 
-        service.getItems("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ItemResponse> {
+        service.getItems().enqueue(object : Callback<ItemResponse> {
 
             /* The HTTP call failed. This method is run on the main thread */
             override fun onFailure(call: Call<ItemResponse>, t: Throwable) {
@@ -236,6 +236,25 @@ class ApiCalls {
             }
         })
 
+    }
+
+    suspend fun logout() {
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.logout("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                //pofig
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                //toshe pofig
+            }
+
+        })
     }
 
     suspend fun getAllUsersApi()  {

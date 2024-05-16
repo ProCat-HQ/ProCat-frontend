@@ -11,7 +11,7 @@ suspend fun DataCoordinatorOLD.updateUserEmail(context: Context, value: String) 
     this.userEmailPreferenceVariable = value
     // Save to System
     // Update DataStore
-    setUserEmailDataStore(context, value)
+    setRefreshTokenDataStore(context, value)
 }
 
 // MARK: DataStore Update Functionality

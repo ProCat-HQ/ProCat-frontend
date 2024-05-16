@@ -168,13 +168,16 @@ interface UserService {
     fun geocoder(): Call<ResponseBody>
 
     @GET("/items")
-    fun getItems(@Header("Authorization") token: String?): Call<ItemResponse>
+    fun getItems(): Call<ItemResponse>
 
     @GET("/users/{userId}")
     fun getUser(@Query("userId") userId: Int): Call<User>
 
     @POST("/users/refresh")
     fun refresh(@Body requestBody: RequestBody): Call<TokenResponse>
+
+    @POST("/users/logout")
+    fun logout(@Header("Authorization") token: String?): Call<ResponseBody>
 
     suspend fun amina(): Call<ResponseBody>
 

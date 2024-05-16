@@ -21,7 +21,6 @@ class AuthViewModel(
     //private val userRoleRepository: UserRoleRepository
 ): ViewModel()  {
 
-
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 

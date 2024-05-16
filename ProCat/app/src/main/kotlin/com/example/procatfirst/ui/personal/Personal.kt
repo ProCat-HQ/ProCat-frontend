@@ -1,39 +1,29 @@
 package com.example.procatfirst.ui.personal
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
-import com.example.procatfirst.repository.UserRoleRepository
 import com.example.procatfirst.repository.cache.UserDataCache
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.getUserRole
-import com.example.procatfirst.ui.personal.notifications.makeNotification
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import java.lang.Thread.sleep
 
 @Composable
 fun PersonalScreen(
@@ -43,6 +33,8 @@ fun PersonalScreen(
     onToChatsClicked:() -> Unit,
     onToDeliveryClicked:() -> Unit,
     onToManagerClicked:() -> Unit,
+    personalViewModel: PersonalViewModel = PersonalViewModel(),
+    uiState: State<PersonalUiState> = personalViewModel.uiState.collectAsState()
 ) {
 
     Column(
@@ -132,8 +124,61 @@ fun PersonalScreen(
                 )
             }
         }
-
+        Button(
+            colors = ButtonColors(Color.Red, Color.White, Color.Cyan, Color.Magenta),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            onClick = { personalViewModel.logoutDialog() }
+        ) {
+            Text(
+                text = "Выйти из аккаунта",
+                fontSize = 16.sp
+            )
+        }
     }
+    if (uiState.value.logout) {
+        ConfirmLogoutDialog(
+            onCancel = { personalViewModel.cancelLogout() },
+            onContinue = { personalViewModel.confirmLogout() },
+        )
+    }
+}
+
+@Composable
+fun ConfirmLogoutDialog(
+    onCancel: () -> Unit,
+    onContinue: () -> Unit
+) {
+    AlertDialog(
+        title = {
+            Text(text = "Выход")
+        },
+        text = {
+            Text(text = "ВЫ уверены, что хотите выйти из аккаунта?")
+        },
+        onDismissRequest = {
+            //onCancel()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onCancel()
+                }
+            ) {
+                Text(text = "Отмена")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onContinue()
+                }
+            ) {
+                Text(text = "Да, я хочу выйти")
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)

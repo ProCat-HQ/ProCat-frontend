@@ -99,17 +99,6 @@ fun Cart(
             Text(text = stringResource(R.string.checkout))
         }
 
-        Button (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            onClick = {
-                cartViewModel.viewModelScope.launch { Log.v("Refresh", DataStorage.shared.getRefresh())}
-            }
-        ) {
-            Text(text = stringResource(R.string.checkout))
-        }
-
     }
 
 }

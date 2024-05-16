@@ -7,10 +7,9 @@ import com.example.procatfirst.repository.api.JwtToken
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage.DataStorage
 import com.example.procatfirst.repository.data_storage.getUserDataFromMemory
-import com.example.procatfirst.repository.data_storage.setRefresh
 import com.example.procatfirst.repository.data_storage.setUserDataToMemory
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
-import com.example.procatfirst.repository.data_storage_deprecated.setUserEmailDataStore
+import com.example.procatfirst.repository.data_storage_deprecated.setRefreshTokenDataStore
 import org.json.JSONObject
 import java.util.Base64
 
@@ -51,15 +50,15 @@ fun DataCoordinator.getUserRole() : String {
 
 fun DataCoordinator.setUserRole(token : String)  {
 
-    val decoded = decodeToken(token)
-    UserDataCache.shared.setUserRole(JSONObject(decoded.payload).getString("userRole"))
+    val decoded = JSONObject(decodeToken(token).payload)
+    UserDataCache.shared.setUserRole(decoded.getString("userRole"))
+    UserDataCache.shared.setUserData(User(decoded.getString("userId").toInt(), "", "", "", "", false, decoded.getString("userRole"), "", "" ))
 
 }
 
 suspend fun DataCoordinator.setTokenAndRole(token : String, refresh : String, context: Context)  {
 
-    //DataStorage.shared.setRefresh(refresh)
-    DataCoordinatorOLD.shared.setUserEmailDataStore(value = refresh, context = context)
+    DataCoordinatorOLD.shared.setRefreshTokenDataStore(value = refresh, context = context)
     UserDataCache.shared.setUserToken(token)
     setUserRole(token)
 

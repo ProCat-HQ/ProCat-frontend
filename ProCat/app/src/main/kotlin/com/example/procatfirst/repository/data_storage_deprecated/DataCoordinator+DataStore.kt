@@ -13,7 +13,7 @@ suspend fun DataCoordinatorOLD.getUserEmailDataStore(context: Context): String {
         ?: defaultUserEmailPreferenceValue
 }
 
-suspend fun DataCoordinatorOLD.setUserEmailDataStore(context: Context, value: String) {
+suspend fun DataCoordinatorOLD.setRefreshTokenDataStore(context: Context, value: String) {
     Log.i(
         identifier,
         "user email old: $userEmailPreferenceVariable"
