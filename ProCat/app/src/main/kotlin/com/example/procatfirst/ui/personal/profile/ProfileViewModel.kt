@@ -145,7 +145,7 @@ class ProfileViewModel: ViewModel() {
             NotificationCoordinator.shared.sendIntent(SystemNotifications.myTestIntent)
         } */
         viewModelScope.launch {
-            
+
             val callback = {status : String, userR: UserDataResponse ->
                 if (status == "SUCCESS") {
 //                    val temp = UserDataCache.shared.getUserData()
