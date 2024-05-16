@@ -8,6 +8,9 @@ import com.example.procatfirst.data.UserResponse
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.cache.UserDataCache
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
+import com.example.procatfirst.repository.data_storage_deprecated.getRefreshTokenDataStore
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -159,6 +162,7 @@ class ApiCalls {
                     }
                 }
                 else {
+                    Log.d("API", response.raw().toString())
                     callback("FAKE", "none", "none")
                 }
             }
@@ -207,13 +211,19 @@ class ApiCalls {
             .build()
             .create(UserService::class.java)
 
-        service.logout("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+        val jsonObject = JSONObject()
+        jsonObject.put("refreshToken", DataCoordinatorOLD.shared.refreshTokenPreferenceVariable)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+        service.logout("Bearer " + UserDataCache.shared.getUserToken(), requestBody).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                //pofig
+                Log.d("RESPONSE", response.raw().toString())
+                Log.d("RESPONSE", response.body().toString())
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                //toshe pofig
+                Log.d("RESPONSE", t.message.toString())
             }
 
         })

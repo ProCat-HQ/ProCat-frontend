@@ -13,7 +13,7 @@ import com.example.procatfirst.intents.SystemNotifications
 @Composable
 fun CustomComposeTextWithReceiver(){
 
-    var text by remember { mutableStateOf(DataCoordinatorOLD.shared.userEmailPreferenceVariable) }
+    var text by remember { mutableStateOf(DataCoordinatorOLD.shared.refreshTokenPreferenceVariable) }
 
     // MARK: Visual
     Text(text = text, fontSize = 24.sp)
@@ -30,7 +30,7 @@ fun CustomComposeTextWithReceiver(){
 
     val receiver1: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
         override fun howToReactOnIntent() {
-            text = DataCoordinatorOLD.shared.userEmailPreferenceVariable
+            text = DataCoordinatorOLD.shared.refreshTokenPreferenceVariable
         }
     }
 

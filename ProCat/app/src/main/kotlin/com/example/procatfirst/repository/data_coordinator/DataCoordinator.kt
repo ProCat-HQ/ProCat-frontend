@@ -8,7 +8,7 @@ import com.example.procatfirst.repository.cache.UserCartCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage.DataStorage
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
-import com.example.procatfirst.repository.data_storage_deprecated.getUserEmailDataStore
+import com.example.procatfirst.repository.data_storage_deprecated.getRefreshTokenDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
@@ -47,7 +47,7 @@ class DataCoordinator {
 
     suspend fun refresh(callback : (String, String, String) -> Unit, context: Context) {
         //val refresh = DataStorage.shared.getRefresh()
-        val refresh = DataCoordinatorOLD.shared.getUserEmailDataStore(context)
+        val refresh = DataCoordinatorOLD.shared.getRefreshTokenDataStore(context)
         if (refresh != "") {
             ApiCalls.shared.refresh(refresh, fingerprint, callback)
         }
@@ -117,6 +117,7 @@ class DataCoordinator {
 
     suspend fun logout() {
         UserDataCache.shared.setUserToken("")
+        UserDataCache.shared.setUserRole("User")
         //DataCoordinatorOLD.shared.setUserEmailDataStore(context, "")
         ApiCalls.shared.logout()
     }

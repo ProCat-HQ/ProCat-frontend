@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.personal
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +41,8 @@ fun PersonalScreen(
     personalViewModel: PersonalViewModel = PersonalViewModel(),
     uiState: State<PersonalUiState> = personalViewModel.uiState.collectAsState()
 ) {
+
+    var showDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -129,7 +136,7 @@ fun PersonalScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { personalViewModel.logoutDialog() }
+            onClick = { showDialog = true}
         ) {
             Text(
                 text = "Выйти из аккаунта",
@@ -137,10 +144,14 @@ fun PersonalScreen(
             )
         }
     }
-    if (uiState.value.logout) {
+
+    if (showDialog) {
         ConfirmLogoutDialog(
-            onCancel = { personalViewModel.cancelLogout() },
-            onContinue = { personalViewModel.confirmLogout() },
+            onCancel = { showDialog = false},
+            onContinue = {
+                personalViewModel.confirmLogout()
+                showDialog = false
+                         },
         )
     }
 }
@@ -150,6 +161,7 @@ fun ConfirmLogoutDialog(
     onCancel: () -> Unit,
     onContinue: () -> Unit
 ) {
+    Log.d("DIALOG", "DIALOG")
     AlertDialog(
         title = {
             Text(text = "Выход")
@@ -158,7 +170,7 @@ fun ConfirmLogoutDialog(
             Text(text = "ВЫ уверены, что хотите выйти из аккаунта?")
         },
         onDismissRequest = {
-            //onCancel()
+            onCancel()
         },
         confirmButton = {
             TextButton(

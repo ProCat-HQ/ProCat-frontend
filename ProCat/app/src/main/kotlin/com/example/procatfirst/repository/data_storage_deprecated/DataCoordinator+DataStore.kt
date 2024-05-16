@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.firstOrNull
 
 // MARK: Sample String Functionality
 // Please note that the DataStore functionality must be called within a coroutine.
-suspend fun DataCoordinatorOLD.getUserEmailDataStore(context: Context): String {
+suspend fun DataCoordinatorOLD.getRefreshTokenDataStore(context: Context): String {
     return context.dataStore.data.firstOrNull()?.get(PreferencesKeys.userEmail)
         ?: defaultUserEmailPreferenceValue
 }
@@ -16,13 +16,13 @@ suspend fun DataCoordinatorOLD.getUserEmailDataStore(context: Context): String {
 suspend fun DataCoordinatorOLD.setRefreshTokenDataStore(context: Context, value: String) {
     Log.i(
         identifier,
-        "user email old: $userEmailPreferenceVariable"
+        "user email old: $refreshTokenPreferenceVariable"
     )
     context.dataStore.edit { preferences ->
         preferences[PreferencesKeys.userEmail] = value
         Log.i(
             identifier,
-            "user email new: $userEmailPreferenceVariable"
+            "user email new: $refreshTokenPreferenceVariable"
         )
     }
 }

@@ -179,7 +179,7 @@ interface UserService {
     fun refresh(@Body requestBody: RequestBody): Call<TokenResponse>
 
     @POST("/users/logout")
-    fun logout(@Header("Authorization") token: String?): Call<ResponseBody>
+    fun logout(@Header("Authorization") token: String?, @Body requestBody: RequestBody): Call<ResponseBody>
 
     suspend fun amina(): Call<ResponseBody>
 

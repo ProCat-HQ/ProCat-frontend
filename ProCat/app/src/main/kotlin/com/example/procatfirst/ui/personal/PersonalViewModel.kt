@@ -33,7 +33,7 @@ class PersonalViewModel: ViewModel() {
     }
 
     fun confirmLogout() {
-        Log.d("logout", "Conf")
+        Log.d("Logout", "Conf")
         viewModelScope.launch {
             DataCoordinator.shared.logout()
         }
@@ -42,7 +42,7 @@ class PersonalViewModel: ViewModel() {
                 logout = false
             )
         }
-        Log.d("logout", "EXIT")
+        Log.d("Logout", "EXIT")
     }
 
 }
