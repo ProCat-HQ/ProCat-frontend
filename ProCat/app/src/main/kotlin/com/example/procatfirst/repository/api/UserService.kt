@@ -110,7 +110,7 @@ interface UserService {
     suspend fun createRouteFromDeliveryman(@Body requestBody: RequestBody): Call<RoutePayload>
 
     @POST("/users/admin/cluster")
-    suspend fun makeCluster(): Call<ClusterPayload>
+    suspend fun makeCluster(@Header("Authorization") token: String?): Call<ClusterPayload>
 
     @GET("/users/admin/deliveries-to-sort")
     suspend fun getAllDeliveriesAfterClustering(): Call<ClusterPayload>

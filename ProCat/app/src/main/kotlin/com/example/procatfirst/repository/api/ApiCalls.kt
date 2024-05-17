@@ -1,6 +1,8 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
+import com.example.procatfirst.data.ClusterPayload
+import com.example.procatfirst.data.ClusterResult
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
@@ -327,6 +329,33 @@ class ApiCalls {
                 /* This will print the response of the network call to the Logcat */
                 response.body()?.let { Log.d("AMINA", it.toString()) }
 
+            }
+
+        })
+    }
+
+    suspend fun makeCluster(callback: (String, List<ClusterResult>) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        Log.d("USER_TOKEN", UserDataCache.shared.getUserToken())
+        service.makeCluster("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ClusterPayload> {
+
+            override fun onFailure(call: Call<ClusterPayload>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ClusterPayload>, response: Response<ClusterPayload>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("Cluster result", it.result.toString())
+                    callback("SUCCESS", it.result)
+                }
             }
 
         })

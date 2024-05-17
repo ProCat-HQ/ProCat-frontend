@@ -40,6 +40,7 @@ fun PersonalScreen(
     onToChatsClicked:() -> Unit,
     onToDeliveryClicked:() -> Unit,
     onToManagerClicked:() -> Unit,
+    onToAdminDeliveryClicked:() -> Unit,
     personalViewModel: PersonalViewModel = viewModel()
 ) {
 
@@ -132,6 +133,19 @@ fun PersonalScreen(
                 )
             }
         }
+        if(userRole == "admin") {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                onClick = { onToAdminDeliveryClicked() }
+            ) {
+                Text(
+                    text = stringResource(R.string.delivery),
+                    fontSize = 16.sp
+                )
+            }
+        }
         Spacer(modifier = Modifier.weight(1f))
     }
     Column(
@@ -143,7 +157,7 @@ fun PersonalScreen(
                 .fillMaxWidth()
                 .padding(16.dp),
             onClick = { personalViewModel.openLogoutDialog() },
-            colors = ButtonColors(MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.onPrimary, MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.onErrorContainer),
+            colors = ButtonColors(MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.onErrorContainer),
 
             ) {
             Text(

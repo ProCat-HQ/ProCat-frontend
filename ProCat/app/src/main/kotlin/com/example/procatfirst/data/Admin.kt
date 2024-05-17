@@ -2,6 +2,8 @@ package com.example.procatfirst.data
 
 
 data class ClusterPayload(
+    val status: Int,
+    val message: String,
     val result: List<ClusterResult>
 )
 
@@ -11,6 +13,7 @@ data class ClusterResult(
 )
 
 data class DeliveryLocation(
+    val address: String,
     val latitude: String,
     val longitude: String,
     val deliveryId: Int
