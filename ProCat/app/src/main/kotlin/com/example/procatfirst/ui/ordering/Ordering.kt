@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.data.CartItem
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.ToolWithCnt
 import com.example.procatfirst.repository.cache.AllOrdersCache
@@ -122,7 +123,7 @@ fun OrderingScreen(
         Spacer(modifier = Modifier.weight(1f))
         var sum = 0
         for (t in orderingViewModel.uiState.value.tools) {
-            sum += t.price * t.cnt
+            sum += t.price * t.count
         }
 
         Column(
@@ -198,7 +199,7 @@ fun SingleSelectionCard(selectionOption: SelectionOption, onOptionClicked: (Sele
 
 @Composable
 fun ToolsScreenCartSmall(
-    tools: List<ToolWithCnt>
+    tools: List<CartItem>
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -212,7 +213,7 @@ fun ToolsScreenCartSmall(
 
 @Composable
 fun ToolCardCartSmall(
-    tool: ToolWithCnt
+    tool: CartItem
 ) {
     Card(
         modifier = Modifier
@@ -245,7 +246,7 @@ fun ToolCardCartSmall(
                 )
             }
             Text(
-                text = ("Кол-во: ${tool.cnt}"),
+                text = ("Кол-во: ${tool.count}"),
                 textAlign = TextAlign.End,
             )
         }
@@ -255,7 +256,6 @@ fun ToolCardCartSmall(
 
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun OrderingPreview() {

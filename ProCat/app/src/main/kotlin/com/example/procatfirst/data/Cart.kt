@@ -10,6 +10,7 @@ data class CartResponse(
     val payload: CartPayload
 )
 
+
 @Serializable
 data class CartPayload(
     val items: Set<CartItem>
@@ -25,6 +26,11 @@ data class CartItem(
 )
 // ---------------------------
 
+data class OrdersResponse (
+    val status: Int,
+    val message: String,
+    val payload: OrdersPayload,
+)
 
 data class OrdersPayload(
     val count: Int,
@@ -33,7 +39,7 @@ data class OrdersPayload(
 
 data class OrderFull(
     val id: Int,
-    val status: String,
+    var status: String,
     val totalPrice: Int,
     val deposit: Int,
     val rentalPeriodStart: String,

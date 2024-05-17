@@ -16,6 +16,7 @@ import com.example.procatfirst.data.NotificationPayload
 import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrdersPayload
+import com.example.procatfirst.data.OrdersResponse
 import com.example.procatfirst.data.PaymentPayload
 import com.example.procatfirst.data.RoutePayload
 import com.example.procatfirst.data.SimpleDeliveryman
@@ -129,11 +130,14 @@ interface UserService {
     @DELETE("/users/cart/{itemId}")
     fun deleteItemFromCart(@Path("itemId") id : Int, @Query("count") count : Int, @Header("Authorization") token: String?): Call<ResponseBody>
 
-    @GET("/users/orders/")
-    suspend fun getOrders(): Call<OrdersPayload>
+    @GET("/users/orders")
+    suspend fun getAllOrders(): Call<OrdersPayload>
+
+    @GET("/users/orders")
+    fun getUserOrders(@Query("userId") id : Int, @Header("Authorization") token: String?): Call<OrdersResponse>
 
     @GET("/users/orders/{orderId}")
-    suspend fun getOrder(@Query("orderId") orderId: Int): Call<OrderFull>
+    suspend fun getOrder(@Path("orderId", ) orderId: Int): Call<OrderFull>
 
     @POST("/users/orders/")
     suspend fun createNewOrder(@Body requestBody: OrderRequest): Call<ResponseBody>

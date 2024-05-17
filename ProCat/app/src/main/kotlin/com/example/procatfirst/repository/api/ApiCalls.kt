@@ -4,6 +4,8 @@ import android.util.Log
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ItemResponse
+import com.example.procatfirst.data.OrdersPayload
+import com.example.procatfirst.data.OrdersResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
@@ -290,6 +292,32 @@ class ApiCalls {
             }
 
         })
+    }
+
+    fun getUserOrders(id: Int, callback: (OrdersPayload?) -> Unit) {
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.getUserOrders(id, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<OrdersResponse> {
+            override fun onResponse(call: Call<OrdersResponse>, response: Response<OrdersResponse>) {
+                Log.d("RESPONSE", response.raw().toString())
+                if (response.code() == 200) {
+                    callback(response.body()?.payload)
+                }
+                else {
+                    callback(null)
+                }
+            }
+
+            override fun onFailure(call: Call<OrdersResponse>, t: Throwable) {
+                Log.d("RESPONSE", t.message.toString())
+                callback(null)
+            }
+        })
+
     }
 
     suspend fun getAllUsersApi()  {
