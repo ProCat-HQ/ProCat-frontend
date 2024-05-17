@@ -6,7 +6,7 @@ class UserDataCache {
 
     var user : User? = null
     private var role : String = "User"
-    private var token : String = "none"
+    private var token : String = ""
 
     companion object {
         val shared = UserDataCache()

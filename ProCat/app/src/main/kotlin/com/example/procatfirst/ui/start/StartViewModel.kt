@@ -5,21 +5,20 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.setTokenAndRole
 import kotlinx.coroutines.launch
 
-class StartViewModel(): ViewModel() {
-
-    //private val _uiState = MutableStateFlow(SearchUiState("", DataCoordinator.shared.getCatalog()))
-    //val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
+class StartViewModel(context: Context, nextPageAction : () -> Unit): ViewModel() {
 
     init{
-        open()
+        open(context)
     }
 
-    private fun open() {
-
+    private fun open(context: Context) {
+        authorise(context) {}
+        Log.v("OPEN", "OPEN")
     }
 
     fun authorise(context: Context, nextPageAction : () -> Unit) {
@@ -36,7 +35,9 @@ class StartViewModel(): ViewModel() {
             }
         }
         viewModelScope.launch {
-            DataCoordinator.shared.refresh(callback, context)
+            if (UserDataCache.shared.getUserToken() == "") {
+                DataCoordinator.shared.refresh(callback, context)
+            }
         }
     }
 

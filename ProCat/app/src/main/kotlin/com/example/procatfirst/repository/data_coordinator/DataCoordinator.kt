@@ -21,6 +21,8 @@ import java.security.cert.CertificateEncodingException
 import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
+import java.time.LocalDateTime
+import java.time.temporal.TemporalAmount
 import java.util.Locale
 
 /**
@@ -36,26 +38,23 @@ class DataCoordinator {
     }
 
     private var fingerprint = ""
+    private var callDown: LocalDateTime? = null
 
     suspend fun initialize(con: Context) {
         DataStorage.shared.initialize(con)
         fingerprint = setFingerPrint(con)
-
-        //Чтобы корзина работала до её открытия (когда добавляем инструмент)
-        withContext(Dispatchers.IO) {
-            //ApiCalls.shared.getCartApi { payload: CartPayload -> UserCartCache.shared.setUserCartStuff(payload) }
-            //UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
-        }
     }
 
     suspend fun refresh(callback : (String, String, String) -> Unit, context: Context) {
-        //val refresh = DataStorage.shared.getRefresh()
-        val refresh = DataCoordinatorOLD.shared.getRefreshTokenDataStore(context)
-        if (refresh != "") {
-            ApiCalls.shared.refresh(refresh, fingerprint, callback)
-        }
-        else {
-            callback("No refresh", "", "")
+        if (callDown == null || (LocalDateTime.now().second - callDown!!.second > 3)) {
+            val refresh = DataCoordinatorOLD.shared.getRefreshTokenDataStore(context)
+            if (refresh != "") {
+                ApiCalls.shared.refresh(refresh, fingerprint, callback)
+                callDown = LocalDateTime.now()
+            }
+            else {
+                callback("No refresh", "", "")
+            }
         }
     }
 

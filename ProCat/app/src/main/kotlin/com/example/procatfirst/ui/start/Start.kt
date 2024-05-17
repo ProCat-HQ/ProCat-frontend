@@ -23,7 +23,7 @@ fun StartScreen(
     controller : Context,
     modifier: Modifier = Modifier,
     onNextButtonClicked: () -> Unit,
-    startViewModel: StartViewModel = StartViewModel(),
+    startViewModel: StartViewModel = StartViewModel(controller, onNextButtonClicked),
 
 ) {
 

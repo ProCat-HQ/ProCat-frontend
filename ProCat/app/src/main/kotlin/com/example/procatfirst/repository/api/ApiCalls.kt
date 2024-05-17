@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ItemResponse
+import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
 import com.example.procatfirst.repository.cache.AllOrdersCache
@@ -81,12 +82,10 @@ class ApiCalls {
 
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 Log.i("RESPONSE", response.raw().toString())
-                //response.body()?.let { UserDataCache.shared.setUserData(it) }
-                //response.body()?.let { UserDataCache.shared.setUserData(User(it.payload.id, it.payload.fullName, it.payload.email, it.payload.phoneNumber, it.payload.identificationNumber, it.payload.isConfirmed, it.payload.role, it.payload.created_at, "hash")) }
+                response.body()?.let { UserDataCache.shared.setUserData(User(it.payload.id, it.payload.fullName, it.payload.email, it.payload.phoneNumber, it.payload.identificationNumber, it.payload.isConfirmed, it.payload.role, "", "hash")) }
                 response.body()?.let {
                     Log.d("USER_DATA", it.payload.toString())
                     callback("SUCCESS", it.payload) }
-                //Log.i("UserData", UserDataCache.shared.getUserData().toString())
             }
 
         })
@@ -147,7 +146,7 @@ class ApiCalls {
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("RESPONSE", "Fail")
-                callback("FAIL", "none", "none")
+                callback("FAIL", "", "")
             }
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                 if (response.code() == 200) {
@@ -157,7 +156,7 @@ class ApiCalls {
                 }
                 else {
                     Log.d("API", response.raw().toString())
-                    callback("FAKE", "none", "none")
+                    callback("FAKE", "", "")
                 }
             }
         })
