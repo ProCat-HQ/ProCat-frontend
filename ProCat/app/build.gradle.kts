@@ -11,6 +11,8 @@ plugins {
     //id("kotlin-kapt")
     //id("com.google.dagger.hilt.android")
 
+    id("com.google.gms.google-services")
+
 }
 
 
@@ -119,6 +121,9 @@ dependencies {
 
     //implementation("com.google.dagger:hilt-android:2.44")
     //kapt("com.google.dagger:hilt-compiler:2.44")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
 
 /*

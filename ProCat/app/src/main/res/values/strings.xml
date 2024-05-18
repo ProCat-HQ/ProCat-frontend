@@ -98,6 +98,11 @@
     <string name="list_of_orders">Список заказов</string>
     <string name="ask_question">Задать вопрос</string>
 
+    <string name="deliveries">Доставки</string>
+    <string name="make_cluster">Распределить</string>
+    <string name="deliverymen">Курьеры</string>
+
+
     <string name="list_of_chats">Чаты</string>
     <string name="type_message">Введите сообщение</string>
     <string name="chat">Чат</string>

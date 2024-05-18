@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.BuildConfig
+import com.example.procatfirst.data.AllDeliveriesToSortResponse
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ChangeDeliveryRequest
@@ -8,6 +9,8 @@ import com.example.procatfirst.data.ClusterPayload
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryPayload
 import com.example.procatfirst.data.Deliveryman
+import com.example.procatfirst.data.DeliverymenPayload
+import com.example.procatfirst.data.DeliverymenResponse
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.ItemsResponse
 import com.example.procatfirst.data.NewOrderResponse
@@ -89,7 +92,7 @@ interface UserService {
     suspend fun changeRole(@Query("userId") userId: Int, @Body requestBody: RequestBody)
 
     @GET("/users/deliverymen")
-    suspend fun getAllDeliverymen(): Call<Deliveryman>
+    fun getAllDeliverymen(@Header("Authorization") token: String?): Call<DeliverymenResponse>
 
     @GET("/users/deliverymen/{deliveryId}")
     suspend fun getDeliveryMan(@Query("deliveryId") deliveryId: Int): Call<SimpleDeliveryman>
@@ -116,10 +119,10 @@ interface UserService {
     suspend fun createRouteFromDeliveryman(@Body requestBody: RequestBody): Call<RoutePayload>
 
     @POST("/users/admin/cluster")
-    suspend fun makeCluster(): Call<ClusterPayload>
+    fun makeCluster(@Header("Authorization") token: String?): Call<ClusterPayload>
 
     @GET("/users/admin/deliveries-to-sort")
-    suspend fun getAllDeliveriesAfterClustering(): Call<ClusterPayload>
+    fun getAllDeliveriesToSort(@Header("Authorization") token: String?): Call<AllDeliveriesToSortResponse>
 
     @PATCH("/users/admin/change-delivery")
     suspend fun changeDelivery(@Body requestBody: ChangeDeliveryRequest): Call<ResponseBody>

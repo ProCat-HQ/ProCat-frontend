@@ -44,6 +44,8 @@ import com.example.procatfirst.ui.cart.Cart
 import com.example.procatfirst.ui.courier.orders.CourierOrdersScreen
 import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.managment.OrdersManagerScreen
+import com.example.procatfirst.ui.managment.delivery.AdminDelivery
+import com.example.procatfirst.ui.managment.deliverymen.Deliverymen
 import com.example.procatfirst.ui.ordering.OrderConfirmation
 import com.example.procatfirst.ui.ordering.OrderingScreen
 import com.example.procatfirst.ui.personal.PersonalScreen
@@ -75,7 +77,8 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Registration(title = R.string.registration),
     Manager(title = R.string.manager), // damn
     OrderConfirmation(title = R.string.order_confirmation),
-
+    AdminDelivery(title = R.string.delivery),
+    AllDeliverymen(title = R.string.deliverymen)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -290,6 +293,12 @@ fun ProCatApp (
                     },
                     onToManagerClicked = {
                         navController.navigate(ProCatScreen.Manager.name)
+                    },
+                    onToAdminDeliveryClicked = {
+                        navController.navigate(ProCatScreen.AdminDelivery.name)
+                    },
+                    onToAllDeliverymenClicked = {
+                        navController.navigate(ProCatScreen.AllDeliverymen.name)
                     }
 
                 )
@@ -339,6 +348,16 @@ fun ProCatApp (
             composable(route = ProCatScreen.OrderConfirmation.name) {
                 OrderConfirmation(
                     orderingViewModel = viewModel()
+                )
+            }
+            composable(route = ProCatScreen.AdminDelivery.name) {
+                AdminDelivery(
+
+                )
+            }
+            composable(route = ProCatScreen.AllDeliverymen.name) {
+                Deliverymen(
+
                 )
             }
         }

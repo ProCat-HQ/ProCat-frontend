@@ -1,6 +1,12 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
+import com.example.procatfirst.data.AllDeliveriesToSortResponse
+import com.example.procatfirst.data.ClusterPayload
+import com.example.procatfirst.data.ClusterResult
+import com.example.procatfirst.data.Deliveryman
+import com.example.procatfirst.data.DeliverymenPayload
+import com.example.procatfirst.data.DeliverymenResponse
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ItemResponse
@@ -480,6 +486,82 @@ class ApiCalls {
                 /* This will print the response of the network call to the Logcat */
                 response.body()?.let { Log.d("AMINA", it.toString()) }
 
+            }
+
+        })
+    }
+
+    fun makeCluster(callback: (String, List<ClusterResult>) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.makeCluster("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ClusterPayload> {
+
+            override fun onFailure(call: Call<ClusterPayload>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ClusterPayload>, response: Response<ClusterPayload>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    callback("SUCCESS", it.result)
+                }
+            }
+
+        })
+    }
+
+    fun getAllDeliverymenApi(callback : (String, List<Deliveryman>) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.getAllDeliverymen("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<DeliverymenResponse> {
+
+            override fun onFailure(call: Call<DeliverymenResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<DeliverymenResponse>, response: Response<DeliverymenResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("DELIVERYMEN_COUNT", it.payload.count.toString())
+                    callback("SUCCESS", it.payload.rows) }
+            }
+
+        })
+    }
+
+    fun getAllDeliveriesToSortApi(callback : (String, List<ClusterResult>) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.getAllDeliveriesToSort("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<AllDeliveriesToSortResponse> {
+
+            override fun onFailure(call: Call<AllDeliveriesToSortResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<AllDeliveriesToSortResponse>, response: Response<AllDeliveriesToSortResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("DELIVERIES_COUNT", it.payload.count.toString())
+                    Log.d("DELIVERIES_RESULT", it.payload.rows.toString())
+                    callback("SUCCESS", it.payload.rows) }
             }
 
         })

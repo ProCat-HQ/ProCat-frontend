@@ -1,6 +1,16 @@
 package com.example.procatfirst.data
 
 
+data class DeliverymenResponse(
+    val status: Int,
+    val message: String,
+    val payload: DeliverymenPayload
+)
+data class DeliverymenPayload(
+    val count: Int,
+    val rows: List<Deliveryman>
+)
+
 data class Deliveryman(
     val id: Int,
     val carCapacity: String,
