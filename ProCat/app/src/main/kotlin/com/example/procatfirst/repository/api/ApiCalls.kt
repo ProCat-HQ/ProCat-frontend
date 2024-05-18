@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
+import com.example.procatfirst.data.AllDeliveriesForDeliverymanResponse
 import com.example.procatfirst.data.AllDeliveriesToSortResponse
 import com.example.procatfirst.data.ClusterPayload
 import com.example.procatfirst.data.ClusterResult
@@ -9,6 +10,8 @@ import com.example.procatfirst.data.DeliverymenPayload
 import com.example.procatfirst.data.DeliverymenResponse
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
+import com.example.procatfirst.data.ClusterResponse
+import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
@@ -447,17 +450,18 @@ class ApiCalls {
             .build()
             .create(UserService::class.java)
 
-        service.makeCluster("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ClusterPayload> {
+        service.makeCluster("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ClusterResponse> {
 
-            override fun onFailure(call: Call<ClusterPayload>, t: Throwable) {
+            override fun onFailure(call: Call<ClusterResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("API", t.toString())
             }
 
-            override fun onResponse(call: Call<ClusterPayload>, response: Response<ClusterPayload>) {
+            override fun onResponse(call: Call<ClusterResponse>, response: Response<ClusterResponse>) {
                 Log.i("RESPONSE", response.raw().toString())
                 response.body()?.let {
-                    callback("SUCCESS", it.result)
+                    Log.d("RESPONSE_R", it.payload.result.toString())
+                    callback("SUCCESS", it.payload.result)
                 }
             }
 
@@ -515,5 +519,56 @@ class ApiCalls {
         })
     }
 
+    fun getDeliveriesForDeliverymanApi(id: Int, callback: (String, List<Delivery>) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+
+        service.getDeliveriesForDeliveryman("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<AllDeliveriesForDeliverymanResponse> {
+
+            override fun onFailure(call: Call<AllDeliveriesForDeliverymanResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<AllDeliveriesForDeliverymanResponse>, response: Response<AllDeliveriesForDeliverymanResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("USER_DATA", it.payload.toString())
+                    callback("SUCCESS", it.payload.rows) }
+            }
+
+        })
+    }
+
+    fun changeStatusForDeliveryApi(id: Int, status: String, callback: (String) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+
+        service.getDeliveriesForDeliveryman("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<AllDeliveriesForDeliverymanResponse> {
+
+            override fun onFailure(call: Call<AllDeliveriesForDeliverymanResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<AllDeliveriesForDeliverymanResponse>, response: Response<AllDeliveriesForDeliverymanResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    callback("SUCCESS")
+                }
+            }
+
+        })
+    }
 
 }

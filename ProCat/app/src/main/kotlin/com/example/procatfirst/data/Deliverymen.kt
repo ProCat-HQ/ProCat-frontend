@@ -31,6 +31,11 @@ data class SimpleDeliveryman(
 
 // ---------------------------
 
+data class AllDeliveriesForDeliverymanResponse(
+    val status: Int,
+    val message: String,
+    val payload: DeliveryPayload
+)
 data class DeliveryPayload(
     val count: Int,
     val rows: List<Delivery>
@@ -48,7 +53,7 @@ data class DeliveryOrder(
     val id: Int,
     val status: String,
     val totalPrice: Int,
-    val deposit: Int,
+    //val deposit: Int,
     val address: String,
     val latitude: String,
     val longitude: String

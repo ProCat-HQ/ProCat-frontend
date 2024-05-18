@@ -106,7 +106,7 @@ fun PersonalScreen(
 
         val userRole = UserDataCache.shared.getUserRole()
 
-        if(userRole == "delivery" || userRole == "admin") {
+        if(userRole == "deliveryman" || userRole == "admin") {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -114,7 +114,7 @@ fun PersonalScreen(
                 onClick = { onToDeliveryClicked() }
             ) {
                 Text(
-                    text = "Я курьер",
+                    text = "Заказы по доставке",
                     fontSize = 16.sp
                 )
             }

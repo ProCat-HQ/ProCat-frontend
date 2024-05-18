@@ -1,9 +1,11 @@
 package com.example.procatfirst.data
 
-
-data class ClusterPayload(
+data class ClusterResponse(
     val status: Int,
     val message: String,
+    val payload: ClusterPayload
+)
+data class ClusterPayload(
     val result: List<ClusterResult>
 )
 

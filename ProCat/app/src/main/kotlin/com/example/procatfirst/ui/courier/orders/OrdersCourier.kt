@@ -39,20 +39,27 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.MapActivity
 import com.example.procatfirst.R
+import com.example.procatfirst.data.Delivery
+import com.example.procatfirst.data.DeliveryOrder
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.setOrderStatus
+import com.example.procatfirst.ui.managment.delivery.AdminDeliveryUiState
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 
 
-var currentOrder : Order? = null
 
 @Composable
 fun CourierOrdersScreen(
         controller : Context,
-        ordersViewModel: CourierOrdersViewModel = viewModel()
+        courierOrdersViewModel: CourierOrdersViewModel = viewModel()
 ) {
-    val orders by ordersViewModel.orders.collectAsState()
+    val deliveriesUiState by courierOrdersViewModel.uiState.collectAsState()
+    var currentOrder by remember { mutableStateOf<DeliveryOrder?>(null) }
+
+
+
+    //val orders by courierOrdersViewModel.orders.collectAsState()
     var changeStatusDialogVisible by remember { mutableStateOf(false) }
 
 
@@ -68,52 +75,45 @@ fun CourierOrdersScreen(
             style = MaterialTheme.typography.titleLarge,
         )
 
-        orders.forEach { order ->
-            orderItem(
-                orderId = order.orderId,
-                status = order.status,
-                totalPrice = order.totalPrice,
-                rentalPeriod = order.rentalPeriod,
-                address = order.address,
-                order = order,
-                changeStatus = {changeStatusDialogVisible = true}
+        deliveriesUiState.deliveries.forEach { delivery ->
+            DeliveryCard(
+                delivery = delivery,
+                changeStatus = {
+                    changeStatusDialogVisible = true
+                    currentOrder = delivery.order
+                },
+                deliveriesUiState
                 )
         }
 
         Button(
                 onClick = { controller.startActivity(Intent(controller, MapActivity().javaClass)) },
                 modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                    .fillMaxWidth()
+                    .padding(16.dp)
         ) {
             Text("Показать карту")
         }
 
         if (changeStatusDialogVisible) {
-            ChangeStatusDialog(onDismiss = { changeStatusDialogVisible = false }, onChangeStatus = {status ->
-                currentOrder?.let {
-                    DataCoordinator.shared.setOrderStatus(
-                        it, status)
+            ChangeStatusDialog(
+                currentOrder = currentOrder!!,
+                onDismiss = { changeStatusDialogVisible = false },
+                onChangeStatus = { newStatus ->
+                    courierOrdersViewModel.changeOrderStatus(currentOrder!!.id, newStatus)
+                    changeStatusDialogVisible = false
                 }
-                changeStatusDialogVisible = false
-            })
+            )
         }
     }
 }
 
 @Composable
-fun orderItem(
-    order : Order,
-
-    orderId: Int,
-    status: String,
-    totalPrice: Int,
-    rentalPeriod: String,
-    address: String,
-
-    changeStatus : () -> Unit,
-
-    ){
+fun DeliveryCard(
+    delivery: Delivery,
+    changeStatus: (DeliveryOrder) -> Unit,
+    deliveryUiState: CourierOrdersUiState
+){
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     ElevatedCard(
@@ -124,7 +124,7 @@ fun orderItem(
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.colorScheme.background)
-            .clickable { expanded = !expanded  }
+            .clickable { expanded = !expanded }
             .padding(16.dp)
     ) {
 
@@ -146,40 +146,43 @@ fun orderItem(
                     .weight(3f)
             ) {
                 Text(
-                    text = "Заказ $orderId",
+                    text = "Доставка ${delivery.id}",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Row(
-
-                ){
-                    Text(
-                        text = rentalPeriod.substringAfterLast("-"),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-
-                }
                 Text(
-                    text = totalPrice.toString(),
+                    text = "Время ${delivery.timeStart} - ${delivery.timeEnd}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "Метод доставки: ${delivery.method}",
                     style = MaterialTheme.typography.bodyLarge
                 )
 
                 if (expanded) {
                     Text(
-                        text = address,
+                        text = "Заказ ${delivery.order.id}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = "Адрес ${delivery.order.address}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = "Сумма заказа ${delivery.order.totalPrice}",
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
 
             }
 
             TextButton(
-                onClick = { currentOrder = order; changeStatus() },
+                onClick = { changeStatus(delivery.order) },
                 modifier = Modifier
                     .weight(2f)
                     .padding(4.dp)
             ) {
                 Text(
-                    text = status,
+                    text = delivery.order.status,
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
@@ -190,27 +193,49 @@ fun orderItem(
 
 @Composable
 fun ChangeStatusDialog(
+    currentOrder: DeliveryOrder,
     onDismiss: () -> Unit,
     onChangeStatus: (String) -> Unit,
 ) {
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Обновить стaтус заказа") },
+        title = { Text("Обновить стaтус заказа ${currentOrder.id}") },
         text = {
             Column {
-
+                Text("Выберите новый статус для заказа")
             }
         },
         confirmButton = {
-            Button(onClick = { onChangeStatus("Принят в обработку") }) {
-                Text("Принят в обработку")
+            Button(onClick = { onChangeStatus("Waiting for payment") }) {
+                Text("Ожидание оплаты")
             }
-            Button(onClick = { onChangeStatus("Готов к выдаче") }) {
+            Button(onClick = { onChangeStatus("Order collection") }) {
+                Text("Сбор заказа")
+            }
+            Button(onClick = { onChangeStatus("Order is ready for dispatch") }) {
                 Text("Готов к выдаче")
             }
-            Button(onClick = { onChangeStatus("Отклонён") }) {
-                Text("Отклонён")
+            Button(onClick = { onChangeStatus("Pending delivery") }) {
+                Text("В ожидании доставки")
+            }
+            Button(onClick = { onChangeStatus("Delivery") }) {
+                Text("Доставка")
+            }
+            Button(onClick = { onChangeStatus("On hire") }) {
+                Text("В аренде")
+            }
+            Button(onClick = { onChangeStatus("Lease expires") }) {
+                Text("Истекает срок аренды")
+            }
+            Button(onClick = { onChangeStatus("Rental expired") }) {
+                Text("Просрочен срок аренды")
+            }
+            Button(onClick = { onChangeStatus("Problem with instrument") }) {
+                Text("Проблема с инструментом")
+            }
+            Button(onClick = { onChangeStatus("Waiting for payment for repairs") }) {
+                Text("Ожидание оплаты за ремонт")
             }
         },
         dismissButton = {
