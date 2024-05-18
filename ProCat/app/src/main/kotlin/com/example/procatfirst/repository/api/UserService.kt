@@ -3,6 +3,7 @@ package com.example.procatfirst.repository.api
 import com.example.procatfirst.BuildConfig
 import com.example.procatfirst.data.AllDeliveriesToSortResponse
 import com.example.procatfirst.data.CartPayload
+import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ChangeDeliveryRequest
 import com.example.procatfirst.data.ClusterPayload
 import com.example.procatfirst.data.Delivery
@@ -18,6 +19,7 @@ import com.example.procatfirst.data.NotificationPayload
 import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrdersPayload
+import com.example.procatfirst.data.OrdersResponse
 import com.example.procatfirst.data.PaymentPayload
 import com.example.procatfirst.data.RoutePayload
 import com.example.procatfirst.data.SimpleDeliveryman
@@ -28,6 +30,7 @@ import com.example.procatfirst.data.UsersResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -121,20 +124,23 @@ interface UserService {
     @PATCH("/users/admin/change-delivery")
     suspend fun changeDelivery(@Body requestBody: ChangeDeliveryRequest): Call<ResponseBody>
 
-    @GET("/users/cart/")
-    suspend fun getItemsInCart(): Call<CartPayload>
+    @GET("/users/cart")
+    fun getItemsInCart(@Header("Authorization") token: String?): Call<CartResponse>
 
     @POST("users/cart")
-    suspend fun postCart(@Body requestBody: RequestBody)
+    fun postCart(@Body requestBody: RequestBody, @Header("Authorization") token: String?): Call<ResponseBody>
 
-    @DELETE("/users/cart")
-    suspend fun deleteItemFromCart(@Body requestBody: RequestBody)
+    @DELETE("/users/cart/{itemId}")
+    fun deleteItemFromCart(@Path("itemId") id : Int, @Query("count") count : Int, @Header("Authorization") token: String?): Call<ResponseBody>
 
-    @GET("/users/orders/")
-    suspend fun getOrders(): Call<OrdersPayload>
+    @GET("/users/orders")
+    suspend fun getAllOrders(): Call<OrdersPayload>
+
+    @GET("/users/orders")
+    fun getUserOrders(@Query("userId") id : Int, @Header("Authorization") token: String?): Call<OrdersResponse>
 
     @GET("/users/orders/{orderId}")
-    suspend fun getOrder(@Query("orderId") orderId: Int): Call<OrderFull>
+    suspend fun getOrder(@Path("orderId", ) orderId: Int): Call<OrderFull>
 
     @POST("/users/orders/")
     suspend fun createNewOrder(@Body requestBody: OrderRequest): Call<ResponseBody>
@@ -182,7 +188,7 @@ interface UserService {
     fun refresh(@Body requestBody: RequestBody): Call<TokenResponse>
 
     @POST("/users/logout")
-    fun logout(@Header("Authorization") token: String?): Call<ResponseBody>
+    fun logout(@Header("Authorization") token: String?, @Body requestBody: RequestBody): Call<ResponseBody>
 
     suspend fun amina(): Call<ResponseBody>
 

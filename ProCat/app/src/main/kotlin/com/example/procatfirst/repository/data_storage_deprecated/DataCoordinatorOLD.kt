@@ -27,7 +27,7 @@ class DataCoordinatorOLD {
     /// Sample String
     var userPhonePreferenceVariable: String = ""
     val defaultUserPhonePreferenceValue: String = ""
-    var userEmailPreferenceVariable: String = ""
+    var refreshTokenPreferenceVariable: String = ""
     val defaultUserEmailPreferenceValue: String = ""
 
 
@@ -46,7 +46,7 @@ class DataCoordinatorOLD {
         // Load DataStore Settings
         // Update Sample String
         userPhonePreferenceVariable = getUserPhoneDataStore(context)
-        userEmailPreferenceVariable = getUserEmailDataStore(context)
+        refreshTokenPreferenceVariable = getRefreshTokenDataStore(context)
         // Update Sample Int
         onLoad()
     }

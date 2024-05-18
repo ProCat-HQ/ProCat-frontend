@@ -3,12 +3,14 @@ package com.example.procatfirst.repository.data_coordinator
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserCartCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage.DataStorage
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
-import com.example.procatfirst.repository.data_storage_deprecated.getUserEmailDataStore
+import com.example.procatfirst.repository.data_storage_deprecated.getRefreshTokenDataStore
+import com.example.procatfirst.repository.data_storage_deprecated.updateRefreshToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
@@ -19,6 +21,8 @@ import java.security.cert.CertificateEncodingException
 import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
+import java.time.LocalDateTime
+import java.time.temporal.TemporalAmount
 import java.util.Locale
 
 /**
@@ -34,25 +38,23 @@ class DataCoordinator {
     }
 
     private var fingerprint = ""
+    private var callDown: LocalDateTime? = null
 
     suspend fun initialize(con: Context) {
         DataStorage.shared.initialize(con)
         fingerprint = setFingerPrint(con)
-
-        //Чтобы корзина работала до её открытия (когда добавляем инструмент)
-        withContext(Dispatchers.IO) {
-            UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
-        }
     }
 
     suspend fun refresh(callback : (String, String, String) -> Unit, context: Context) {
-        //val refresh = DataStorage.shared.getRefresh()
-        val refresh = DataCoordinatorOLD.shared.getUserEmailDataStore(context)
-        if (refresh != "") {
-            ApiCalls.shared.refresh(refresh, fingerprint, callback)
-        }
-        else {
-            callback("No refresh", "", "")
+        if (callDown == null || (LocalDateTime.now().second - callDown!!.second > 3)) {
+            val refresh = DataCoordinatorOLD.shared.getRefreshTokenDataStore(context)
+            if (refresh != "") {
+                ApiCalls.shared.refresh(refresh, fingerprint, callback)
+                callDown = LocalDateTime.now()
+            }
+            else {
+                callback("No refresh", "", "")
+            }
         }
     }
 
@@ -115,9 +117,10 @@ class DataCoordinator {
         return str.toString();
     }
 
-    suspend fun logout() {
+    suspend fun logout(context: Context) {
         UserDataCache.shared.setUserToken("")
-        //DataCoordinatorOLD.shared.setUserEmailDataStore(context, "")
+        UserDataCache.shared.setUserRole("User")
+        DataCoordinatorOLD.shared.updateRefreshToken(context, "")
         ApiCalls.shared.logout()
     }
 

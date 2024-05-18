@@ -6,9 +6,9 @@ import android.content.Context
 /**
  * Методы для обновления данных  долговременной памяти.
  */
-suspend fun DataCoordinatorOLD.updateUserEmail(context: Context, value: String) {
+suspend fun DataCoordinatorOLD.updateRefreshToken(context: Context, value: String) {
     // Update Value
-    this.userEmailPreferenceVariable = value
+    this.refreshTokenPreferenceVariable = value
     // Save to System
     // Update DataStore
     setRefreshTokenDataStore(context, value)

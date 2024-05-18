@@ -105,7 +105,7 @@ fun ToolCardCart(
             ){
                 Spacer(modifier = Modifier.height(10.dp))
                 Image(
-                    painter = painterResource(id = tool.image.toInt()),//(id = tool.imageResId),
+                    painter = painterResource(id = R.drawable.hammer),//tool.image.toInt()),
                     contentDescription = tool.name,
                     modifier = Modifier
                         .fillMaxWidth()

@@ -4,7 +4,7 @@ import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.CatalogCache
 
-fun DataCoordinator.loadCatalog(callback : () -> Unit) {
+suspend fun DataCoordinator.loadCatalog(callback : () -> Unit) {
     if (CatalogCache.shared.getCatalogStuff().isEmpty()) {
         ApiCalls.shared.getItemsApi(callback)
     }

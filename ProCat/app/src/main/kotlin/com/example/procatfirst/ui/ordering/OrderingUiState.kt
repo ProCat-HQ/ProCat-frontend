@@ -1,9 +1,9 @@
 package com.example.procatfirst.ui.ordering
 
-import com.example.procatfirst.data.ToolWithCnt
+import com.example.procatfirst.data.CartItem
 
 data class OrderingUiState(
-    val tools : List<ToolWithCnt> = emptyList(),
+    val tools : List<CartItem> = emptyList(),
     val address: String = "",
     val selectedDate: String = "",
     val orderStatus: String = "",

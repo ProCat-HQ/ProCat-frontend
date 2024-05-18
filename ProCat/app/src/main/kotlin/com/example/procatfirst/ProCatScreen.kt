@@ -274,6 +274,7 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Personal.name) {
                 PersonalScreen(
+                    context = controller,
                     onToProfileClicked = {
                         navController.navigate(ProCatScreen.Profile.name)
                     },

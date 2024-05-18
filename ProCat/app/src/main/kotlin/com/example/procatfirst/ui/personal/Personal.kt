@@ -1,5 +1,7 @@
 package com.example.procatfirst.ui.personal
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,17 +13,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,11 +28,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.repository.cache.UserDataCache
-import com.example.procatfirst.ui.registration.RegistrationViewModel
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 
 @Composable
 fun PersonalScreen(
+    context: Context,
     onToProfileClicked: () -> Unit,
     onToOrdersClicked: () -> Unit,
     onToNotificationsClicked: () -> Unit,
@@ -182,10 +181,13 @@ fun PersonalScreen(
     }
 
 
+
     if (personalUiState.logout) {
         ConfirmLogoutDialog(
             onCancel = { personalViewModel.cancelLogout() },
-            onContinue = { personalViewModel.confirmLogout() },
+            onContinue = {
+                personalViewModel.confirmLogout(context)
+                         },
         )
     }
 }
@@ -195,6 +197,7 @@ fun ConfirmLogoutDialog(
     onCancel: () -> Unit,
     onContinue: () -> Unit
 ) {
+    Log.d("DIALOG", "DIALOG")
     AlertDialog(
         title = {
             Text(text = "Выход")
@@ -203,7 +206,7 @@ fun ConfirmLogoutDialog(
             Text(text = "ВЫ уверены, что хотите выйти из аккаунта?")
         },
         onDismissRequest = {
-            //onCancel()
+            onCancel()
         },
         confirmButton = {
             TextButton(
