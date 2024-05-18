@@ -3,6 +3,9 @@ package com.example.procatfirst.repository.api
 import android.util.Log
 import com.example.procatfirst.data.ClusterPayload
 import com.example.procatfirst.data.ClusterResult
+import com.example.procatfirst.data.Deliveryman
+import com.example.procatfirst.data.DeliverymenPayload
+import com.example.procatfirst.data.DeliverymenResponse
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
@@ -334,7 +337,7 @@ class ApiCalls {
         })
     }
 
-    suspend fun makeCluster(callback: (String, List<ClusterResult>) -> Unit) {
+    fun makeCluster(callback: (String, List<ClusterResult>) -> Unit) {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
             .baseUrl(url)
@@ -342,7 +345,6 @@ class ApiCalls {
             .build()
             .create(UserService::class.java)
 
-        Log.d("USER_TOKEN", UserDataCache.shared.getUserToken())
         service.makeCluster("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ClusterPayload> {
 
             override fun onFailure(call: Call<ClusterPayload>, t: Throwable) {
@@ -353,9 +355,33 @@ class ApiCalls {
             override fun onResponse(call: Call<ClusterPayload>, response: Response<ClusterPayload>) {
                 Log.i("RESPONSE", response.raw().toString())
                 response.body()?.let {
-                    Log.d("Cluster result", it.result.toString())
                     callback("SUCCESS", it.result)
                 }
+            }
+
+        })
+    }
+
+    fun getAllDeliverymenApi(callback : (String, List<Deliveryman>) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.getAllDeliverymen("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<DeliverymenResponse> {
+
+            override fun onFailure(call: Call<DeliverymenResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<DeliverymenResponse>, response: Response<DeliverymenResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("DELIVERYMEN_COUNT", it.payload.count.toString())
+                    callback("SUCCESS", it.payload.rows) }
             }
 
         })

@@ -41,6 +41,7 @@ fun PersonalScreen(
     onToDeliveryClicked:() -> Unit,
     onToManagerClicked:() -> Unit,
     onToAdminDeliveryClicked:() -> Unit,
+    onToAllDeliverymenClicked: () -> Unit,
     personalViewModel: PersonalViewModel = viewModel()
 ) {
 
@@ -142,6 +143,19 @@ fun PersonalScreen(
             ) {
                 Text(
                     text = stringResource(R.string.delivery),
+                    fontSize = 16.sp
+                )
+            }
+        }
+        if(userRole == "admin") {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                onClick = { onToAllDeliverymenClicked() }
+            ) {
+                Text(
+                    text = stringResource(R.string.deliverymen),
                     fontSize = 16.sp
                 )
             }
