@@ -10,5 +10,6 @@ data class OrderingUiState(
     val selectedTimeFromHour: Int = 9,
     val selectedTimeFromMinute: Int = 0,
     val selectedTimeToHour: Int = 17,
-    val selectedTimeToMinute: Int = 0
+    val selectedTimeToMinute: Int = 0,
+    val periodInDays: Int = 1,
 )

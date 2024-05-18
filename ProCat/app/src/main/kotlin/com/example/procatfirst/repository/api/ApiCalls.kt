@@ -4,8 +4,12 @@ import android.util.Log
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ItemResponse
+import com.example.procatfirst.data.NewOrderResponse
+import com.example.procatfirst.data.OrderRequest
+import com.example.procatfirst.data.OrderSmall
 import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
+import com.example.procatfirst.data.RegistrationResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
@@ -13,6 +17,7 @@ import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
+import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -94,7 +99,7 @@ class ApiCalls {
     }
 
 
-    fun signUpApi(login: String, password: String, name: String)  {
+    fun signUpApi(login: String, password: String, name: String, callback : (String) -> Unit)  {
 
         val service = Retrofit.Builder()
             .baseUrl(BACKEND_URL)
@@ -110,21 +115,33 @@ class ApiCalls {
         jsonObject.put("phoneNumber", login)
         jsonObject.put("password", password)
 
+        Log.d("RequestJson", jsonObject.toString())
+
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
 
-        service.register(requestBody).enqueue(object : Callback<ResponseBody> { //ResponseBody
+        service.register(requestBody).enqueue(object : Callback<RegistrationResponse> {
 
             /* The HTTP call failed. This method is run on the main thread */
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("RESPONSE", "Fail")
+                callback("BigFail")
             }
 
             /* The HTTP call was successful, we should still check status code and response body
              * on a production app. This method is run on the main thread */
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            override fun onResponse(call: Call<RegistrationResponse>, response: Response<RegistrationResponse>) {
                 /* This will print the response of the network call to the Logcat */
-                response.body()?.string()?.let { Log.i("RESPONSE", it) }
+                Log.d("RESPONSE", response.raw().toString())
+
+                response.body()?.let {
+                    if (it.status == 200) {
+                        callback("SUCCESS")
+                    }
+                    else {
+                        callback("Fail")
+                    }
+                }
 
             }
 
@@ -318,6 +335,41 @@ class ApiCalls {
             }
         })
 
+    }
+
+    fun createNewOrder(order : OrderRequest, callback: (OrderSmall?) -> Unit) {
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        val jsonObject = Gson().toJson(order)
+        Log.d("RequestJSON", jsonObject.toString())
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+        service.createNewOrder( requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<NewOrderResponse> {
+            override fun onResponse(call: Call<NewOrderResponse>, response: Response<NewOrderResponse>) {
+                Log.d("RESPONSE", response.raw().toString())
+                Log.d("Message1", response.message())
+                Log.d("Body", response.body().toString())
+                response.body()?.message?.let { Log.d("Message2", it) }
+                response.body().let {
+                    if (it?.status == 200) {
+                        callback(it.payload)
+                    }
+                    else {
+                        callback(null)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<NewOrderResponse>, t: Throwable) {
+                Log.d("RESPONSE", t.message.toString())
+                callback(null)
+            }
+
+        })
     }
 
     suspend fun getAllUsersApi()  {

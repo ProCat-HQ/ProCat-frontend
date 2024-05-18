@@ -46,7 +46,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateTimePickerComponent(
@@ -252,6 +251,6 @@ fun TimePickerDialog(
 }
 
 private fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("dd.MM.yyyy")
+    val formatter = SimpleDateFormat("yyyy-MM-dd")
     return formatter.format(Date(millis))
 }

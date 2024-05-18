@@ -10,14 +10,17 @@ import com.example.procatfirst.data.DeliveryPayload
 import com.example.procatfirst.data.Deliveryman
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.ItemsResponse
+import com.example.procatfirst.data.NewOrderResponse
 import com.example.procatfirst.data.Notification
 import com.example.procatfirst.data.NotificationItem
 import com.example.procatfirst.data.NotificationPayload
+import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
 import com.example.procatfirst.data.PaymentPayload
+import com.example.procatfirst.data.RegistrationResponse
 import com.example.procatfirst.data.RoutePayload
 import com.example.procatfirst.data.SimpleDeliveryman
 import com.example.procatfirst.data.SubscriptionResponse
@@ -53,7 +56,7 @@ interface UserService {
     suspend fun deleteUser(@Query("userId") userId: Int)
 
     @POST("/users/sign-up")
-    fun register(@Body requestBody: RequestBody): Call<ResponseBody>
+    fun register(@Body requestBody: RequestBody): Call<RegistrationResponse>
 
     @POST("/users/sign-in")
     fun login(@Body requestBody: RequestBody): Call<TokenResponse>
@@ -139,8 +142,8 @@ interface UserService {
     @GET("/users/orders/{orderId}")
     suspend fun getOrder(@Path("orderId", ) orderId: Int): Call<OrderFull>
 
-    @POST("/users/orders/")
-    suspend fun createNewOrder(@Body requestBody: OrderRequest): Call<ResponseBody>
+    @POST("/users/orders")
+    fun createNewOrder(@Body requestBody: RequestBody, @Header("Authorization") token: String?): Call<NewOrderResponse>
 
     @POST("/users/orders/cancel/{orderId}")
     suspend fun setStatusOfOrder(@Query("orderId") orderId: Int): Call<ResponseBody>

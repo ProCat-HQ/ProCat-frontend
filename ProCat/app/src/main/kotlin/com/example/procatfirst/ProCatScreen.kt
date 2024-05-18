@@ -220,6 +220,7 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Registration.name) {
                 RegistrationScreen(
+                    context = controller,
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Tools.name)
                     },

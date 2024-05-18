@@ -1,5 +1,7 @@
 package com.example.procatfirst.ui.registration
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -71,8 +73,7 @@ class RegistrationViewModel: ViewModel()  {
 
     fun checkUserPhoneNumber() {
         if (userInputPhoneNumber.length < 11) {
-            //val updatedScore = _uiState.value.score.plus(SCORE_INCREASE)
-            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
+
             _uiState.update { currentState ->
                 currentState.copy(enteredPhoneNumberWrong = true)
             }
@@ -86,7 +87,6 @@ class RegistrationViewModel: ViewModel()  {
 
      fun checkUserPassword() {
         if (userInputPassword.length < 3) {
-            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
                     enteredPasswordWrong = true
@@ -101,7 +101,6 @@ class RegistrationViewModel: ViewModel()  {
 
     fun checkUserLastName() {
         if (userInputLastName.length < 2) {
-            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
                     enteredLastNameWrong = true
@@ -116,7 +115,6 @@ class RegistrationViewModel: ViewModel()  {
 
     fun checkUserFirstName() {
         if (userInputFirstName.length < 2) {
-            //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
             _uiState.update { currentState ->
                 currentState.copy(
                     enteredFirstNameWrong = true
@@ -130,7 +128,6 @@ class RegistrationViewModel: ViewModel()  {
     }
 
     fun checkUserFatherName() {
-        //NotificationCoordinator.shared.sendIntent(SystemNotifications.loginIntent)
         _uiState.update { currentState ->
             currentState.copy(
                 enteredFatherNameWrong = false
@@ -159,16 +156,23 @@ class RegistrationViewModel: ViewModel()  {
 
     }
 
-    fun signUp() {
+    fun signUp(onAuth: () -> Unit, context: Context) {
         check()
 
         if (!_uiState.value.enteredLastNameWrong && !_uiState.value.enteredPhoneNumberWrong
             && !_uiState.value.enteredFirstNameWrong && !_uiState.value.enteredPasswordWrong) {
-            val fullName: String = uiState.value.firstName + " " + uiState.value.lastName + " " + uiState.value.fatherName
-            //viewModelScope.launch {
-            //    ApiCalls.shared.signUpApi(uiState.value.phoneNumber, uiState.value.password, fullName)
-            //}
-            ApiCalls.shared.signUpApi(uiState.value.phoneNumber, uiState.value.password, fullName)
+            val fullName: String = "$userInputFirstName $userInputLastName $userInputFatherName"
+            viewModelScope.launch {
+                ApiCalls.shared.signUpApi(userInputPhoneNumber, userInputPassword, fullName) {
+                    if (it == "SUCCESS") {
+                        Toast.makeText(context, "Успешная регистрация", Toast.LENGTH_SHORT).show()
+                        onAuth()
+                    }
+                    else {
+                        Toast.makeText(context, "Ошибка регистрации", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
             //createNewVerificationCode
             isInputCodeDialogVisible = true
         }

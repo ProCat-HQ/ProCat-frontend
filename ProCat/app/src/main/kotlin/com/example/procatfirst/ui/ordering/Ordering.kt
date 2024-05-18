@@ -25,9 +25,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,21 +39,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.CartItem
-import com.example.procatfirst.data.Order
-import com.example.procatfirst.data.ToolWithCnt
-import com.example.procatfirst.repository.cache.AllOrdersCache
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
-import getUserCart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun OrderingScreen(
     orderingViewModel: OrderingViewModel = viewModel(),
@@ -62,6 +52,7 @@ fun OrderingScreen(
     ) {
 
     //-----------------------------------------------------
+    val orderingUiState by orderingViewModel.uiState.collectAsState()
 
     val addresses = listOf(
         SelectionOption("Адрес 1", initialSelectedValue = true),
@@ -114,6 +105,16 @@ fun OrderingScreen(
 
         DateTimePickerComponent(orderingViewModel)
 
+        OutlinedTextField(
+            value = orderingUiState.periodInDays.toString(),
+            onValueChange = { try { orderingViewModel.updateSelectedPeriod(it.toInt()) }
+            catch (e : NumberFormatException ) { orderingViewModel.updateSelectedPeriod(0)} },
+            label = { Text("Длительность аренды в днях") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        )
+
         if(orderingViewModel.uiState.value.tools.isNotEmpty()) {
             ToolsScreenCartSmall(orderingViewModel.uiState.value.tools)
         } else {
@@ -145,7 +146,7 @@ fun OrderingScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 onClick = {
-                    orderingViewModel.order(Order(3, "Ожидает подтверджения", sum, "05.04.2024", orderingViewModel.address, AllOrdersCache.shared.getCoords().lat.toString() + " " + AllOrdersCache.shared.getCoords().lon.toString(), 897, 1))
+                    orderingViewModel.order()
                     onToConfirmationClicked(orderingViewModel)
                 }
             ) {
@@ -221,7 +222,7 @@ fun ToolCardCartSmall(
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.colorScheme.background)
             .clickable { /* Handle click on the card if needed */ }
-            .padding(16.dp)
+            .padding(8.dp)
     ) {
         Row(
             modifier = Modifier

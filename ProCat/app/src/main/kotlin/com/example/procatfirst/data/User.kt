@@ -54,6 +54,16 @@ data class UsersResponse(
     }
 }
 
+data class RegistrationResponse (
+    val status: Int,
+    val message: String,
+    val payload: ID,
+)
+
+data class ID (
+    val id: Int
+)
+
 object UserDataProvider {
     val users = listOf(
         User(

@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.registration
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +51,7 @@ import com.example.procatfirst.ui.theme.md_theme_light_tertiary
 
 @Composable
 fun RegistrationScreen(
+    context: Context,
     onNextButtonClicked: () -> Unit,
     onToAuthClick: () -> Unit,
     registrationViewModel: RegistrationViewModel = viewModel(),
@@ -115,7 +117,7 @@ fun RegistrationScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            onClick = { registrationViewModel.signUp()}
+            onClick = { registrationViewModel.signUp(onToAuthClick, context)}
         ) {
             Text(
                 text = stringResource(R.string.register),

@@ -2,6 +2,8 @@ package com.example.procatfirst.data
 
 import kotlinx.serialization.Serializable
 
+
+// TODO delete class and delete/fix all methods with this class
 @Serializable
 data class ToolWithCnt(
     val id: Int,

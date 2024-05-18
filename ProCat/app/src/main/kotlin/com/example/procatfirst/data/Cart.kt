@@ -69,9 +69,28 @@ data class OrderRequest(
     val companyName: String?,
     val deliveryMethod: String,
     val deliveryTimeStart: String,
-    val deliveryTimeEnd: String
+    val deliveryTimeEnd: String,
     )
 
+data class NewOrderResponse(
+    val status: Int,
+    val message: String,
+    val payload: OrderSmall,
+)
+
+data class OrderSmall(
+    val orderId: Int,
+    val totalPrice: Int,
+    val deposit: Int,
+    val items: OrderItemSmall,
+)
+
+data class OrderItemSmall(
+    val name: String,
+    val count: Int,
+    val price: Int,
+    val priceDeposit: Int,
+)
 
 data class PaymentPayload(
     val payments: List<Payment>
