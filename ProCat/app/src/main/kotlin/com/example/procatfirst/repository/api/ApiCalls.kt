@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
+import com.example.procatfirst.data.AllDeliveriesToSortResponse
 import com.example.procatfirst.data.ClusterPayload
 import com.example.procatfirst.data.ClusterResult
 import com.example.procatfirst.data.Deliveryman
@@ -381,6 +382,32 @@ class ApiCalls {
                 Log.i("RESPONSE", response.raw().toString())
                 response.body()?.let {
                     Log.d("DELIVERYMEN_COUNT", it.payload.count.toString())
+                    callback("SUCCESS", it.payload.rows) }
+            }
+
+        })
+    }
+
+    fun getAllDeliveriesToSortApi(callback : (String, List<ClusterResult>) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.getAllDeliveriesToSort("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<AllDeliveriesToSortResponse> {
+
+            override fun onFailure(call: Call<AllDeliveriesToSortResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<AllDeliveriesToSortResponse>, response: Response<AllDeliveriesToSortResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("DELIVERIES_COUNT", it.payload.count.toString())
+                    Log.d("DELIVERIES_RESULT", it.payload.rows.toString())
                     callback("SUCCESS", it.payload.rows) }
             }
 

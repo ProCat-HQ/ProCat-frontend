@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.BuildConfig
+import com.example.procatfirst.data.AllDeliveriesToSortResponse
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.ChangeDeliveryRequest
 import com.example.procatfirst.data.ClusterPayload
@@ -115,7 +116,7 @@ interface UserService {
     fun makeCluster(@Header("Authorization") token: String?): Call<ClusterPayload>
 
     @GET("/users/admin/deliveries-to-sort")
-    suspend fun getAllDeliveriesAfterClustering(): Call<ClusterPayload>
+    fun getAllDeliveriesToSort(@Header("Authorization") token: String?): Call<AllDeliveriesToSortResponse>
 
     @PATCH("/users/admin/change-delivery")
     suspend fun changeDelivery(@Body requestBody: ChangeDeliveryRequest): Call<ResponseBody>

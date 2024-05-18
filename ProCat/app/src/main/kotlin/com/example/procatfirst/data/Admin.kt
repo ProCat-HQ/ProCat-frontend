@@ -24,3 +24,14 @@ data class ChangeDeliveryRequest(
     val deliveryId: Int
 )
 
+data class AllDeliveriesToSortResponse(
+    val status: Int,
+    val message: String,
+    val payload: AllDeliveriesToSortPayload
+)
+
+data class AllDeliveriesToSortPayload(
+    val count: Int,
+    val rows: List<ClusterResult>
+)
+

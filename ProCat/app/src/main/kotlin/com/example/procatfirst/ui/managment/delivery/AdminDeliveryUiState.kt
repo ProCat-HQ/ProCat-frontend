@@ -4,5 +4,5 @@ import com.example.procatfirst.data.ClusterResult
 
 
 data class AdminDeliveryUiState (
-    val clusterResult: List<ClusterResult> = emptyList()
+    val deliveries: List<ClusterResult> = emptyList()
 )

@@ -27,12 +27,22 @@ class AdminDeliveryViewModel(): ViewModel()  {
     val uiState: StateFlow<AdminDeliveryUiState> = _uiState.asStateFlow()
 
     init{
-        val deliveryLocation = DeliveryLocation("Pirogova", "000", "111", 2)
-        val deliveries: List<DeliveryLocation> = listOf(deliveryLocation, deliveryLocation)
-        _uiState.update { currentState ->
-            currentState.copy(
-                clusterResult = listOf(ClusterResult(1, deliveries))
-            )
+        loadDeliveriesToSort()
+    }
+
+
+    private fun loadDeliveriesToSort() {
+        viewModelScope.launch {
+            val callback = {status: String, result: List<ClusterResult> ->
+                if(status == "SUCCESS") {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            deliveries = result
+                        )
+                    }
+                }
+            }
+            ApiCalls.shared.getAllDeliveriesToSortApi(callback)
         }
     }
 
@@ -42,7 +52,7 @@ class AdminDeliveryViewModel(): ViewModel()  {
                 if(status == "SUCCESS") {
                     _uiState.update { currentState ->
                         currentState.copy(
-                            clusterResult = result
+                            deliveries = result
                         )
                     }
                 }

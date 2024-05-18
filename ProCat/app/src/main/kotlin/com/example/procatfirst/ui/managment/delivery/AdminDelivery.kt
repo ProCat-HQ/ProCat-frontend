@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.ClusterResult
+import com.example.procatfirst.data.DeliveryLocation
 import com.example.procatfirst.ui.managment.deliverymen.DeliverymenViewModel
 
 @Composable
@@ -50,15 +53,12 @@ fun AdminDelivery(
                 fontSize = 16.sp
             )
         }
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .padding(16.dp),
+        LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(16.dp),
         ) {
-            items(adminDeliveryUiState.clusterResult) { clusterResult ->
-                DeliveryCard(clusterResult = clusterResult)
+            items(adminDeliveryUiState.deliveries) { deliveries ->
+                DeliveryCard(deliveries = deliveries)
             }
         }
     }
@@ -67,22 +67,60 @@ fun AdminDelivery(
 
 @Composable
 fun DeliveryCard(
-    clusterResult: ClusterResult
+    deliveries: ClusterResult
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
         ) {
             Text(
-                text = clusterResult.deliverymanId.toString(),
+                text = deliveries.deliverymanId.toString(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
+            )
+            deliveries.deliveries.forEach { delivery ->
+                DeliveryLocationCard(deliveryLocation = delivery)
+            }
+        }
+    }
+}
+
+
+@Composable
+fun DeliveryLocationCard(
+    deliveryLocation: DeliveryLocation
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.small)
+            .padding(vertical = 4.dp),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Address: ${deliveryLocation.address}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Latitude: ${deliveryLocation.latitude}",
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = "Longitude: ${deliveryLocation.longitude}",
+                style = MaterialTheme.typography.bodySmall
+            )
+            Text(
+                text = "Delivery ID: ${deliveryLocation.deliveryId}",
+                style = MaterialTheme.typography.bodySmall
             )
         }
     }
