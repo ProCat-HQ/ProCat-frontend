@@ -1,11 +1,13 @@
 package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.BuildConfig
+import com.example.procatfirst.data.AllDeliveriesForDeliverymanResponse
 import com.example.procatfirst.data.AllDeliveriesToSortResponse
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ChangeDeliveryRequest
 import com.example.procatfirst.data.ClusterPayload
+import com.example.procatfirst.data.ClusterResponse
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryPayload
 import com.example.procatfirst.data.Deliveryman
@@ -110,16 +112,16 @@ interface UserService {
     suspend fun getAllDeliveries(): Call<DeliveryPayload>
 
     @GET("/users/deliverymen/deliveries/{deliverymanId}")
-    suspend fun getDeliveriesForDeliveryman(@Query("deliveryId") deliveryId: Int): Call<DeliveryPayload>
+    fun getDeliveriesForDeliveryman(@Header("Authorization") token: String?, @Path("deliverymanId") deliverymanId: Int): Call<AllDeliveriesForDeliverymanResponse>
 
-    @PATCH("/users/deliverymen/deliveries/{deliverymanId}")
-    suspend fun changeStatusForDeliveryman(@Query("deliveryId") deliveryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
+    @PATCH("/users/deliverymen/deliveries/{deliveryId}")
+    suspend fun changeStatusForDelivery(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/deliverymen/deliveries/create-route")
     suspend fun createRouteFromDeliveryman(@Body requestBody: RequestBody): Call<RoutePayload>
 
     @POST("/users/admin/cluster")
-    fun makeCluster(@Header("Authorization") token: String?): Call<ClusterPayload>
+    fun makeCluster(@Header("Authorization") token: String?): Call<ClusterResponse>
 
     @GET("/users/admin/deliveries-to-sort")
     fun getAllDeliveriesToSort(@Header("Authorization") token: String?): Call<AllDeliveriesToSortResponse>

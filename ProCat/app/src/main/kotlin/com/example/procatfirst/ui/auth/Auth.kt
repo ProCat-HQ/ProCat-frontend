@@ -27,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import androidx.compose.ui.unit.dp
@@ -145,7 +147,10 @@ fun inputField(
                 unfocusedContainerColor = colorScheme.surface,
                 disabledContainerColor = colorScheme.surface,
             ),
-            onValueChange = { onUserPhoneNumberChanged(it) },
+            onValueChange = { newValue ->
+                val newPhoneNumber = if (newValue.startsWith("+")) newValue else "+$newValue"
+                onUserPhoneNumberChanged(newPhoneNumber)
+            },
             label = {
                 if (isPhoneNumberWrong) {
                     Text(stringResource(R.string.wrong_phone_number))
@@ -180,9 +185,11 @@ fun inputField(
                     Text(stringResource(R.string.enter_password))
                 }
             },
+            visualTransformation = PasswordVisualTransformation(),
             isError = isPasswordWrong,
             keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
             ),
             keyboardActions = KeyboardActions(
                 onDone = { onKeyboardDone() }

@@ -1,6 +1,7 @@
 package com.example.procatfirst.ui.managment.deliverymen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,13 +52,15 @@ fun Deliverymen(
 
 @Composable
 fun DeliveryManCard(
-    man: Deliveryman
+    man: Deliveryman,
+    //onCardClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.large)
             .background(MaterialTheme.colorScheme.background)
+            //.clickable { onCardClick() }
     ) {
         Column(
             modifier = Modifier
