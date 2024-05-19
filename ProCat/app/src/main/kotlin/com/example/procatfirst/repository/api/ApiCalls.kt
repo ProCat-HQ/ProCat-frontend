@@ -12,6 +12,7 @@ import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ClusterResponse
 import com.example.procatfirst.data.Delivery
+import com.example.procatfirst.data.DeliveryResponse
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.NewOrderResponse
 import com.example.procatfirst.data.OrderRequest
@@ -22,6 +23,7 @@ import com.example.procatfirst.data.RegistrationResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
+import com.example.procatfirst.data.UsersResponse
 import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.repository.cache.UserDataCache
@@ -381,24 +383,29 @@ class ApiCalls {
         })
     }
 
-    suspend fun getAllUsersApi()  {
+    fun getAllUsersApi(callback: (String, List<User>) -> Unit)  {
+        val url = BACKEND_URL
         val service = Retrofit.Builder()
-            .baseUrl(BACKEND_URL)
+            .baseUrl(url)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create(UserService::class.java)
-        // TODO can use Moshi
-        try {
-            val userResponse = service.getAllUsers()
-            Log.i("RESPONSE", "Status: ${userResponse.status}, Message: ${userResponse.message}")
-            for (user in userResponse.payload.rows) {
-                Log.i("USER", "ID: ${user.id}, Name: ${user.fullName}, Email: ${user.email}")
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e("RESPONSE", "Error: ${e.message}")
-        }
 
+        service.getAllUsers("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<UsersResponse> {
+
+            override fun onFailure(call: Call<UsersResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<UsersResponse>, response: Response<UsersResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("USER_DATA", it.payload.toString())
+                    callback("SUCCESS", it.payload.rows) }
+            }
+
+        })
     }
 
     suspend fun changeFullNameApi(fullName: String, password: String)  {
@@ -597,7 +604,7 @@ class ApiCalls {
         })
     }
 
-    fun changeStatusForDeliveryApi(id: Int, status: String, callback: (String) -> Unit) {
+    fun getDeliveryFromDeliveryIdApi(id: Int, callback: (String, Delivery) -> Unit) {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
             .baseUrl(url)
@@ -606,7 +613,34 @@ class ApiCalls {
             .create(UserService::class.java)
 
 
-        service.getDeliveriesForDeliveryman("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<AllDeliveriesForDeliverymanResponse> {
+        service.getDeliveryFromDeliveryId("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<DeliveryResponse> {
+
+            override fun onFailure(call: Call<DeliveryResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<DeliveryResponse>, response: Response<DeliveryResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("DELIVERY", it.payload.toString())
+                    callback("SUCCESS", it.payload) }
+            }
+
+        })
+    }
+
+    /*
+    fun changeStatusForDeliveryFromDeliveryIdApi(id: Int, status: String, callback: (String) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+
+        service.changeStatusForDeliveryFromDeliveryId("Bearer " + UserDataCache.shared.getUserToken(), requestBody).enqueue(object : Callback<AllDeliveriesForDeliverymanResponse> {
 
             override fun onFailure(call: Call<AllDeliveriesForDeliverymanResponse>, t: Throwable) {
                 t.printStackTrace()
@@ -621,6 +655,65 @@ class ApiCalls {
             }
 
         })
+    }
+    */
+
+    fun createDeliveryManFromUserApi(userId: Int, carCapacity: String, workingHoursStart: String, workingHoursEnd: String, carId: String, callback: (String) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        val jsonObject = JSONObject()
+        jsonObject.put("carCapacity", carCapacity)
+        jsonObject.put("workingHoursStart", workingHoursStart)
+        jsonObject.put("workingHoursEnd", workingHoursEnd)
+        jsonObject.put("carId", carId)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+        service.createDeliveryManFromUser("Bearer " + UserDataCache.shared.getUserToken(), userId, requestBody).enqueue(object : Callback<ResponseBody> {
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    callback("SUCCESS")
+                }
+            }
+        })
+    }
+
+    fun deleteDeliverymanApi(id: Int, callback: (String) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        service.deleteDeliveryman("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<ResponseBody> {
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    callback("SUCCESS")
+                }
+            }
+
+        })
+
     }
 
 }

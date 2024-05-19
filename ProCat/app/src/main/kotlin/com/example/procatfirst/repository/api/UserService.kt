@@ -10,6 +10,7 @@ import com.example.procatfirst.data.ClusterPayload
 import com.example.procatfirst.data.ClusterResponse
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryPayload
+import com.example.procatfirst.data.DeliveryResponse
 import com.example.procatfirst.data.Deliveryman
 import com.example.procatfirst.data.DeliverymenPayload
 import com.example.procatfirst.data.DeliverymenResponse
@@ -52,7 +53,7 @@ import retrofit2.http.Query
 interface UserService {
 
     @GET("/users")
-    suspend fun getAllUsers(@Query("limit") limit: Int? = null, @Query("page") page: Int? = null, @Query("role") role: String? = null): UsersResponse
+    fun getAllUsers(@Header("Authorization") token: String?, @Query("limit") limit: Int? = null, @Query("page") page: Int? = null, @Query("role") role: String? = null): Call<UsersResponse>
 
     //@GET("/users/{userId}")
     //suspend fun getSimpleUser(@Query("userId") userId: Int): Call<ResponseBody>
@@ -100,13 +101,13 @@ interface UserService {
     suspend fun getDeliveryMan(@Query("deliveryId") deliveryId: Int): Call<SimpleDeliveryman>
 
     @POST("/users/deliverymen/{userId}")
-    suspend fun createDeliveryManFromUser(@Query("userId") userId: Int, @Body requestBody: SimpleDeliveryman)
+    fun createDeliveryManFromUser(@Header("Authorization") token: String?, @Path("userId") userId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @PATCH("/users/deliverymen/{deliverymanId}")
     suspend fun changeDeliverymanData(@Query("deliveryId") deliveryId: Int, @Body requestBody: SimpleDeliveryman)
 
     @DELETE("/users/deliverymen/{deliverymanId}")
-    suspend fun deleteDeliveryman(@Query("deliveryId") deliveryId: Int): Call<ResponseBody>
+    fun deleteDeliveryman(@Header("Authorization") token: String?, @Path("deliverymanId") deliveryId: Int): Call<ResponseBody>
 
     @GET("/users/deliverymen/deliveries/")
     suspend fun getAllDeliveries(): Call<DeliveryPayload>
@@ -114,8 +115,13 @@ interface UserService {
     @GET("/users/deliverymen/deliveries/{deliverymanId}")
     fun getDeliveriesForDeliveryman(@Header("Authorization") token: String?, @Path("deliverymanId") deliverymanId: Int): Call<AllDeliveriesForDeliverymanResponse>
 
+    @GET("/users/deliverymen/deliveries/{deliveryId}")
+    fun getDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int): Call<DeliveryResponse>
+
+    //TODO
     @PATCH("/users/deliverymen/deliveries/{deliveryId}")
-    suspend fun changeStatusForDelivery(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
+    suspend fun changeStatusForDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int, requestBody: RequestBody): Call<ResponseBody>
+
 
     @POST("/users/deliverymen/deliveries/create-route")
     suspend fun createRouteFromDeliveryman(@Body requestBody: RequestBody): Call<RoutePayload>

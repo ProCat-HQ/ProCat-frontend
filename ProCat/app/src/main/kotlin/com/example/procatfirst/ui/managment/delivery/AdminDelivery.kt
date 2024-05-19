@@ -1,6 +1,7 @@
 package com.example.procatfirst.ui.managment.delivery
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,8 +11,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.ClusterResult
+import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryLocation
 import com.example.procatfirst.ui.managment.deliverymen.DeliverymenViewModel
 
@@ -35,13 +39,7 @@ fun AdminDelivery(
 ) {
     val adminDeliveryUiState by adminDeliveryViewModel.uiState.collectAsState()
 
-    Column(
-        /*
-        modifier = Modifier
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally */
-    ) {
+    Column() {
         Button(
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,16 +56,27 @@ fun AdminDelivery(
             modifier = Modifier.padding(16.dp),
         ) {
             items(adminDeliveryUiState.deliveries) { deliveries ->
-                DeliveryCard(deliveries = deliveries)
+                DeliveryCard(
+                    deliveries = deliveries,
+                    onLocationClick = { id -> adminDeliveryViewModel.getDelivery(id) }
+                    )
             }
         }
+    }
+
+    if (adminDeliveryUiState.isDeliveryDialogOpen && adminDeliveryUiState.currentDelivery != null) {
+        DeliveryDetailsDialog(
+            delivery = adminDeliveryUiState.currentDelivery!!,
+            onDismiss = { adminDeliveryViewModel.closeDeliveryDialog() }
+        )
     }
 
 }
 
 @Composable
 fun DeliveryCard(
-    deliveries: ClusterResult
+    deliveries: ClusterResult,
+    onLocationClick: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -84,7 +93,10 @@ fun DeliveryCard(
                 fontWeight = FontWeight.Bold
             )
             deliveries.deliveries.forEach { delivery ->
-                DeliveryLocationCard(deliveryLocation = delivery)
+                DeliveryLocationCard(
+                    deliveryLocation = delivery,
+                    onClick = { onLocationClick(delivery.deliveryId) }
+                )
             }
         }
     }
@@ -93,13 +105,22 @@ fun DeliveryCard(
 
 @Composable
 fun DeliveryLocationCard(
-    deliveryLocation: DeliveryLocation
+    deliveryLocation: DeliveryLocation,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
-            .padding(vertical = 4.dp),
+            .padding(vertical = 8.dp)
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            disabledContentColor = MaterialTheme.colorScheme.onTertiaryContainer
+        ),
+
     ) {
         Column(
             modifier = Modifier
@@ -124,4 +145,36 @@ fun DeliveryLocationCard(
             )
         }
     }
+}
+
+
+@Composable
+fun DeliveryDetailsDialog(
+    delivery: Delivery,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Delivery Details") },
+        text = {
+            Column {
+                Text(text = "ID: ${delivery.id}")
+                Text(text = "Time Start: ${delivery.timeStart}")
+                Text(text = "Time End: ${delivery.timeEnd}")
+                Text(text = "Method: ${delivery.method}")
+                /*
+                Text(text = "Order ID: ${delivery.order.id}")
+                Text(text = "Order Status: ${delivery.order.status}")
+                Text(text = "Total Price: ${delivery.order.totalPrice}")
+                Text(text = "Address: ${delivery.order.address}")
+                Text(text = "Latitude: ${delivery.order.latitude}")
+                Text(text = "Longitude: ${delivery.order.longitude}") */
+            }
+        },
+        confirmButton = {
+            Button(onClick = onDismiss) {
+                Text("OK")
+            }
+        }
+    )
 }

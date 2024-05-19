@@ -69,5 +69,13 @@ data class Point(
     val lon: Double
 )
 
+//------------------------------
+
+data class DeliveryResponse(
+    val status: Int,
+    val message: String,
+    val payload: Delivery
+)
+
 
 

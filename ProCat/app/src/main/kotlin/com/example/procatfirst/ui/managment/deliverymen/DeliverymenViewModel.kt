@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.ClusterResult
 import com.example.procatfirst.data.Deliveryman
+import com.example.procatfirst.data.User
 import com.example.procatfirst.repository.api.ApiCalls
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +35,54 @@ class DeliverymenViewModel(): ViewModel()  {
                 }
             }
             ApiCalls.shared.getAllDeliverymenApi(callback)
+        }
+    }
+
+    fun loadUsers() {
+        viewModelScope.launch {
+            val callback = {status: String, result: List<User> ->
+                if(status == "SUCCESS") {
+
+                    val courierNames = _uiState.value.deliverymen.map { it.fullName }.toSet()
+                    val filteredUsers = result.filter { it.fullName !in courierNames }
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            users = filteredUsers
+                        )
+                    }
+                    /*
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            users = result
+                        )
+                    } */
+                }
+            }
+            ApiCalls.shared.getAllUsersApi(callback)
+        }
+    }
+
+    fun makeCourier(user: User, carCapacity: String, workingHoursStart: String, workingHoursEnd: String, carId: String) {
+        viewModelScope.launch {
+            val callback = {status: String ->
+                if(status == "SUCCESS") {
+                    loadDeliverymen()
+                    loadUsers()
+                }
+            }
+            ApiCalls.shared.createDeliveryManFromUserApi(user.id, carCapacity, workingHoursStart, workingHoursEnd, carId, callback)
+        }
+    }
+
+    fun deleteDeliveryman(id: Int) {
+        viewModelScope.launch {
+            val callback = {status: String ->
+                if(status == "SUCCESS") {
+                    loadDeliverymen()
+                    loadUsers()
+                }
+            }
+            ApiCalls.shared.deleteDeliverymanApi(id, callback)
         }
     }
 

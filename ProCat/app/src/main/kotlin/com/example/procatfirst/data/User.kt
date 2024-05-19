@@ -12,7 +12,7 @@ data class User(
         val isConfirmed: Boolean,
         val role: String,
         val created_at : String,
-        val password_hash : String,
+        val password_hash : String?,
 )
 
 data class UserDataResponse(
@@ -35,24 +35,14 @@ data class UserResponse(
 data class UsersResponse(
     val status: Int,
     val message: String,
-    val payload: Payload
-) {
-    data class Payload(
-        val count: Int,
-        val rows: List<User>
-    ) {
-        data class User(
-            val id: Int,
-            val fullName: String,
-            val email: String,
-            val phone_number: String,
-            val identification_number: String,
-            val is_confirmed: Boolean,
-            val role: String,
-            val createdAt: String
-        )
-    }
-}
+    val payload: UsersPayload
+)
+
+data class UsersPayload(
+    val count: Int,
+    val rows: List<User>
+)
+
 
 data class RegistrationResponse (
     val status: Int,

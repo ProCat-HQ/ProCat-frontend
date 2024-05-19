@@ -3,6 +3,7 @@ package com.example.procatfirst.ui.managment.delivery
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.ClusterResult
+import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryLocation
 import com.example.procatfirst.repository.api.ApiCalls
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +59,30 @@ class AdminDeliveryViewModel(): ViewModel()  {
                 }
             }
             ApiCalls.shared.makeCluster(callback)
+        }
+    }
+
+    fun getDelivery(id: Int) {
+        viewModelScope.launch {
+            val callback = {status: String, result: Delivery ->
+                if(status == "SUCCESS") {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            currentDelivery = result,
+                            isDeliveryDialogOpen = true
+                        )
+                    }
+                }
+            }
+            ApiCalls.shared.getDeliveryFromDeliveryIdApi(id, callback)
+        }
+    }
+
+    fun closeDeliveryDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isDeliveryDialogOpen = false
+            )
         }
     }
 }
