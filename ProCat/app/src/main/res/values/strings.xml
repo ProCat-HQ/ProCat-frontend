@@ -59,7 +59,10 @@
     <string name="confirm_inn_text">Чтобы продолжить офромление заказа необходимо ввести ИИН в Личном кабинете и дождаться его проверки</string>
     <string name="to_personal">Перейти в личный кабинет</string>
 
+    <string name="enter_country">Введите страну</string>
+    <string name="enter_city">Введите город</string>
     <string name="enter_address">Введите адрес доставки</string>
+
     <string name="choose_address_from_list">Выберите адрес пункта</string>
     <string name="pick_date">Выберите дату</string>
     <string name="from">От:</string>

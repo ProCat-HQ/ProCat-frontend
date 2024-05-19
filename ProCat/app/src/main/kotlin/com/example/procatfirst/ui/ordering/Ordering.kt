@@ -93,12 +93,28 @@ fun OrderingScreen(
 
         if (orderingViewModel.delivery) {
             OutlinedTextField(
+                value = orderingViewModel.country,
+                onValueChange = { orderingViewModel.country = it },
+                label = { Text(text = stringResource(R.string.enter_country)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+            OutlinedTextField(
+                value = orderingViewModel.city,
+                onValueChange = { orderingViewModel.city = it },
+                label = { Text(text = stringResource(R.string.enter_city)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+            OutlinedTextField(
                 value = orderingViewModel.address,
                 onValueChange = { orderingViewModel.address = it },
                 label = { Text(text = stringResource(R.string.enter_address)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp)
+                    .padding(vertical = 8.dp)
             )
         } else {
             AddressSelectionSection(addresses, onOptionClicked)

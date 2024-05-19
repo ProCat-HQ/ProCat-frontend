@@ -162,13 +162,12 @@ fun DeliveryDetailsDialog(
                 Text(text = "Time Start: ${delivery.timeStart}")
                 Text(text = "Time End: ${delivery.timeEnd}")
                 Text(text = "Method: ${delivery.method}")
-                /*
-                Text(text = "Order ID: ${delivery.order.id}")
+                //Text(text = "Order ID: ${delivery.order.id}")
                 Text(text = "Order Status: ${delivery.order.status}")
                 Text(text = "Total Price: ${delivery.order.totalPrice}")
                 Text(text = "Address: ${delivery.order.address}")
                 Text(text = "Latitude: ${delivery.order.latitude}")
-                Text(text = "Longitude: ${delivery.order.longitude}") */
+                Text(text = "Longitude: ${delivery.order.longitude}")
             }
         },
         confirmButton = {

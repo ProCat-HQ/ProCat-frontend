@@ -612,6 +612,8 @@ class ApiCalls {
             .build()
             .create(UserService::class.java)
 
+        Log.d("DELIVERY", id.toString())
+
 
         service.getDeliveryFromDeliveryId("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<DeliveryResponse> {
 

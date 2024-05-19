@@ -115,7 +115,7 @@ interface UserService {
     @GET("/users/deliverymen/deliveries/{deliverymanId}")
     fun getDeliveriesForDeliveryman(@Header("Authorization") token: String?, @Path("deliverymanId") deliverymanId: Int): Call<AllDeliveriesForDeliverymanResponse>
 
-    @GET("/users/deliverymen/deliveries/{deliveryId}")
+    @GET("/users/deliverymen/deliveries/delivery/{deliveryId}")
     fun getDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int): Call<DeliveryResponse>
 
     //TODO

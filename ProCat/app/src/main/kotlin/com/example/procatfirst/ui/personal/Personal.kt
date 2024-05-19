@@ -47,6 +47,8 @@ fun PersonalScreen(
 ) {
 
     val personalUiState by personalViewModel.uiState.collectAsState()
+    val userRole = UserDataCache.shared.getUserRole()
+
 
     Column(
         modifier = Modifier
@@ -68,16 +70,18 @@ fun PersonalScreen(
             )
         }
         // My orders button
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            onClick = { onToOrdersClicked() }
-        ) {
-            Text(
-                text = stringResource(R.string.orders),
-                fontSize = 16.sp
-            )
+        if(userRole != "admin") {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                onClick = { onToOrdersClicked() }
+            ) {
+                Text(
+                    text = stringResource(R.string.orders),
+                    fontSize = 16.sp
+                )
+            }
         }
 
         // Notifications button
@@ -106,7 +110,6 @@ fun PersonalScreen(
             )
         }
 
-        val userRole = UserDataCache.shared.getUserRole()
 
         if(userRole == "deliveryman" || userRole == "admin") {
             Button(

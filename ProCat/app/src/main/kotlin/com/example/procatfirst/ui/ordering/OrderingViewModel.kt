@@ -24,6 +24,8 @@ class OrderingViewModel(): ViewModel() {
     private val _uiState = MutableStateFlow(OrderingUiState())
     val uiState: StateFlow<OrderingUiState> = _uiState.asStateFlow()
 
+    var country by mutableStateOf("")
+    var city by mutableStateOf("")
     var address by mutableStateOf("")
 
     var delivery by mutableStateOf(true)
@@ -59,7 +61,9 @@ class OrderingViewModel(): ViewModel() {
     }
 
     private fun updateSelectedAddress(address: String) {
-        _uiState.value = _uiState.value.copy(address = address)
+        //_uiState.value = _uiState.value.copy(address = address)
+        _uiState.value = _uiState.value.copy(address = "$country, $city, $address")
+
     }
 
     fun order(context: Context, nextPage: (OrderingViewModel) -> Unit) {
