@@ -59,16 +59,7 @@ object OrderDataProvider {
         )
     )
     val deliveryOrders = listOf(
-//        Order(
-//            orderId = 1,
-//            status = "Ожидает подтверждения",
-//            totalPrice = 8000,
-//            rentalPeriod = "30.04.2023-23.06.2023",
-//            address = "Пирогова, 1",
-//            companyName = "54.843243 83.088801",
-//            contract = 897,
-//            userId = 1
-//        ),
+
         Order(
             orderId = 1,
             status = "Ожидает доставки",

@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.personal.orders
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +35,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.repository.cache.UserOrdersCache
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun OrdersScreen(
@@ -61,7 +67,10 @@ fun OrdersScreen(
                     orderId = order.id,
                     status = order.status,
                     totalPrice = order.totalPrice,
-                    rentalPeriod = order.rentalPeriodEnd,
+                    rentalPeriod = LocalDate.parse(order.rentalPeriodStart.substringBefore('T')).format(
+                        DateTimeFormatter.ofPattern("dd.MM.yyyy")
+                    ).toString() + " - " + LocalDate.parse(order.rentalPeriodEnd.substringBefore('T')).format(
+                        DateTimeFormatter.ofPattern("dd.MM.yyyy")).toString(),
                     address = order.address,
                 )
             }
@@ -87,13 +96,13 @@ fun orderItem(
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.colorScheme.background)
-            .clickable { expanded = !expanded  }
+            .clickable { expanded = !expanded }
             .padding(16.dp)
     ) {
 
         Row(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(6.dp)
                 .animateContentSize(
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioMediumBouncy,
@@ -106,7 +115,7 @@ fun orderItem(
             Column(
                 modifier = Modifier
                     .padding(6.dp)
-                    .weight(3f)
+                    .weight(4f)
             ) {
                 Text(
                     text = "Заказ $orderId",
@@ -116,7 +125,7 @@ fun orderItem(
 
                 ){
                     Text(
-                        text = rentalPeriod.substringAfterLast("-"),
+                        text = rentalPeriod,
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Spacer(modifier = Modifier.width(4.dp))

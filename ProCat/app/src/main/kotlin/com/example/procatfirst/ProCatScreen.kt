@@ -340,6 +340,7 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Ordering.name) {
                 OrderingScreen(
+                    context = controller,
                     onToConfirmationClicked = {
                         navController.navigate(ProCatScreen.OrderConfirmation.name)
                     }

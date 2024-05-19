@@ -9,17 +9,16 @@ import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.cache.UserOrdersCache
 
 
-suspend fun DataCoordinator.getUserOrders() : List<OrderFull> {
+suspend fun DataCoordinator.getUserOrders(callback : (orders : List<OrderFull>) -> Unit) {
     //if (UserOrdersCache.shared.getOrders().isEmpty()) {
         ApiCalls.shared.getUserOrders(UserDataCache.shared.getUserData()!!.id
         ) { payload: OrdersPayload? ->
             if (payload?.rows != null) {
                 UserOrdersCache.shared.setOrders(payload.rows)
+                callback(UserOrdersCache.shared.getOrders())
             }
         }
     //}
-
-    return UserOrdersCache.shared.getOrders()
 }
 
 suspend fun DataCoordinator.createNewOrder(order : OrderRequest) : OrderSmall? {

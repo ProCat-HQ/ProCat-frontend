@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.repository.cache.UserDataCache
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getUserData
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 
 @Composable

@@ -82,7 +82,7 @@ data class OrderSmall(
     val orderId: Int,
     val totalPrice: Int,
     val deposit: Int,
-    val items: OrderItemSmall,
+    val items: List<OrderItemSmall>,
 )
 
 data class OrderItemSmall(

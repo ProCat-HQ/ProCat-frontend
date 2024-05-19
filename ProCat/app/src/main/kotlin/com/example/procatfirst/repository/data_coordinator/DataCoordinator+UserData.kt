@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.User
+import com.example.procatfirst.data.UserDataResponse
+import com.example.procatfirst.data.UserResponse
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.api.JwtToken
 import com.example.procatfirst.repository.cache.UserCartCache
@@ -19,13 +21,19 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Base64
 
-suspend fun DataCoordinator.getUserData() : User {
+suspend fun DataCoordinator.getUserData(callback: (User) -> Unit) : User? {
 
-    if (UserDataCache.shared.getUserData() == null) {
-        UserDataCache.shared.setUserData(DataStorage.shared.getUserDataFromMemory())
+    if (UserDataCache.shared.getUserData()?.fullName == "") {
+        ApiCalls.shared.getUserDataApi(UserDataCache.shared.getUserData()!!.id) {
+                status: String, user: UserDataResponse ->
+            if (status == "SUCCESS") {
+                UserDataCache.shared.setUserData(User(user.id, user.fullName, user.email, user.phoneNumber, user.identificationNumber, user.isConfirmed, user.role, "bad", "hash"))
+                callback(UserDataCache.shared.getUserData()!!)
+            }
+        }
     }
-    return UserDataCache.shared.getUserData()!!
 
+    return UserDataCache.shared.getUserData()
 }
 
 suspend fun DataCoordinator.setUserData(user: User)  {
@@ -71,5 +79,6 @@ suspend fun DataCoordinator.setTokenAndRole(token : String, refresh : String, co
     withContext(Dispatchers.IO) {
         ApiCalls.shared.getCartApi { payload: CartPayload -> UserCartCache.shared.setUserCartStuff(payload) }
     }
+    Log.v("ID", UserDataCache.shared.getUserData()?.id.toString())
 
 }

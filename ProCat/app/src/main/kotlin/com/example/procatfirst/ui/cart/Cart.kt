@@ -46,7 +46,7 @@ fun Cart(
 
         ToolCard()
 
-        if (cartUiState.orderDialog) {
+        if (cartUiState.confirmIinDialog) {
             ConfirmInnDialog(
                 onContinue = {
                     onToOrderingClicked()
@@ -78,7 +78,7 @@ fun Cart(
                 if (cartViewModel.checked) {
                     onToOrderingClicked()
                 } else {
-                    cartViewModel.checkIsEmpty()
+                    cartViewModel.checkIsEmpty(onToOrderingClicked)
                 }
             }
         ) {

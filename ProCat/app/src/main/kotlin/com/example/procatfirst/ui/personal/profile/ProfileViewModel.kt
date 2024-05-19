@@ -12,6 +12,7 @@ import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getUserData
 import com.example.procatfirst.repository.data_coordinator.setUserData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -120,69 +121,30 @@ class ProfileViewModel: ViewModel() {
     }
 
 
-    fun checkPassword(password: String): Boolean {
+    private fun checkPassword(password: String): Boolean {
         return password == "123456"
     }
     private fun getUserProfileInfo() {
-        var trueUser : User? = null
-        var user = UserDataProvider.users[0];
-        var id = 1
-
-        /*
-        CoroutineScope(Dispatchers.IO).launch {
-            trueUser = DataCoordinator.shared.getUserData()
-            val user = UserDataProvider.users[0];
-            _uiState.value = _uiState.value.copy(
-                    userId = user.id,
-                    //fullName = user.fullName,
-                    fullName = trueUser!!.fullName,
-                    email = trueUser!!.email,//user.email,
-                    phoneNumber = user.phoneNumber,
-                    identificationNumber = user.identificationNumber,
-                    isConfirmed = user.isConfirmed,
-                    role = trueUser!!.role//user.role
-            )
-            NotificationCoordinator.shared.sendIntent(SystemNotifications.myTestIntent)
-        } */
         viewModelScope.launch {
 
-            val callback = {status : String, userR: UserDataResponse ->
-                if (status == "SUCCESS") {
-//                    val temp = UserDataCache.shared.getUserData()
-//                    if (temp != null) {
-//                        user = temp
-//                    }
-                    user = User(userR.id, userR.fullName, userR.email, userR.phoneNumber, userR.identificationNumber, userR.isConfirmed, userR.role, "bad", "hash")
-                    viewModelScope.launch { DataCoordinator.shared.setUserData(user) }
-                    _uiState.value = _uiState.value.copy(
-                        userId = user.id,
-                        fullName = user.fullName,
-                        email = user.email,
-                        phoneNumber = user.phoneNumber,
-                        identificationNumber = user.identificationNumber,
-                        isConfirmed = user.isConfirmed,
-                        role = user.role
-                    )
-                } else {
-                    //TODO Show error
-                }
-            }
             val idUser = UserDataCache.shared.getUserData()?.id
             if (idUser != null) {
                 Log.i("UserId", idUser.toString())
-                ApiCalls.shared.getUserDataApi(idUser, callback)
+
+                DataCoordinator.shared.getUserData() {
+                    _uiState.value = _uiState.value.copy(
+                        userId = it.id,
+                        fullName = it.fullName,
+                        email = it.email,
+                        phoneNumber = it.phoneNumber,
+                        identificationNumber = it.identificationNumber,
+                        isConfirmed = it.isConfirmed,
+                        role = it.role
+                    )
+                }
             }
         }
 
-        _uiState.value = _uiState.value.copy(
-                userId = user.id,
-                fullName = user.fullName,
-                email = user.email,
-                phoneNumber = user.phoneNumber,
-                identificationNumber = user.identificationNumber,
-                isConfirmed = user.isConfirmed,
-                role = user.role
-        )
     }
 
 

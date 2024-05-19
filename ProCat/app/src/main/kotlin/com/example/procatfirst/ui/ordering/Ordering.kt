@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.ordering
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -48,7 +49,7 @@ import com.example.procatfirst.ui.theme.ProCatFirstTheme
 fun OrderingScreen(
     orderingViewModel: OrderingViewModel = viewModel(),
     onToConfirmationClicked: (OrderingViewModel) -> Unit,
-
+    context: Context,
     ) {
 
     //-----------------------------------------------------
@@ -146,8 +147,7 @@ fun OrderingScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 onClick = {
-                    orderingViewModel.order()
-                    onToConfirmationClicked(orderingViewModel)
+                    orderingViewModel.order(context, onToConfirmationClicked)
                 }
             ) {
                 Text(text = stringResource(R.string.order))

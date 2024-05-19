@@ -6,14 +6,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getUserData
 import getUserCartPayload
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class CartViewModel: ViewModel()  {
+class CartViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
@@ -29,16 +32,16 @@ class CartViewModel: ViewModel()  {
     fun closeDialog() {
         _uiState.update { currentState ->
             currentState.copy(
-                orderDialog = false,
+                confirmIinDialog = false,
                 emptyDialog = false,
             )
         }
     }
 
-    private fun showOrderDialog() {
+    private fun showIinDialog() {
         _uiState.update { currentState ->
             currentState.copy(
-                orderDialog = true,
+                confirmIinDialog = true,
                 emptyDialog = false,
             )
         }
@@ -47,21 +50,25 @@ class CartViewModel: ViewModel()  {
     private fun showEmptyDialog() {
         _uiState.update { currentState ->
             currentState.copy(
-                orderDialog = false,
+                confirmIinDialog = false,
                 emptyDialog = true,
             )
         }
     }
 
-    fun checkIsEmpty() {
+    fun checkIsEmpty(ordering: () -> Unit) {
         viewModelScope.launch {
             if (DataCoordinator.shared.getUserCartPayload().items.isEmpty()) {
                 showEmptyDialog()
-            }
-            else {
-                showOrderDialog()
+            } else {
+                DataCoordinator.shared.getUserData() {
+                    if (it.identificationNumber != "") {
+                        ordering()
+                    } else {
+                        showIinDialog()
+                    }
+                }
             }
         }
-
     }
 }
