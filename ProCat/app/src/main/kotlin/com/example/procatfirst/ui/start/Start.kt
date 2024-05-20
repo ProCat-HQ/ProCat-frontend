@@ -47,6 +47,7 @@ fun StartScreen(
                         .padding(top = 5.dp, bottom = 5.dp)
         )
 
+
         Button(
             onClick = { startViewModel.authorise(controller, true, onNextButtonClicked) },
             modifier = Modifier
