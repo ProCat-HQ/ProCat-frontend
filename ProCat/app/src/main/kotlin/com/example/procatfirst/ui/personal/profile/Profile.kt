@@ -1,6 +1,6 @@
 package com.example.procatfirst.ui.personal.profile
 
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -27,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -46,15 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
-import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.getUserData
-import com.example.procatfirst.ui.IntentsReceiverAbstractObject
-import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
-import com.example.procatfirst.ui.theme.md_theme_light_scrim
 import com.example.procatfirst.ui.theme.md_theme_light_tertiary
-import java.lang.Thread.sleep
 
 @Composable
 fun ProfileScreen(
@@ -65,21 +54,6 @@ fun ProfileScreen(
 
     val profileUiState by profileViewModel.uiState.collectAsState()
 
-
-    val isActive by remember { mutableStateOf(true) }
-
-//    val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
-//        override fun howToReactOnIntent() {
-//            isActive = false
-//
-//            isActive = true
-//        }
-//    }
-//
-//    receiver.CreateReceiver(intentToReact = SystemNotifications.myTestIntent)
-
-    if (isActive) {
-    val profileUiState by profileViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -92,40 +66,40 @@ fun ProfileScreen(
 
         Text(text = "Профиль", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(16.dp))
-        mutableField(
+        MutableField(
             stringResource(R.string.fullname),
             profileUiState.fullName,
             userInput = profileViewModel.userInputFullName,
             onUserInputChanged = { profileViewModel.updateUserFullName(it) },
             onKeyboardDone = { profileViewModel.saveUserFullName() },
-            saveChanges = {profileViewModel.fullSaveUserFullName("") },
+            saveChanges = { profileViewModel.fullSaveUserFullName(it) },
             profileViewModel = profileViewModel
         )
-        mutableField(
+        MutableField(
             stringResource(R.string.phone),
             profileUiState.phoneNumber,
             userInput = profileViewModel.userInputPhoneNumber,
             onUserInputChanged = { profileViewModel.updateUserPhoneNumber(it) },
             onKeyboardDone = { profileViewModel.saveUserPhoneNumber() },
-            saveChanges = {profileViewModel.fullSaveUserPhoneNumber("") },
+            saveChanges = {profileViewModel.fullSaveUserPhoneNumber(it) },
             profileViewModel = profileViewModel
         )
-        mutableField(
+        MutableField(
             stringResource(R.string.email),
             profileUiState.email,
             userInput = profileViewModel.userInputEmail,
             onUserInputChanged = { profileViewModel.updateUserEmail(it) },
             onKeyboardDone = { profileViewModel.saveUserEmail() },
-            saveChanges = {profileViewModel.fullSaveUserEmail("") },
+            saveChanges = { profileViewModel.fullSaveUserEmail(it) },
             profileViewModel = profileViewModel
         )
-        mutableField(
+        MutableField(
             stringResource(R.string.inn),
             profileUiState.identificationNumber,
             userInput = profileViewModel.userInputIdentificationNumber,
             onUserInputChanged = { profileViewModel.updateUserIdentificationNumber(it) },
             onKeyboardDone = { profileViewModel.saveUserIdentificationNumber() },
-            saveChanges = {profileViewModel.fullSaveUserIdentificationNumber("") },
+            saveChanges = { profileViewModel.fullSaveUserIdentificationNumber(it) },
             profileViewModel = profileViewModel
         )
         if (profileViewModel.uiState.value.isConfirmed) {
@@ -156,6 +130,18 @@ fun ProfileScreen(
         }
     }
 
+    if (profileUiState.errorDialog) {
+        ErrorDialog(
+            onDismiss = { profileViewModel.hideErrorDialog() },
+            message = profileUiState.errorMessage,
+        )
+    }
+
+    if (profileUiState.passwordDialog) {
+        EnterPasswordDialog(
+            onConfirm = { profileViewModel.action(it) }
+        ) { profileViewModel.hidePasswordDialog() }
+    }
 
         if (isChangePasswordDialogVisible) {
             ChangePasswordDialog(
@@ -166,13 +152,11 @@ fun ProfileScreen(
             )
         }
 
-    }
-
 
 }
 
 @Composable
-fun mutableField(
+fun MutableField(
     title: String = "",
     data: String = "",
 
@@ -184,9 +168,6 @@ fun mutableField(
     profileViewModel: ProfileViewModel
 ) {
     var isChangeVisible by remember { mutableStateOf(false) }
-
-    var isInputPasswordDialogVisible by remember { mutableStateOf(false) }
-
 
     Column (
         modifier = Modifier
@@ -225,8 +206,6 @@ fun mutableField(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-
-
             }
             Column (
                 modifier = Modifier
@@ -243,9 +222,8 @@ fun mutableField(
                 }
                 IconButton(
                     onClick = {
-                        isInputPasswordDialogVisible = true
-                        saveChanges("")
-                              },
+                        profileViewModel.showPasswordDialog { saveChanges(it) }
+                    },
                 ) {
                     Icon(
                         imageVector = Icons.Default.Check,
@@ -256,14 +234,6 @@ fun mutableField(
 
         }
         HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
-
-        if (isInputPasswordDialogVisible) {
-            EnterPasswordDialog(
-                onConfirm = { saveChanges("") },
-                onDismiss = { isInputPasswordDialogVisible = false},
-                profileViewModel
-            )
-        }
     }
 
 }
@@ -271,8 +241,7 @@ fun mutableField(
 @Composable
 fun EnterPasswordDialog(
     onConfirm: (String) -> Unit,
-    onDismiss: () -> Unit,
-    profileViewModel: ProfileViewModel
+    onDismiss: () -> Unit
 ) {
     var password by remember { mutableStateOf("") }
 
@@ -304,6 +273,20 @@ fun EnterPasswordDialog(
                 Text("Изменить")
             }
         }
+    )
+}
+
+@Composable
+fun ErrorDialog(message: String, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Ошибка") },
+        text = {Text(message)},
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Ok")
+            }
+        },
     )
 }
 

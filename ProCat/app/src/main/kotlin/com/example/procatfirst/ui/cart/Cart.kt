@@ -75,11 +75,7 @@ fun Cart(
                 .fillMaxWidth()
                 .padding(16.dp),
             onClick = {
-                if (cartViewModel.checked) {
-                    onToOrderingClicked()
-                } else {
-                    cartViewModel.checkIsEmpty(onToOrderingClicked)
-                }
+                cartViewModel.checkIsEmpty(onToOrderingClicked)
             }
         ) {
             Text(text = stringResource(R.string.checkout))

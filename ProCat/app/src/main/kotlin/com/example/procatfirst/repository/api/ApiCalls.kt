@@ -49,14 +49,22 @@ class ApiCalls {
         const val identifier = "[ApiCalls]"
     }
 
-    fun getItemsApi(callback : () -> Unit) {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-                .baseUrl(url)
+    private var userService: UserService? = null
+
+    private fun getUserService(): UserService {
+        if (userService == null) {
+            userService = Retrofit.Builder()
+                .baseUrl(BACKEND_URL)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build()
                 .create(UserService::class.java)
+        }
+        return userService!!
+    }
 
+    fun getItemsApi(callback : () -> Unit) {
+        val url = BACKEND_URL
+        val service = getUserService()
 
         service.getItems().enqueue(object : Callback<ItemResponse> {
 
@@ -84,12 +92,8 @@ class ApiCalls {
     }
 
     fun getUserDataApi(id: Int, callback: (String, UserDataResponse) -> Unit) {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build()
-                .create(UserService::class.java)
+
+        val service = getUserService()
 
         Log.d("CHECK!!!", id.toString() + " " + UserDataCache.shared.getUserToken())
 
@@ -114,11 +118,7 @@ class ApiCalls {
 
     fun signUpApi(login: String, password: String, name: String, callback : (String) -> Unit)  {
 
-        val service = Retrofit.Builder()
-            .baseUrl(BACKEND_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+        val service = getUserService()
 
         /* Calls the endpoint set on getUsers (/api) from UserService using enqueue method
          * that creates a new worker thread to make the HTTP call */
@@ -162,12 +162,104 @@ class ApiCalls {
 
     }
 
+    fun changeName(name: String, password: String, callback: (String) -> Unit) {
+        val service = getUserService()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("password", password)
+        jsonObject.put("fullName", name)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+        service.changeFullName(requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("RESPONSE", "Fail")
+                callback(t.message.toString())
+            }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.code() == 200) {
+                    response.body()?.let {
+                        if(it.string().contains("\"status\": 200")) {
+                            callback("SUCCESS")
+                        }
+                        else {
+                            response.errorBody()?.string()?.let { it1 -> callback(it1) }
+                        }
+                    }
+                }
+                else {
+                    Log.d("API", response.raw().toString())
+                    response.errorBody()?.string()?.let { it1 -> callback(it1) }
+                }
+            }
+        })
+    }
+
+    fun changeIin(iin: String, password: String, callback: (String) -> Unit) {
+        val service = getUserService()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("password", password)
+        jsonObject.put("identificationNumber", iin)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+        service.changeIin(requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.e("RESPONSE", "Fail")
+                callback("FAIL")
+            }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.code() == 200) {
+                    response.body()?.let {
+                        if(it.string().contains("\"status\": 200")) {
+                            callback("SUCCESS")
+                        }
+                        else {
+                            response.errorBody()?.string()?.let { it1 -> callback(it1) }
+                            callback("Fail")
+                        }
+                    }
+                }
+                else {
+                    Log.e("API", response.raw().toString())
+                    callback("FAKE")
+                }
+            }
+        })
+    }
+
+    fun changeEmail(email: String, password: String, callback: (String) -> Unit) {
+
+        val service = getUserService()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("password", password)
+        jsonObject.put("email", email)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+        service.changeEmail(requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.e("RESPONSE", "Fail")
+                callback(t.message.toString())
+            }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.code() == 200) {
+                    response.body()?.let {
+                        callback("SUCCESS")
+                    }
+                }
+                else {
+                    Log.e("API", response.raw().toString())
+                    response.errorBody()?.string()?.let { it1 -> callback(it1) }
+                }
+            }
+        })
+    }
+
     suspend fun refresh(refresh: String, fingerprint: String, callback: (String, String, String) -> Unit) {
-        val service = Retrofit.Builder()
-            .baseUrl(BACKEND_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+        val service = getUserService()
 
         val jsonObject = JSONObject()
         jsonObject.put("refreshToken", refresh)
@@ -196,11 +288,7 @@ class ApiCalls {
 
     suspend fun signInApi(login: String, password: String, fingerprint: String, callback: (String, String, String) -> Unit) {
 
-        val service = Retrofit.Builder()
-                .baseUrl(BACKEND_URL)
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build()
-                .create(UserService::class.java)
+        val service = getUserService()
 
         val jsonObject = JSONObject()
         jsonObject.put("phoneNumber", login)
@@ -230,11 +318,7 @@ class ApiCalls {
     }
 
     suspend fun logout() {
-        val service = Retrofit.Builder()
-            .baseUrl(BACKEND_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+        val service = getUserService()
 
         val jsonObject = JSONObject()
         jsonObject.put("refreshToken", DataCoordinatorOLD.shared.refreshTokenPreferenceVariable)
@@ -254,12 +338,8 @@ class ApiCalls {
     }
 
     fun getCartApi(callback : (CartPayload) -> Unit) {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+
+        val service = getUserService()
 
         service.getItemsInCart("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<CartResponse> {
 
@@ -281,11 +361,7 @@ class ApiCalls {
     }
 
     fun postCart(itemId : Int, count: Int) {
-        val service = Retrofit.Builder()
-            .baseUrl(BACKEND_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+        val service = getUserService()
 
         val jsonObject = JSONObject()
         jsonObject.put("itemId", itemId)
@@ -306,11 +382,7 @@ class ApiCalls {
     }
 
     fun deleteInCart(itemId : Int, cnt: Int) {
-        val service = Retrofit.Builder()
-            .baseUrl(BACKEND_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+        val service = getUserService()
 
         service.deleteItemFromCart( itemId, cnt, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -325,11 +397,7 @@ class ApiCalls {
     }
 
     fun getUserOrders(id: Int, callback: (OrdersPayload?) -> Unit) {
-        val service = Retrofit.Builder()
-            .baseUrl(BACKEND_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+        val service = getUserService()
 
         service.getUserOrders(id, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<OrdersResponse> {
             override fun onResponse(call: Call<OrdersResponse>, response: Response<OrdersResponse>) {
@@ -351,11 +419,7 @@ class ApiCalls {
     }
 
     fun createNewOrder(order : OrderRequest, callback: (OrderSmall?) -> Unit) {
-        val service = Retrofit.Builder()
-            .baseUrl(BACKEND_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+        val service = getUserService()
 
         val jsonObject = Gson().toJson(order)
         Log.d("RequestJSON", jsonObject.toString())
@@ -364,9 +428,9 @@ class ApiCalls {
         service.createNewOrder( requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<NewOrderResponse> {
             override fun onResponse(call: Call<NewOrderResponse>, response: Response<NewOrderResponse>) {
                 Log.d("RESPONSE", response.raw().toString())
-                Log.d("Message1", response.message())
-                Log.d("Body", response.body().toString())
-                response.body()?.message?.let { Log.d("Message2", it) }
+                if (response.code() != 200) {
+                    response.errorBody()?.string()?.let { it1 -> Log.e("API", it1) }
+                }
                 response.body().let {
                     if (it?.status == 200) {
                         callback(it.payload)
@@ -386,12 +450,8 @@ class ApiCalls {
     }
 
     fun getAllUsersApi(callback: (String, List<User>) -> Unit)  {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+
+        val service = getUserService()
 
         service.getAllUsers("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<UsersResponse> {
 
@@ -408,31 +468,6 @@ class ApiCalls {
             }
 
         })
-    }
-
-    suspend fun changeFullNameApi(fullName: String, password: String)  {
-        val service = Retrofit.Builder()
-            .baseUrl(BACKEND_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
-
-        val jsonObject = JSONObject()
-        jsonObject.put("password", password)
-        jsonObject.put("fullName", fullName)
-
-        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
-
-        service.changeFullName(requestBody).enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                t.printStackTrace()
-                Log.i("RESPONSE", "Fail")
-            }
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                response.body()?.string()?.let { Log.i("RESPONSE", it) }
-            }
-        })
-
     }
 
     fun geocoderApi()  {
@@ -475,13 +510,8 @@ class ApiCalls {
     }
 
     suspend fun aminaApi() {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
 
+        val service = getUserService()
 
         service.amina().enqueue(object : Callback<ResponseBody> {
 
@@ -505,11 +535,7 @@ class ApiCalls {
 
     fun makeCluster(callback: (String, List<ClusterResult>) -> Unit) {
         val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+        val service = getUserService()
 
         service.makeCluster("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ClusterResponse> {
 
@@ -531,11 +557,7 @@ class ApiCalls {
 
     fun getAllDeliverymenApi(callback : (String, List<Deliveryman>) -> Unit) {
         val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+        val service = getUserService()
 
         service.getAllDeliverymen("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<DeliverymenResponse> {
 
@@ -555,12 +577,8 @@ class ApiCalls {
     }
 
     fun getAllDeliveriesToSortApi(callback : (String, List<ClusterResult>) -> Unit) {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+
+        val service = getUserService()
 
         service.getAllDeliveriesToSort("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<AllDeliveriesToSortResponse> {
 
@@ -582,12 +600,7 @@ class ApiCalls {
 
     fun getDeliveriesForDeliverymanApi(id: Int, callback: (String, List<Delivery>) -> Unit) {
         val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
-
+        val service = getUserService()
 
         service.getDeliveriesForDeliveryman("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<AllDeliveriesForDeliverymanResponse> {
 
@@ -607,15 +620,10 @@ class ApiCalls {
     }
 
     fun getDeliveryFromDeliveryIdApi(id: Int, callback: (String, Delivery) -> Unit) {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+
+        val service = getUserService()
 
         Log.d("DELIVERY", id.toString())
-
 
         service.getDeliveryFromDeliveryId("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<DeliveryResponse> {
 
@@ -663,12 +671,8 @@ class ApiCalls {
     */
 
     fun createDeliveryManFromUserApi(userId: Int, carCapacity: String, workingHoursStart: String, workingHoursEnd: String, carId: String, callback: (String) -> Unit) {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+
+        val service = getUserService()
 
         val jsonObject = JSONObject()
         jsonObject.put("carCapacity", carCapacity)
@@ -695,12 +699,8 @@ class ApiCalls {
     }
 
     fun deleteDeliverymanApi(id: Int, callback: (String) -> Unit) {
-        val url = BACKEND_URL
-        val service = Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-            .create(UserService::class.java)
+
+        val service = getUserService()
 
         service.deleteDeliveryman("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<ResponseBody> {
 

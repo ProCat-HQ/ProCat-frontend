@@ -77,10 +77,10 @@ interface UserService {
     suspend fun postIin(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/change/iin-bin")
-    suspend fun changeIin(@Body requestBody: RequestBody): Call<ResponseBody>
+    fun changeIin(@Body requestBody: RequestBody, @Header("Authorization") token: String?): Call<ResponseBody>
 
     @POST("users/change/fullname")
-    suspend fun changeFullName(@Body requestBody: RequestBody): Call<ResponseBody>
+    fun changeFullName(@Body requestBody: RequestBody, @Header("Authorization") token: String?): Call<ResponseBody>
 
     @POST("/users/change/password")
     suspend fun changePassword(@Body requestBody: RequestBody): Call<ResponseBody>
@@ -89,7 +89,7 @@ interface UserService {
     suspend fun changePhone(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/change/email")
-    suspend fun changeEmail(@Body requestBody: RequestBody)
+    fun changeEmail(@Body requestBody: RequestBody, @Header("Authorization") token: String?): Call<ResponseBody>
 
     @POST("users/change/role/{userId}")
     suspend fun changeRole(@Query("userId") userId: Int, @Body requestBody: RequestBody)

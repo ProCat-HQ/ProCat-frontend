@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class AuthViewModel(
-    //private val userRoleRepository: UserRoleRepository
+
 ): ViewModel()  {
 
     private val _uiState = MutableStateFlow(AuthUiState())

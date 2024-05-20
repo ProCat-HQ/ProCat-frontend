@@ -6,27 +6,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.procatfirst.data.User
-import com.example.procatfirst.data.UserDataProvider
-import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.getUserData
-import com.example.procatfirst.repository.data_coordinator.setUserData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class ProfileViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
+    var action: (String) -> Unit = {}
 
     init {
         getUserProfileInfo()
@@ -75,7 +70,27 @@ class ProfileViewModel: ViewModel() {
 
     fun fullSaveUserFullName(password: String) {
         viewModelScope.launch {
-            //ApiCalls.shared.
+            ApiCalls.shared.changeName(userInputFullName, password) {
+                if (it == "SUCCESS") {
+                    getUserProfileInfo()
+                }
+                else {
+                    errorDialog(it)
+                }
+            }
+        }
+    }
+
+    fun showPasswordDialog(act: (String) -> Unit) {
+        _uiState.update { currentState ->
+            currentState.copy(passwordDialog = true)
+        }
+        action = act
+    }
+
+    fun hidePasswordDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(passwordDialog = false)
         }
     }
 
@@ -93,9 +108,17 @@ class ProfileViewModel: ViewModel() {
         }
         updateUserIdentificationNumber(userInputIdentificationNumber)
     }
+
     fun fullSaveUserIdentificationNumber(password: String) {
         viewModelScope.launch {
-            //ApiCalls.shared.
+            ApiCalls.shared.changeIin(userInputIdentificationNumber, password) {
+                if (it == "SUCCESS") {
+                    getUserProfileInfo()
+                }
+                else {
+                    errorDialog("Ваш ИИН некорректен или не соответствует указанному ФИО")
+                }
+            }
         }
     }
 
@@ -107,6 +130,18 @@ class ProfileViewModel: ViewModel() {
         userInputEmail = enteredEmail
     }
 
+    private fun errorDialog(message: String) {
+        _uiState.update { currentState ->
+            currentState.copy(errorDialog = true, errorMessage = message)
+        }
+    }
+
+    fun hideErrorDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(errorDialog = false)
+        }
+    }
+
     fun saveUserEmail() {
         _uiState.update { currentState ->
             currentState.copy(email = userInputEmail)
@@ -114,9 +149,15 @@ class ProfileViewModel: ViewModel() {
         updateUserEmail(userInputEmail)
     }
     fun fullSaveUserEmail(password: String) {
-
         viewModelScope.launch {
-            //ApiCalls.shared.
+            ApiCalls.shared.changeEmail(userInputEmail, password) {
+                if (it == "SUCCESS") {
+                    getUserProfileInfo()
+                }
+                else {
+                    errorDialog("Некорректный email или пароль $it")
+                }
+            }
         }
     }
 

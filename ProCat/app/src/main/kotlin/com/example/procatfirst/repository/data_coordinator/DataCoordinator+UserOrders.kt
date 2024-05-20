@@ -21,11 +21,8 @@ suspend fun DataCoordinator.getUserOrders(callback : (orders : List<OrderFull>) 
     //}
 }
 
-suspend fun DataCoordinator.createNewOrder(order : OrderRequest) : OrderSmall? {
-    var orderResponse : OrderSmall? = null
+suspend fun DataCoordinator.createNewOrder(order : OrderRequest, callback: (OrderSmall?) -> Unit) {
     ApiCalls.shared.createNewOrder(order) {
-        ord : OrderSmall? ->
-        orderResponse = ord
+        callback(it)
     }
-    return orderResponse
 }

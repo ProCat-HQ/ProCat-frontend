@@ -21,12 +21,8 @@ class CartViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(CartUiState())
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
 
-    var checked by mutableStateOf(false)
-        private set
-
     init {
         _uiState.value = CartUiState()
-        checked = false
     }
 
     fun closeDialog() {
