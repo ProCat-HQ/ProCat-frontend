@@ -11,6 +11,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface StoresService {
@@ -25,5 +26,5 @@ interface StoresService {
     suspend fun deleteStore(@Query("storeId") storeId: Int): Call<ResponseBody>
 
     @PATCH("/stores/{storeId}")
-    suspend fun updateStore(@Query("storeId") storeId: Int, @Body requestBody: RequestBody) // StoreRequest
+    fun updateStore(@Header("Authorization") token: String?, @Path("storeId") storeId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 }

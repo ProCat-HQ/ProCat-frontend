@@ -42,6 +42,8 @@ import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.ui.auth.AuthScreen
 import com.example.procatfirst.ui.cart.Cart
 import com.example.procatfirst.ui.courier.orders.CourierOrdersScreen
+import com.example.procatfirst.ui.editing.EditingScreen
+import com.example.procatfirst.ui.editing.stores.StoresScreen
 import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.managment.OrdersManagerScreen
 import com.example.procatfirst.ui.managment.delivery.AdminDelivery
@@ -78,7 +80,9 @@ enum class ProCatScreen(@StringRes val title: Int) {
     Manager(title = R.string.manager), // damn
     OrderConfirmation(title = R.string.order_confirmation),
     AdminDelivery(title = R.string.delivery),
-    AllDeliverymen(title = R.string.deliverymen)
+    AllDeliverymen(title = R.string.deliverymen),
+    Stores(title = R.string.stores),
+    Editing(title = R.string.editing)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -297,8 +301,8 @@ fun ProCatApp (
                     onToAdminDeliveryClicked = {
                         navController.navigate(ProCatScreen.AdminDelivery.name)
                     },
-                    onToAllDeliverymenClicked = {
-                        navController.navigate(ProCatScreen.AllDeliverymen.name)
+                    onToEditingClicked = {
+                        navController.navigate(ProCatScreen.Editing.name)
                     }
 
                 )
@@ -358,6 +362,21 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.AllDeliverymen.name) {
                 Deliverymen(
+
+                )
+            }
+            composable(route = ProCatScreen.Editing.name) {
+                EditingScreen(
+                    onToStoresClicked = {
+                        navController.navigate(ProCatScreen.Stores.name)
+                    },
+                    onToAllDeliverymenClicked = {
+                        navController.navigate(ProCatScreen.AllDeliverymen.name)
+                    },
+                )
+            }
+            composable(route = ProCatScreen.Stores.name) {
+                StoresScreen(
 
                 )
             }
