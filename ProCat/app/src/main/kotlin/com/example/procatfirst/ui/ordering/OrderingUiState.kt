@@ -1,6 +1,7 @@
 package com.example.procatfirst.ui.ordering
 
 import com.example.procatfirst.data.CartItem
+import com.example.procatfirst.data.Store
 
 data class OrderingUiState(
     val tools : List<CartItem> = emptyList(),
@@ -12,4 +13,6 @@ data class OrderingUiState(
     val selectedTimeToHour: Int = 17,
     val selectedTimeToMinute: Int = 0,
     val periodInDays: Int = 1,
+
+    val stores: List<Store> = emptyList()
 )

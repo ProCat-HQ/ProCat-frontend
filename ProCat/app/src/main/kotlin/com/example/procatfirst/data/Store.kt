@@ -1,7 +1,10 @@
 package com.example.procatfirst.data
 
-data class StorePayload(
-    val stores: List<Store>
+
+data class StoreResponse(
+    val status: Int,
+    val message: String,
+    val payload: List<Store>
 )
 
 data class Store(

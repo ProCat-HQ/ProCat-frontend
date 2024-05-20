@@ -20,6 +20,8 @@ import com.example.procatfirst.data.OrderSmall
 import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
 import com.example.procatfirst.data.RegistrationResponse
+import com.example.procatfirst.data.Store
+import com.example.procatfirst.data.StoreResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
@@ -717,5 +719,32 @@ class ApiCalls {
         })
 
     }
+
+
+    fun getAllStoresApi(callback : (String, List<Store>) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(StoresService::class.java)
+
+        service.getAllStores().enqueue(object : Callback<StoreResponse> {
+
+            override fun onFailure(call: Call<StoreResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<StoreResponse>, response: Response<StoreResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("STORES_RESULT", it.payload.toString())
+                    callback("SUCCESS", it.payload) }
+            }
+
+        })
+    }
+
 
 }

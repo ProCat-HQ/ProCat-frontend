@@ -55,10 +55,16 @@ fun OrderingScreen(
     //-----------------------------------------------------
     val orderingUiState by orderingViewModel.uiState.collectAsState()
 
+    /*
     val addresses = listOf(
         SelectionOption("Адрес 1", initialSelectedValue = true),
         SelectionOption("Адрес 2", initialSelectedValue = false)
-    )
+    ) */
+
+    val addresses = orderingUiState.stores.map { store ->
+        SelectionOption(store.address, initialSelectedValue = false)
+    }
+
     val onOptionClicked: (SelectionOption) -> Unit = { selectedOption ->
         addresses.forEach { it.selected = false }
         selectedOption.selected = true
