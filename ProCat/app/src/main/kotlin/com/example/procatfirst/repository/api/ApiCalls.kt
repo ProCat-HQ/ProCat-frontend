@@ -49,6 +49,19 @@ class ApiCalls {
         const val identifier = "[ApiCalls]"
     }
 
+    private var userService: UserService? = null
+
+    private fun getUserService(): UserService {
+        if (userService == null) {
+            userService = Retrofit.Builder()
+                .baseUrl(BACKEND_URL)
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build()
+                .create(UserService::class.java)
+        }
+        return userService!!
+    }
+
     fun getItemsApi(callback : () -> Unit) {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
@@ -232,6 +245,35 @@ class ApiCalls {
                 else {
                     Log.e("API", response.raw().toString())
                     callback("FAKE")
+                }
+            }
+        })
+    }
+
+    fun changeEmail(email: String, password: String, callback: (String) -> Unit) {
+
+        val service = getUserService()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("password", password)
+        jsonObject.put("email", email)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+        service.changeEmail(requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.e("RESPONSE", "Fail")
+                callback(t.message.toString())
+            }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.code() == 200) {
+                    response.body()?.let {
+                        callback("SUCCESS")
+                    }
+                }
+                else {
+                    Log.e("API", response.raw().toString())
+                    response.errorBody()?.string()?.let { it1 -> callback(it1) }
                 }
             }
         })

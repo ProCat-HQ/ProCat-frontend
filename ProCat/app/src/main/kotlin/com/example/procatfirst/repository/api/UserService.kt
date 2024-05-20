@@ -89,7 +89,7 @@ interface UserService {
     suspend fun changePhone(@Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/change/email")
-    suspend fun changeEmail(@Body requestBody: RequestBody)
+    fun changeEmail(@Body requestBody: RequestBody, @Header("Authorization") token: String?): Call<ResponseBody>
 
     @POST("users/change/role/{userId}")
     suspend fun changeRole(@Query("userId") userId: Int, @Body requestBody: RequestBody)

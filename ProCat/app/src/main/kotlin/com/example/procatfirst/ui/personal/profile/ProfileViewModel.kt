@@ -149,9 +149,15 @@ class ProfileViewModel: ViewModel() {
         updateUserEmail(userInputEmail)
     }
     fun fullSaveUserEmail(password: String) {
-        Log.d("BAD", "BAD")
         viewModelScope.launch {
-            //ApiCalls.shared.
+            ApiCalls.shared.changeEmail(userInputEmail, password) {
+                if (it == "SUCCESS") {
+                    getUserProfileInfo()
+                }
+                else {
+                    errorDialog("Некорректный email или пароль $it")
+                }
+            }
         }
     }
 
