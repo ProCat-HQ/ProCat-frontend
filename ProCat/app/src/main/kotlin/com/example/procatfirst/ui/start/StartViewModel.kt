@@ -1,16 +1,30 @@
 package com.example.procatfirst.ui.start
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.procatfirst.repository.api.ApiCalls
+import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getImage
 import com.example.procatfirst.repository.data_coordinator.setTokenAndRole
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class StartViewModel(context: Context, nextPageAction : () -> Unit): ViewModel() {
+
+    private val _uiState = MutableStateFlow(StartUiState())
+    val uiState: StateFlow<StartUiState> = _uiState.asStateFlow()
 
     init{
         open(context)
@@ -19,6 +33,17 @@ class StartViewModel(context: Context, nextPageAction : () -> Unit): ViewModel()
     private fun open(context: Context) {
         authorise(context, false) {}
         Log.v("OPEN", "OPEN")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                DataCoordinator.shared.getImage("hammer.jpg") {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            bitmap = it
+                        )
+                    }
+                }
+            }
+        }
     }
 
     fun authorise(context: Context, manual: Boolean, nextPageAction : () -> Unit) {

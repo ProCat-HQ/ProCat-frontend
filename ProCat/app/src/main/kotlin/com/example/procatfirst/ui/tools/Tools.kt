@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -70,6 +72,7 @@ fun ToolsScreen(
         }
     }
     receiver1.CreateReceiver(intentToReact = SystemNotifications.stuffAddedIntent)
+
     if (searchUiState.isActive) {
         Column (
 
@@ -196,7 +199,11 @@ fun ToolsScreen(
 fun ToolCard(
     tool: Tool,
     onNextButtonClicked: (Tool) -> Unit,
+    toolViewModel: ToolViewModel = ToolViewModel(tool)
 ) {
+
+    val toolUiState by toolViewModel.uiState.collectAsState()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -208,14 +215,16 @@ fun ToolCard(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(id = tool.imageResId),
-                contentDescription = tool.name,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .clip(MaterialTheme.shapes.medium)
-            )
+            if (toolUiState.bitmap != null) {
+                Image(
+                    bitmap = toolUiState.bitmap!!.asImageBitmap(),
+                    contentDescription = stringResource(id = R.string.logo),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
+                        .padding(top = 5.dp, bottom = 5.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = tool.name,
@@ -233,7 +242,6 @@ fun ToolCard(
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.End,
                 modifier = Modifier.fillMaxWidth()
-
             )
         }
     }

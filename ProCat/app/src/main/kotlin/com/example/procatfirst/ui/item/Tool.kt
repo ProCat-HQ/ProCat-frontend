@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,7 +48,7 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun ToolScreen(
         tool : Tool,
-        toolViewModel: ToolViewModel = viewModel(),
+        toolViewModel: ToolViewModel = ToolViewModel(tool),
         onNextButtonClicked: () -> Unit,
         modifier: Modifier = Modifier
     ) {
@@ -58,18 +59,26 @@ fun ToolScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
     ) {
-
-        Image(
-            painter = painterResource(id = tool.imageResId),
-            contentDescription = stringResource(id = R.string.hammer),
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
-                .padding(top = 5.dp, bottom = 5.dp)
-        )
+        if (toolUiState.bitmap != null) {
+            Image(
+                bitmap = toolUiState.bitmap!!.asImageBitmap(),
+                contentDescription = stringResource(id = R.string.logo),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
+                    .padding(top = 5.dp, bottom = 5.dp)
+            )
+        }
+//        Image(
+//            painter = painterResource(id = tool.imageResId),
+//            contentDescription = stringResource(id = R.string.hammer),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
+//                .padding(top = 5.dp, bottom = 5.dp)
+//        )
 
         Text(
-            //text = toolUiState.tool.name,
             text = tool.name,
             style = MaterialTheme.typography.titleLarge
         )
@@ -90,12 +99,10 @@ fun ToolScreen(
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            //text = stringResource(R.string.toolSpecifications),
             text = "Цена",
             style = MaterialTheme.typography.titleMedium
         )
         Text(
-            //text = tool.specifications,
             text = tool.price.toString(),
             style = MaterialTheme.typography.bodyMedium
         )

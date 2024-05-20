@@ -12,6 +12,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
+import java.io.InputStream
 
 interface ItemsService {
 
@@ -50,5 +51,8 @@ interface ItemsService {
 
     @DELETE("/items/images/{itemId}")
     suspend fun deleteImages(@Query("itemId") itemId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
+
+    @GET("/assets/hammer.jpg")
+    fun downloadFile(): InputStream
 
 }

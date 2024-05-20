@@ -20,7 +20,7 @@ class UserCartCache {
             toolsStorage[tool.id] = toolsStorage[tool.id]!!.copy(count = toolsStorage[tool.id]!!.count + 1)
         }
         else {
-            toolsStorage[tool.id] = CartItem(tool.id, tool.name, tool.price, 1, tool.imageResId.toString())
+            toolsStorage[tool.id] = CartItem(tool.id, tool.name, tool.price, 1, tool.image)
         }
         Log.v("TOOLCache", toolsStorage.toString())
     }

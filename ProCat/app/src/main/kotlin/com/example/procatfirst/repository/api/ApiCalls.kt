@@ -1,5 +1,7 @@
 package com.example.procatfirst.repository.api
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import com.example.procatfirst.data.AllDeliveriesForDeliverymanResponse
 import com.example.procatfirst.data.AllDeliveriesToSortResponse
@@ -41,6 +43,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.dublgis.dgismobile.mapsdk.LonLat
+import java.io.InputStream
+import java.net.URL
 
 class ApiCalls {
     companion object {
@@ -62,8 +66,16 @@ class ApiCalls {
         return userService!!
     }
 
+    fun getImageApi(img: String, callback : (Bitmap) -> Unit) {
+
+        val url = URL("$BACKEND_URL/assets/$img")
+        val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+        callback(bmp)
+
+    }
+
     fun getItemsApi(callback : () -> Unit) {
-        val url = BACKEND_URL
+
         val service = getUserService()
 
         service.getItems().enqueue(object : Callback<ItemResponse> {
@@ -534,7 +546,7 @@ class ApiCalls {
     }
 
     fun makeCluster(callback: (String, List<ClusterResult>) -> Unit) {
-        val url = BACKEND_URL
+
         val service = getUserService()
 
         service.makeCluster("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ClusterResponse> {
@@ -606,7 +618,7 @@ class ApiCalls {
     }
 
     fun getAllDeliverymenApi(callback : (String, List<Deliveryman>) -> Unit) {
-        val url = BACKEND_URL
+
         val service = getUserService()
 
         service.getAllDeliverymen("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<DeliverymenResponse> {
