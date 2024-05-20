@@ -7,6 +7,7 @@ import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getImage
 import decreaseToolCount
 import increaseToolCount
 import kotlinx.coroutines.Dispatchers
@@ -64,6 +65,19 @@ class ToolViewModel(tool : CartItem): ViewModel()  {
 
     private fun open(tool: CartItem){
         _uiState.value = ToolUiState(tool)
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                DataCoordinator.shared.getImage(tool.image) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            bitmap = it
+                        )
+                    }
+                }
+            }
+        }
+
     }
 
 }

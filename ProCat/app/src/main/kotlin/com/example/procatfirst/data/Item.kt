@@ -11,7 +11,7 @@ data class Item(
         val description: String,
         val price: Int,
         val isInStock: Boolean,
-        val images: Int?,
+        val image: String,
         val categoryId: Int?,
 
 
