@@ -160,6 +160,81 @@ class ApiCalls {
 
     }
 
+    fun changeName(name: String, password: String, callback: (String) -> Unit) {
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        val jsonObject = JSONObject()
+        jsonObject.put("password", password)
+        jsonObject.put("fullName", name)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+        service.changeFullName(requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("RESPONSE", "Fail")
+                callback(t.message.toString())
+            }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.code() == 200) {
+                    response.body()?.let {
+                        if(it.string().contains("\"status\": 200")) {
+                            callback("SUCCESS")
+                        }
+                        else {
+                            response.errorBody()?.string()?.let { it1 -> callback(it1) }
+                        }
+                    }
+                }
+                else {
+                    Log.d("API", response.raw().toString())
+                    response.errorBody()?.string()?.let { it1 -> callback(it1) }
+                }
+            }
+        })
+    }
+
+    fun changeIin(iin: String, password: String, callback: (String) -> Unit) {
+        val service = Retrofit.Builder()
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
+        val jsonObject = JSONObject()
+        jsonObject.put("password", password)
+        jsonObject.put("identificationNumber", iin)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+        service.changeIin(requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.e("RESPONSE", "Fail")
+                callback("FAIL")
+            }
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.code() == 200) {
+                    response.body()?.let {
+                        if(it.string().contains("\"status\": 200")) {
+                            callback("SUCCESS")
+                        }
+                        else {
+                            response.errorBody()?.string()?.let { it1 -> callback(it1) }
+                            callback("Fail")
+                        }
+                    }
+                }
+                else {
+                    Log.e("API", response.raw().toString())
+                    callback("FAKE")
+                }
+            }
+        })
+    }
+
     suspend fun refresh(refresh: String, fingerprint: String, callback: (String, String, String) -> Unit) {
         val service = Retrofit.Builder()
             .baseUrl(BACKEND_URL)
@@ -362,9 +437,9 @@ class ApiCalls {
         service.createNewOrder( requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<NewOrderResponse> {
             override fun onResponse(call: Call<NewOrderResponse>, response: Response<NewOrderResponse>) {
                 Log.d("RESPONSE", response.raw().toString())
-                Log.d("Message1", response.message())
-                Log.d("Body", response.body().toString())
-                response.body()?.message?.let { Log.d("Message2", it) }
+                if (response.code() != 200) {
+                    response.errorBody()?.string()?.let { it1 -> Log.e("API", it1) }
+                }
                 response.body().let {
                     if (it?.status == 200) {
                         callback(it.payload)
@@ -421,7 +496,7 @@ class ApiCalls {
 
         val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
 
-        service.changeFullName(requestBody).enqueue(object : Callback<ResponseBody> {
+        service.changeFullName(requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("RESPONSE", "Fail")

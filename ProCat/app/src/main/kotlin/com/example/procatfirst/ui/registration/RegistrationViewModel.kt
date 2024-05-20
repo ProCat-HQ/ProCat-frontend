@@ -161,7 +161,7 @@ class RegistrationViewModel: ViewModel()  {
 
         if (!_uiState.value.enteredLastNameWrong && !_uiState.value.enteredPhoneNumberWrong
             && !_uiState.value.enteredFirstNameWrong && !_uiState.value.enteredPasswordWrong) {
-            val fullName: String = "$userInputFirstName $userInputLastName $userInputFatherName"
+            val fullName: String = "$userInputLastName $userInputFirstName $userInputFatherName"
             viewModelScope.launch {
                 ApiCalls.shared.signUpApi(userInputPhoneNumber, userInputPassword, fullName) {
                     if (it == "SUCCESS") {

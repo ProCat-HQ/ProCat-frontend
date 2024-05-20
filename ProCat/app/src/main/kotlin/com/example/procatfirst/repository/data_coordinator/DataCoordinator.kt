@@ -3,6 +3,7 @@ package com.example.procatfirst.repository.data_coordinator
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.util.Log
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserCartCache
@@ -45,9 +46,10 @@ class DataCoordinator {
         fingerprint = setFingerPrint(con)
     }
 
-    suspend fun refresh(callback : (String, String, String) -> Unit, context: Context) {
-        if (callDown == null || (LocalDateTime.now().second - callDown!!.second > 3)) {
+    suspend fun refresh(callback : (String, String, String) -> Unit, context: Context, manual: Boolean) {
+        if (manual || callDown == null || (LocalDateTime.now().second - callDown!!.second > 3) )  {
             val refresh = DataCoordinatorOLD.shared.getRefreshTokenDataStore(context)
+            Log.d("REFRESH", refresh)
             if (refresh != "") {
                 ApiCalls.shared.refresh(refresh, fingerprint, callback)
                 callDown = LocalDateTime.now()

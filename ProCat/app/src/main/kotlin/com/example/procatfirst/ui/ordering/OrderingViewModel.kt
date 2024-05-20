@@ -61,7 +61,6 @@ class OrderingViewModel(): ViewModel() {
     }
 
     private fun updateSelectedAddress(address: String) {
-        //_uiState.value = _uiState.value.copy(address = address)
         _uiState.value = _uiState.value.copy(address = "$country, $city, $address")
 
     }
@@ -90,19 +89,20 @@ class OrderingViewModel(): ViewModel() {
             val deliveryTimeFrom = order.selectedDate + ' ' + timeFromHour + ':' + timeFromMinutes + ":00"
             val deliveryTimeTo = "$dateEnd $timeToHour:$timeToMinutes:00"
 
-            val newOrder = DataCoordinator.shared.createNewOrder(
+            DataCoordinator.shared.createNewOrder(
                 OrderRequest(deliveryTimeFrom,
-                    "$dateEnd 00:00:00", order.address, null, type, deliveryTimeFrom, deliveryTimeTo))
-            if (newOrder == null) {
-                //TODO ERROR MESSAGE
-                Toast.makeText(context, "Ошибка при оформлении заказа", Toast.LENGTH_SHORT).show()
-                Log.e("NEW ORDER", "It's null!")
+                    "$dateEnd 00:00:00", order.address, null, type, deliveryTimeFrom, deliveryTimeTo)) {
+                if (it == null) {
+                    Toast.makeText(context, "Ошибка при оформлении заказа", Toast.LENGTH_SHORT).show()
+                    Log.e("NEW ORDER", "It's null!")
+                }
+                else {
+                    //TODO show result
+                    nextPage(this@OrderingViewModel)
+                    Log.i("NEW ORDER", "It's OK")
+                }
             }
-            else {
-                //TODO show result
-                nextPage(this@OrderingViewModel)
-                Log.i("NEW ORDER", "It's OK")
-            }
+
         }
     }
 

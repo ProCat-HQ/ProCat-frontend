@@ -17,11 +17,11 @@ class StartViewModel(context: Context, nextPageAction : () -> Unit): ViewModel()
     }
 
     private fun open(context: Context) {
-        authorise(context) {}
+        authorise(context, false) {}
         Log.v("OPEN", "OPEN")
     }
 
-    fun authorise(context: Context, nextPageAction : () -> Unit) {
+    fun authorise(context: Context, manual: Boolean, nextPageAction : () -> Unit) {
         val callback = {status: String, acc: String, ref: String ->
             Log.d("Status", status)
             if (status == "SUCCESS") {
@@ -36,7 +36,7 @@ class StartViewModel(context: Context, nextPageAction : () -> Unit): ViewModel()
         }
         viewModelScope.launch {
             if (UserDataCache.shared.getUserToken() == "") {
-                DataCoordinator.shared.refresh(callback, context)
+                DataCoordinator.shared.refresh(callback, context, manual)
             }
         }
     }

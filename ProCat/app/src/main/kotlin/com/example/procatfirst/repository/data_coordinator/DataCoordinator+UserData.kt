@@ -5,25 +5,22 @@ import android.util.Log
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
-import com.example.procatfirst.data.UserResponse
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.api.JwtToken
 import com.example.procatfirst.repository.cache.UserCartCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage.DataStorage
-import com.example.procatfirst.repository.data_storage.getUserDataFromMemory
 import com.example.procatfirst.repository.data_storage.setUserDataToMemory
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
-import com.example.procatfirst.repository.data_storage_deprecated.setRefreshTokenDataStore
 import com.example.procatfirst.repository.data_storage_deprecated.updateRefreshToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Base64
 
-suspend fun DataCoordinator.getUserData(callback: (User) -> Unit) : User? {
+suspend fun DataCoordinator.getUserData(callback: (User) -> Unit) {
 
-    if (UserDataCache.shared.getUserData()?.fullName == "") {
+    if (UserDataCache.shared.getUserData()?.phoneNumber == "") {
         ApiCalls.shared.getUserDataApi(UserDataCache.shared.getUserData()!!.id) {
                 status: String, user: UserDataResponse ->
             if (status == "SUCCESS") {
@@ -32,8 +29,7 @@ suspend fun DataCoordinator.getUserData(callback: (User) -> Unit) : User? {
             }
         }
     }
-
-    return UserDataCache.shared.getUserData()
+    callback(UserDataCache.shared.getUserData()!!)
 }
 
 suspend fun DataCoordinator.setUserData(user: User)  {
