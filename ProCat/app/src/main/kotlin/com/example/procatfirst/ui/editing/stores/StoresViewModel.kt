@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.Deliveryman
 import com.example.procatfirst.data.Store
 import com.example.procatfirst.repository.api.ApiCalls
+import com.example.procatfirst.repository.api.StoreApiCalls
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +32,7 @@ class StoresViewModel(): ViewModel() {
                     }
                 }
             }
-            ApiCalls.shared.getAllStoresApi(callback)
+            StoreApiCalls.shared.getAllStoresApi(callback)
         }
     }
 
@@ -42,7 +43,8 @@ class StoresViewModel(): ViewModel() {
                     loadStores()
                 }
             }
-            ApiCalls.shared.updateStoreApi(store.id, store.name, store.address, store.workingHoursStart, store.workingHoursEnd, callback)
+            //ApiCalls.shared.updateStoreApi(store.id, store.name, store.address, store.workingHoursStart, store.workingHoursEnd, callback)
+            StoreApiCalls.shared.updateStoreApi(store.id, store.name, store.address, store.workingHoursStart, store.workingHoursEnd, callback)
         }
     }
 

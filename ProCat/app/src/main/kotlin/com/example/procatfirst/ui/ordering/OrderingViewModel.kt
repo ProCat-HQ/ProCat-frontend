@@ -12,6 +12,7 @@ import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.Store
 import com.example.procatfirst.data.User
 import com.example.procatfirst.repository.api.ApiCalls
+import com.example.procatfirst.repository.api.StoreApiCalls
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.createNewOrder
 import getUserCart
@@ -122,7 +123,7 @@ class OrderingViewModel(): ViewModel() {
                     }
                 }
             }
-            ApiCalls.shared.getAllStoresApi(callback)
+            StoreApiCalls.shared.getAllStoresApi(callback)
         }
     }
 
