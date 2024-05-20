@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.managment.delivery
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.ClusterResult
@@ -38,7 +39,7 @@ class AdminDeliveryViewModel(): ViewModel()  {
                 if(status == "SUCCESS") {
                     _uiState.update { currentState ->
                         currentState.copy(
-                            deliveries = result
+                            deliveryPairs = result
                         )
                     }
                 }
@@ -53,7 +54,7 @@ class AdminDeliveryViewModel(): ViewModel()  {
                 if(status == "SUCCESS") {
                     _uiState.update { currentState ->
                         currentState.copy(
-                            deliveries = result
+                            deliveryPairs = result
                         )
                     }
                 }
@@ -84,5 +85,50 @@ class AdminDeliveryViewModel(): ViewModel()  {
                 isDeliveryDialogOpen = false
             )
         }
+    }
+
+    fun confirm() {
+        for (deliveryManId in 0 until uiState.value.deliveryPairs.size) {
+            for (deliveryId in 0 until uiState.value.deliveryPairs[deliveryManId].deliveries.size) {
+                //val a = uiState.value.deliveryPairs[deliveryManId].deliverymanId
+                val b = uiState.value.deliveryPairs[deliveryManId].deliveries[deliveryId].deliveryId
+                if (uiState.value.changedMap.containsKey(b)) {
+                    Log.d("CLUSTER_MAN_ID", b.toString() + " " + uiState.value.changedMap[b].toString())
+
+                    viewModelScope.launch {
+                        val callback = {status: String ->
+                            if(status == "SUCCESS") {
+                                loadDeliveriesToSort()
+                            }
+                        }
+                        if (uiState.value.changedMap[b] != null) {
+                            ApiCalls.shared.changeDeliveryWithDeliverymanApi(b,
+                                uiState.value.changedMap[b]!!, callback)
+                        }
+                    }
+                } else {
+                    Log.d("CLUSTER_MAN_ID", b.toString())
+                    viewModelScope.launch {
+                        val callback = {status: String ->
+                            if(status == "SUCCESS") {
+                                loadDeliveriesToSort()
+                            }
+                        }
+                        ApiCalls.shared.changeDeliveryApi(b, callback)
+                    }
+                }
+            }
+        }
+    }
+
+    fun changeDeliveryman(deliveryId: Int, newDeliverymanId: Int) {
+        val map = uiState.value.changedMap.toMutableMap()
+        map[deliveryId] = newDeliverymanId
+        _uiState.update { currentState ->
+            currentState.copy(
+                changedMap = map
+            )
+        }
+
     }
 }

@@ -555,6 +555,56 @@ class ApiCalls {
         })
     }
 
+    fun changeDeliveryApi(deliveryId: Int, callback: (String) -> Unit) {
+        val service = getUserService()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("deliveryId", deliveryId)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+        service.changeDelivery("Bearer " + UserDataCache.shared.getUserToken(), requestBody).enqueue(object : Callback<ResponseBody> {
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    callback("SUCCESS")
+                }
+            }
+        })
+    }
+
+
+    fun changeDeliveryWithDeliverymanApi(deliveryId: Int, deliverymanId: Int, callback: (String) -> Unit) {
+        val service = getUserService()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("deliveryId", deliveryId)
+        jsonObject.put("deliverymanId", deliverymanId)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+        service.changeDelivery("Bearer " + UserDataCache.shared.getUserToken(), requestBody).enqueue(object : Callback<ResponseBody> {
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    callback("SUCCESS")
+                }
+            }
+        })
+    }
+
     fun getAllDeliverymenApi(callback : (String, List<Deliveryman>) -> Unit) {
         val url = BACKEND_URL
         val service = getUserService()

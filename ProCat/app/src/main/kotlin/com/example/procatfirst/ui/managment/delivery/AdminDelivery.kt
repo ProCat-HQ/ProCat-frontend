@@ -3,7 +3,9 @@ package com.example.procatfirst.ui.managment.delivery
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,11 +17,18 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -51,14 +60,27 @@ fun AdminDelivery(
                 fontSize = 16.sp
             )
         }
+        OutlinedButton(
+            onClick = {adminDeliveryViewModel.confirm()},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text("Подтвердить")
+        }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.padding(16.dp),
         ) {
-            items(adminDeliveryUiState.deliveries) { deliveries ->
+            items(adminDeliveryUiState.deliveryPairs) { deliveries ->
                 DeliveryCard(
                     deliveries = deliveries,
-                    onLocationClick = { id -> adminDeliveryViewModel.getDelivery(id) }
+                    onLocationClick = { id -> adminDeliveryViewModel.getDelivery(id) },
+                    deliverymenIds = adminDeliveryUiState.deliveryPairs.map{ clusterResult -> clusterResult.deliverymanId },
+                    onDeliverymanChange = { deliveryId, newDeliverymanId ->
+                        adminDeliveryViewModel.changeDeliveryman(deliveryId, newDeliverymanId)
+                    },
+                    deliverymanId = deliveries.deliverymanId
                     )
             }
         }
@@ -76,7 +98,10 @@ fun AdminDelivery(
 @Composable
 fun DeliveryCard(
     deliveries: ClusterResult,
-    onLocationClick: (Int) -> Unit
+    onLocationClick: (Int) -> Unit,
+    deliverymenIds: List<Int>,
+    onDeliverymanChange: (Int, Int) -> Unit,
+    deliverymanId: Int,
 ) {
     Card(
         modifier = Modifier
@@ -88,14 +113,19 @@ fun DeliveryCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = deliveries.deliverymanId.toString(),
+                text = "Курьер: ${deliveries.deliverymanId}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
             deliveries.deliveries.forEach { delivery ->
                 DeliveryLocationCard(
                     deliveryLocation = delivery,
-                    onClick = { onLocationClick(delivery.deliveryId) }
+                    onClick = { onLocationClick(delivery.deliveryId) },
+                    deliverymenIds = deliverymenIds,
+                    onDeliverymanChange = { newDeliverymanId ->
+                        onDeliverymanChange(delivery.deliveryId, newDeliverymanId)
+                    },
+                    deliverymanId
                 )
             }
         }
@@ -106,8 +136,14 @@ fun DeliveryCard(
 @Composable
 fun DeliveryLocationCard(
     deliveryLocation: DeliveryLocation,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    deliverymenIds: List<Int>,
+    onDeliverymanChange: (Int) -> Unit,
+    deliverymanId: Int,
 ) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedDeliverymanId by remember { mutableStateOf(deliverymanId) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -131,18 +167,52 @@ fun DeliveryLocationCard(
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold
             )
-            Text(
-                text = "Latitude: ${deliveryLocation.latitude}",
-                style = MaterialTheme.typography.bodySmall
-            )
-            Text(
-                text = "Longitude: ${deliveryLocation.longitude}",
-                style = MaterialTheme.typography.bodySmall
-            )
-            Text(
-                text = "Delivery ID: ${deliveryLocation.deliveryId}",
-                style = MaterialTheme.typography.bodySmall
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column (
+
+                ){
+                    Text(
+                        text = "Selected ID: $selectedDeliverymanId",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        text = "Latitude: ${deliveryLocation.latitude}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        text = "Longitude: ${deliveryLocation.longitude}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        text = "Delivery ID: ${deliveryLocation.deliveryId}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Box {
+                    FilledTonalButton(onClick = { expanded = true }) {
+                        Text("Изменить")
+                    }
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        deliverymenIds.forEach { deliverymanId ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedDeliverymanId = deliverymanId
+                                    onDeliverymanChange(deliverymanId)
+                                    expanded = false
+                                },
+                                text = { Text(text = deliverymanId.toString()) }
+                            )
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

@@ -133,7 +133,7 @@ interface UserService {
     fun getAllDeliveriesToSort(@Header("Authorization") token: String?): Call<AllDeliveriesToSortResponse>
 
     @PATCH("/users/admin/change-delivery")
-    suspend fun changeDelivery(@Body requestBody: ChangeDeliveryRequest): Call<ResponseBody>
+    fun changeDelivery(@Header("Authorization") token: String?, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/cart")
     fun getItemsInCart(@Header("Authorization") token: String?): Call<CartResponse>
