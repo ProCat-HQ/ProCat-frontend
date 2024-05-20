@@ -765,10 +765,28 @@ class ApiCalls {
                     callback("SUCCESS")
                 }
             }
+        })
+    }
+
+    fun cancelOrderApi(id: Int, callback: (String) -> Unit) {
+        val service = getUserService()
+
+        service.cancelOrder("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<ResponseBody> {
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    callback("SUCCESS") }
+            }
 
         })
-
     }
+
 
 
 }

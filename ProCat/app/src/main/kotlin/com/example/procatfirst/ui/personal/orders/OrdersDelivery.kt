@@ -42,12 +42,13 @@ fun OrdersDeliveryScreen(
         )
 
         orders.forEach { order ->
-            orderItem(
+            OrderItem(
                 orderId = order.orderId,
                 status = order.status,
                 totalPrice = order.totalPrice,
                 rentalPeriod = order.rentalPeriod,
                 address = order.address,
+                onCancelOrder = { ordersViewModel.cancelOrder(order.orderId) }
             )
         }
 

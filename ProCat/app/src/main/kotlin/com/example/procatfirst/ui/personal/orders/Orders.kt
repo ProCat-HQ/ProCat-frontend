@@ -63,7 +63,7 @@ fun OrdersScreen(
         }
         else {
             ordersUiState.orders.forEach { order ->
-                orderItem(
+                OrderItem(
                     orderId = order.id,
                     status = order.status,
                     totalPrice = order.totalPrice,
@@ -72,6 +72,7 @@ fun OrdersScreen(
                     ).toString() + " - " + LocalDate.parse(order.rentalPeriodEnd.substringBefore('T')).format(
                         DateTimeFormatter.ofPattern("dd.MM.yyyy")).toString(),
                     address = order.address,
+                    onCancelOrder = { ordersViewModel.cancelOrder(order.id) }
                 )
             }
         }
@@ -79,12 +80,13 @@ fun OrdersScreen(
 }
 
 @Composable
-fun orderItem(
+fun OrderItem(
     orderId: Int,
     status: String,
     totalPrice: Int,
     rentalPeriod: String,
     address: String,
+    onCancelOrder: () -> Unit
 ){
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -140,6 +142,14 @@ fun orderItem(
                     Text(
                         text = address,
                     )
+                    TextButton(
+                        onClick = { onCancelOrder() },
+                    ) {
+                        Text(
+                            text = "Отменить заказ",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
                 }
 
             }
@@ -155,6 +165,7 @@ fun orderItem(
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
+
         }
     }
 }

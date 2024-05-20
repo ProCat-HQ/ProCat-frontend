@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.OrderDataProvider
+import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.getUserOrders
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,17 @@ class OrdersViewModel: ViewModel() {
             DataCoordinator.shared.getUserOrders() {
                 _uiState.value = OrdersUiState(it)
             }
+        }
+    }
+
+    fun cancelOrder(id: Int) {
+        viewModelScope.launch {
+            val callback = {status: String ->
+                if(status == "SUCCESS") {
+                    open()
+                }
+            }
+            ApiCalls.shared.cancelOrderApi(id, callback)
         }
     }
 

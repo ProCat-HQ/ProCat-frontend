@@ -156,8 +156,8 @@ interface UserService {
     @POST("/users/orders")
     fun createNewOrder(@Body requestBody: RequestBody, @Header("Authorization") token: String?): Call<NewOrderResponse>
 
-    @POST("/users/orders/cancel/{orderId}")
-    suspend fun setStatusOfOrder(@Query("orderId") orderId: Int): Call<ResponseBody>
+    @PATCH("/users/orders/cancel/{orderId}")
+    fun cancelOrder(@Header("Authorization") token: String?, @Path("orderId") orderId: Int): Call<ResponseBody>
 
     @PATCH("/users/orders/status/{orderId}")
     suspend fun changeStatusOfOrder(@Query("orderId") orderId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
