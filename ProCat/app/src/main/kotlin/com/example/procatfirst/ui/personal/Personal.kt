@@ -42,7 +42,8 @@ fun PersonalScreen(
     onToDeliveryClicked:() -> Unit,
     onToManagerClicked:() -> Unit,
     onToAdminDeliveryClicked:() -> Unit,
-    onToAllDeliverymenClicked: () -> Unit,
+    //onToAllDeliverymenClicked: () -> Unit,
+    onToEditingClicked: () -> Unit,
     personalViewModel: PersonalViewModel = viewModel()
 ) {
 
@@ -151,6 +152,7 @@ fun PersonalScreen(
                 )
             }
         }
+        /*
         if(userRole == "admin") {
             Button(
                 modifier = Modifier
@@ -160,6 +162,19 @@ fun PersonalScreen(
             ) {
                 Text(
                     text = stringResource(R.string.deliverymen),
+                    fontSize = 16.sp
+                )
+            }
+        } */
+        if(userRole == "admin") {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                onClick = { onToEditingClicked() }
+            ) {
+                Text(
+                    text = stringResource(R.string.editing),
                     fontSize = 16.sp
                 )
             }

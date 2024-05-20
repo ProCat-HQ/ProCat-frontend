@@ -69,6 +69,11 @@
     <string name="to">До:</string>
     <string name="order">Заказать</string>
 
+    <string name="editing">Редактирование</string>
+    <string name="stores">Магазины</string>
+
+
+
     <string name="order_confirmation">Подтверждение заказа</string>
 
     <string name="send_notification">Послать уведомление</string>
