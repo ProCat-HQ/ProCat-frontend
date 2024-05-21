@@ -28,14 +28,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.bundleOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -50,6 +48,7 @@ import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.managment.OrdersManagerScreen
 import com.example.procatfirst.ui.managment.delivery.AdminDelivery
 import com.example.procatfirst.ui.editing.deliverymen.Deliverymen
+import com.example.procatfirst.ui.managment.payments.PaymentsScreen
 import com.example.procatfirst.ui.ordering.OrderConfirmation
 import com.example.procatfirst.ui.ordering.OrderingScreen
 import com.example.procatfirst.ui.personal.PersonalScreen
@@ -84,7 +83,8 @@ enum class ProCatScreen(@StringRes val title: Int) {
     AdminDelivery(title = R.string.delivery),
     AllDeliverymen(title = R.string.deliverymen),
     Stores(title = R.string.stores),
-    Editing(title = R.string.editing)
+    Editing(title = R.string.editing),
+    Payments(title = R.string.payments)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -169,6 +169,15 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = USER_ROLE_NAME
 )
 
+fun getProCatScreenFromRoute(route: String?): ProCatScreen {
+    return when {
+        route == null -> ProCatScreen.Start
+        route.startsWith(ProCatScreen.Payments.name) -> ProCatScreen.Payments
+        else -> ProCatScreen.valueOf(route)
+    }
+}
+
+
 
 @Composable
 fun ProCatApp (
@@ -176,9 +185,9 @@ fun ProCatApp (
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = ProCatScreen.valueOf(
-        backStackEntry?.destination?.route ?: ProCatScreen.Start.name
-    )
+    //val currentScreen = ProCatScreen.valueOf(backStackEntry?.destination?.route ?: ProCatScreen.Start.name)
+    val currentScreen = getProCatScreenFromRoute(backStackEntry?.destination?.route)
+
 
     Scaffold(
         topBar = {
@@ -325,7 +334,8 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Manager.name) {
                 OrdersManagerScreen(
-                    controller
+                    controller,
+                    navController = navController
                 )
             }
             composable(route = ProCatScreen.Notifications.name) {
@@ -381,6 +391,12 @@ fun ProCatApp (
             composable(route = ProCatScreen.Stores.name) {
                 StoresScreen(
 
+                )
+            }
+            composable(route = "${ProCatScreen.Payments.name}/{orderId}") { backStackEntry ->
+                val orderId = backStackEntry.arguments?.getString("orderId")?.toInt()
+                PaymentsScreen(
+                    orderId = orderId ?: -1
                 )
             }
         }

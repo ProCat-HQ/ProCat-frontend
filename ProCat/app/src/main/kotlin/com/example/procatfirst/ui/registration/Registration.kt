@@ -265,7 +265,10 @@ fun inputField(
                 unfocusedContainerColor = colorScheme.surface,
                 disabledContainerColor = colorScheme.surface,
             ),
-            onValueChange = { onUserPhoneNumberChanged(it) },
+            onValueChange = { newValue ->
+                val newPhoneNumber = if (newValue.startsWith("+")) newValue else "+$newValue"
+                onUserPhoneNumberChanged(newPhoneNumber)
+            },
             label = {
                 if (isPhoneNumberWrong) {
                     Text(stringResource(R.string.wrong_phone_number))
@@ -301,8 +304,10 @@ fun inputField(
                 }
             },
             isError = isPasswordWrong,
+            visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
             ),
             keyboardActions = KeyboardActions(
                 onDone = { onKeyboardDone() }

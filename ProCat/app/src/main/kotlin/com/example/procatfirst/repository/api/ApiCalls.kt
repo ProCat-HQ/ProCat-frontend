@@ -22,6 +22,8 @@ import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrderSmall
 import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
+import com.example.procatfirst.data.Payment
+import com.example.procatfirst.data.PaymentResponse
 import com.example.procatfirst.data.RegistrationResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
@@ -909,6 +911,50 @@ class ApiCalls {
         })
     }
 
+    fun getInfoAboutPaymentsApi(id: Int, callback: (String, List<Payment>) -> Unit) {
+        val service = getUserService()
+
+        service.getInfoAboutPayments("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<PaymentResponse> {
+
+            override fun onFailure(call: Call<PaymentResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<PaymentResponse>, response: Response<PaymentResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    callback("SUCCESS", it.payload.payments) }
+            }
+
+        })
+    }
+
+    fun updatePaymentInfoApi(id: Int, paid: Int, method: String, callback: (String) -> Unit) {
+        val service = getUserService()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("paid", paid)
+        jsonObject.put("method", method)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+
+        service.updatePaymentInfo("Bearer " + UserDataCache.shared.getUserToken(), id, requestBody).enqueue(object : Callback<ResponseBody> {
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    callback("SUCCESS") }
+            }
+
+        })
+    }
 
 
 }
