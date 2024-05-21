@@ -15,6 +15,8 @@ import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ClusterResponse
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryResponse
+import com.example.procatfirst.data.ItemFullPayload
+import com.example.procatfirst.data.ItemFullResponse
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.NewOrderResponse
 import com.example.procatfirst.data.OrderFull
@@ -55,6 +57,7 @@ class ApiCalls {
     }
 
     private var userService: UserService? = null
+    private var itemsService: ItemsService? = null
 
     private fun getUserService(): UserService {
         if (userService == null) {
@@ -67,6 +70,17 @@ class ApiCalls {
         return userService!!
     }
 
+    private fun getItemsService(): ItemsService {
+        if (itemsService == null) {
+            itemsService = Retrofit.Builder()
+                .baseUrl(BACKEND_URL)
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build()
+                .create(ItemsService::class.java)
+        }
+        return itemsService!!
+    }
+
     fun getImageApi(img: String, callback : (Bitmap) -> Unit) {
 
         val url = URL("$BACKEND_URL/assets/$img")
@@ -77,7 +91,7 @@ class ApiCalls {
 
     fun getItemsApi(callback : () -> Unit) {
 
-        val service = getUserService()
+        val service = getItemsService()
 
         service.getItems().enqueue(object : Callback<ItemResponse> {
 
@@ -101,6 +115,38 @@ class ApiCalls {
 
             }
 
+        })
+    }
+
+    fun getItemApi(id: Int, callback : (ItemFullPayload?) -> Unit) {
+
+        val service = getItemsService()
+
+        service.getItemWithInfo(id).enqueue(object : Callback<ItemFullResponse> {
+
+            override fun onFailure(call: Call<ItemFullResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+                callback(null)
+            }
+
+            override fun onResponse(call: Call<ItemFullResponse>, response: Response<ItemFullResponse>) {
+                Log.i("RESPONSE ROW", response.raw().toString())
+                if (response.code() == 200) {
+                    response.let {
+                        Log.i("RESPONSE", it.toString())
+                        callback(it.body()?.payload)
+                    }
+                    response.errorBody()?.string().let {it1 ->
+                        if (it1 != null) {
+                            Log.e("API", it1)
+                        }
+                    }
+                }
+                else {
+                    callback(null)
+                }
+            }
         })
     }
 

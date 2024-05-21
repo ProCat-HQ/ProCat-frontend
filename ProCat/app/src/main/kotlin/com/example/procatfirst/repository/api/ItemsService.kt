@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.data.ItemFullPayload
+import com.example.procatfirst.data.ItemFullResponse
 import com.example.procatfirst.data.ItemResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -11,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.io.InputStream
 
@@ -22,8 +24,11 @@ interface ItemsService {
     @GET("/items") //query params
     suspend fun getAllItems(): Call<ItemResponse>
 
+    @GET("/items")
+    fun getItems(): Call<ItemResponse>
+
     @GET("/items/{itemId}")
-    suspend fun getItemWithInfo(@Query("itemId") itemId: Int): Call<ItemFullPayload>
+    fun getItemWithInfo(@Path("itemId") itemId: Int): Call<ItemFullResponse>
 
     @DELETE("/items/{itemId}")
     suspend fun deleteItem(@Query("itemId") itemId: Int): Call<ResponseBody>

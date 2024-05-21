@@ -1,18 +1,16 @@
 package com.example.procatfirst.repository.cache
 
 import android.graphics.Bitmap
-import com.example.procatfirst.R
 import com.example.procatfirst.data.Item
+import com.example.procatfirst.data.ItemFullPayload
 import com.example.procatfirst.data.Tool
-import com.example.procatfirst.intents.NotificationCoordinator
-import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.intents.sendIntent
 
 class CatalogCache {
 
     private var toolsStorage: MutableList<Tool> = mutableListOf()
+    private var currentId: Int = -1
     private var images: MutableMap<String, Bitmap?> = HashMap()
-    private var currentTool: Tool = Tool(1, "?", "1", 1, false, 1, "hammer.jpg")
+    private var currentTool: ItemFullPayload? = null
 
     companion object {
         val shared = CatalogCache()
@@ -42,12 +40,20 @@ class CatalogCache {
         return toolsStorage
     }
 
-    fun getCurrent(): Tool {
+    fun getCurrent(): ItemFullPayload? {
         return currentTool
     }
 
-    fun setCurrent(tool : Tool){
+    fun setCurrent(tool : ItemFullPayload){
         currentTool = tool
+    }
+
+    fun getCurrentId(): Int {
+        return currentId
+    }
+
+    fun setCurrentID(id: Int){
+        currentId = id
     }
 
     fun getImage(name: String) : Bitmap? {
