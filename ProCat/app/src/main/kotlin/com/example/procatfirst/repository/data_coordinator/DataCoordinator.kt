@@ -50,9 +50,9 @@ class DataCoordinator {
         if (manual || callDown == null || (LocalDateTime.now().second - callDown!!.second > 3) )  {
             val refresh = DataCoordinatorOLD.shared.getRefreshTokenDataStore(context)
             Log.d("REFRESH", refresh)
+            callDown = LocalDateTime.now()
             if (refresh != "") {
                 ApiCalls.shared.refresh(refresh, fingerprint, callback)
-                callDown = LocalDateTime.now()
             }
             else {
                 callback("No refresh", "", "")

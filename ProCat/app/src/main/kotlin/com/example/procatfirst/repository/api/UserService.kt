@@ -59,7 +59,7 @@ interface UserService {
     //suspend fun getSimpleUser(@Query("userId") userId: Int): Call<ResponseBody>
 
     @DELETE("/users/{userId}")
-    suspend fun deleteUser(@Query("userId") userId: Int)
+    fun deleteUser(@Path("userId") userId: Int, @Header("Authorization") token: String?): Call<ResponseBody>
 
     @POST("/users/sign-up")
     fun register(@Body requestBody: RequestBody): Call<RegistrationResponse>

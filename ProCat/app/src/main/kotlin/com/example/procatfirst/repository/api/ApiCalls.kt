@@ -865,6 +865,31 @@ class ApiCalls {
         })
     }
 
+    fun deleteUserApi(id: Int, callback: (String) -> Unit) {
+
+        val service = getUserService()
+
+        service.deleteUser(id, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Log.i("RESPONSE", response.raw().toString())
+                if(response.code() == 200) {
+                    response.body()?.let {
+                        callback("SUCCESS")
+                    }
+                }
+                else {
+                    callback("FAIL")
+                }
+            }
+        })
+    }
+
     fun cancelOrderApi(id: Int, callback: (String) -> Unit) {
         val service = getUserService()
 

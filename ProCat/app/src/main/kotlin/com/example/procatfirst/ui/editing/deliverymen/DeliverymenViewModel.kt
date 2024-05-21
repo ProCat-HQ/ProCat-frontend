@@ -86,5 +86,16 @@ class DeliverymenViewModel(): ViewModel()  {
         }
     }
 
+    fun deleteUser(id: Int) {
+        viewModelScope.launch {
+            ApiCalls.shared.deleteUserApi(id) {
+                if(it == "SUCCESS") {
+                    loadDeliverymen()
+                    loadUsers()
+                }
+            }
+        }
+    }
+
 
 }

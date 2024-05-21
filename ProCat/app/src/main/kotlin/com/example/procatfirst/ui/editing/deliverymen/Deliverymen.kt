@@ -1,22 +1,18 @@
 package com.example.procatfirst.ui.editing.deliverymen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -44,6 +40,7 @@ fun Deliverymen(
     val deliverymenUiState by deliverymenViewModel.uiState.collectAsState()
     var showUsers by remember { mutableStateOf(false) }
     var showCourierDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var selectedUser by remember { mutableStateOf<User?>(null) }
 
 
@@ -53,14 +50,6 @@ fun Deliverymen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        /*
-        item {
-            Text(
-                text = "Доставщики",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-        } */
 
         items(deliverymenUiState.deliverymen) { deliveryMan ->
             DeliveryManCard(
@@ -96,6 +85,10 @@ fun Deliverymen(
                     onMakeCourierClick = {
                         selectedUser = user
                         showCourierDialog = true
+                    },
+                    onDeleteClick = {
+                        selectedUser = user
+                        showDeleteDialog = true
                     }
                 )
             }
@@ -109,6 +102,16 @@ fun Deliverymen(
             onConfirm = { carCapacity, workingHoursStart, workingHoursEnd, carId ->
                 deliverymenViewModel.makeCourier(selectedUser!!, carCapacity, workingHoursStart, workingHoursEnd, carId)
                 showCourierDialog = false
+            }
+        )
+    }
+    if (showDeleteDialog && selectedUser != null) {
+        DeleteUserDialog(
+            user = selectedUser!!,
+            onDismiss = { showDeleteDialog = false },
+            onConfirm = {
+                deliverymenViewModel.deleteUser(selectedUser!!.id)
+                showDeleteDialog = false
             }
         )
     }
@@ -170,7 +173,8 @@ fun DeliveryManCard(
 @Composable
 fun UserNameCard(
     user: User,
-    onMakeCourierClick: () -> Unit
+    onMakeCourierClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier
@@ -187,13 +191,18 @@ fun UserNameCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            Box(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.BottomEnd
             ) {
                 OutlinedButton(
+                    onClick = onDeleteClick,
+                    Modifier.padding(5.dp),
+                    colors = ButtonColors(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.onErrorContainer),
+                ) {
+                    Text("Удалить")
+                }
+                OutlinedButton(
                     onClick = onMakeCourierClick,
-                    modifier = Modifier.padding(top = 8.dp)
                 ) {
                     Text("Сделать курьером")
                 }
@@ -249,6 +258,33 @@ fun MakeCourierDialog(
             Button(
                 onClick = {
                     onConfirm(carCapacity, workingHoursStart, workingHoursEnd, carId)
+                }
+            ) {
+                Text("Подтвердить")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Отмена")
+            }
+        }
+    )
+}
+
+@Composable
+fun DeleteUserDialog(
+    user: User,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Удалить пользователя?: ${user.fullName}") },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirm()
                 }
             ) {
                 Text("Подтвердить")

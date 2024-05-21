@@ -19,7 +19,7 @@ import com.example.procatfirst.R
 @Composable
 fun EditingScreen(
     onToStoresClicked: () -> Unit,
-    onToAllDeliverymenClicked: () -> Unit
+    onToAllDeliverymenClicked: () -> Unit,
 ){
     Column(
         modifier = Modifier
@@ -50,5 +50,6 @@ fun EditingScreen(
                 fontSize = 16.sp
             )
         }
+
     }
 }
