@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.api
 
 import android.util.Log
+import com.example.procatfirst.data.NewStoreResponse
 import com.example.procatfirst.data.Store
 import com.example.procatfirst.data.StoreResponse
 import com.example.procatfirst.repository.cache.UserDataCache
@@ -77,6 +78,47 @@ class StoreApiCalls {
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    response.body()?.let {
+                        callback("SUCCESS")
+                    }
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}")
+                }
+            }
+        })
+    }
+
+    fun createStoreApi(name: String, address: String, workingHoursStart: String, workingHoursEnd: String, callback: (String) -> Unit) {
+        val url = BACKEND_URL
+        val service = Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(StoresService::class.java)
+
+        val jsonObject = JSONObject()
+        jsonObject.put("name", name)
+        jsonObject.put("address", address)
+        jsonObject.put("workingHoursStart", workingHoursStart)
+        jsonObject.put("workingHoursEnd", workingHoursEnd)
+
+        Log.d("WHS", workingHoursStart)
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+        service.createNewStore("Bearer " + UserDataCache.shared.getUserToken(), requestBody).enqueue(object : Callback<NewStoreResponse> {
+
+            override fun onFailure(call: Call<NewStoreResponse>, t: Throwable) {
+                t.printStackTrace()
+                //Log.i("API", t.toString())
+                Log.i("API_ERROR", call.toString())
+
+            }
+
+            override fun onResponse(call: Call<NewStoreResponse>, response: Response<NewStoreResponse>) {
                 if (response.isSuccessful) {
                     Log.i("RESPONSE", response.raw().toString())
                     response.body()?.let {

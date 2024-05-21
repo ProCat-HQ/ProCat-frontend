@@ -24,7 +24,9 @@ import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
 import com.example.procatfirst.data.Payment
 import com.example.procatfirst.data.PaymentResponse
+import com.example.procatfirst.data.Point
 import com.example.procatfirst.data.RegistrationResponse
+import com.example.procatfirst.data.RouteResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
@@ -37,6 +39,7 @@ import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import okhttp3.Route
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -819,6 +822,31 @@ class ApiCalls {
     }
     */
 
+    fun createRoute(callback: (String, List<Point>) -> Unit) {
+        val service = getUserService()
+
+        service.createRoute("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<RouteResponse> {
+
+            override fun onFailure(call: Call<RouteResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<RouteResponse>, response: Response<RouteResponse>) {
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    response.body()?.let {
+                        callback("SUCCESS", it.payload.points)
+                    }
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}", emptyList())
+                }
+            }
+
+        })
+    }
+
     fun createDeliveryManFromUserApi(userId: Int, carCapacity: String, workingHoursStart: String, workingHoursEnd: String, carId: String, callback: (String) -> Unit) {
 
         val service = getUserService()
@@ -923,8 +951,8 @@ class ApiCalls {
 
             override fun onResponse(call: Call<PaymentResponse>, response: Response<PaymentResponse>) {
                 Log.i("RESPONSE", response.raw().toString())
-                response.body()?.let {
-                    callback("SUCCESS", it.payload.payments) }
+                val payments = response.body()?.payload?.payments ?: emptyList()
+                callback("SUCCESS", payments)
             }
 
         })

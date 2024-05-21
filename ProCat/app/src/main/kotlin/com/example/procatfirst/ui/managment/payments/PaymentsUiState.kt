@@ -4,5 +4,5 @@ import com.example.procatfirst.data.Payment
 
 
 data class PaymentsUiState (
-    var payments: List<Payment>
+    var payments: List<Payment> = emptyList()
 )

@@ -23,3 +23,13 @@ data class StoreRequest(
     val workingHoursStart: String,
     val workingHoursEnd: String
 )
+
+data class NewStoreResponse(
+    val status: Int,
+    val message: String,
+    val payload: IdPayload
+)
+
+data class IdPayload(
+    val id: Int
+)

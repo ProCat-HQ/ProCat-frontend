@@ -43,8 +43,18 @@ class StoresViewModel(): ViewModel() {
                     loadStores()
                 }
             }
-            //ApiCalls.shared.updateStoreApi(store.id, store.name, store.address, store.workingHoursStart, store.workingHoursEnd, callback)
             StoreApiCalls.shared.updateStoreApi(store.id, store.name, store.address, store.workingHoursStart, store.workingHoursEnd, callback)
+        }
+    }
+
+    fun createStore(store: Store) {
+        viewModelScope.launch {
+            val callback = {status: String ->
+                if(status == "SUCCESS") {
+                    loadStores()
+                }
+            }
+            StoreApiCalls.shared.createStoreApi(store.name, store.address, store.workingHoursStart, store.workingHoursEnd, callback)
         }
     }
 

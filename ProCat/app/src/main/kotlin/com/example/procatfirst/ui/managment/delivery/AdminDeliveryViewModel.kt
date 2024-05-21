@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.ClusterResult
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryLocation
+import com.example.procatfirst.data.Deliveryman
+import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.repository.api.ApiCalls
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -130,5 +132,18 @@ class AdminDeliveryViewModel(): ViewModel()  {
             )
         }
 
+    }
+
+    fun getDeliverymanName(deliverymanId: Int): String {
+        var name = ""
+        viewModelScope.launch {
+            val callback = {status: String, result: UserDataResponse ->
+                if(status == "SUCCESS") {
+                    name = result.fullName
+                }
+            }
+            ApiCalls.shared.getUserDataApi(deliverymanId, callback)
+        }
+        return name
     }
 }

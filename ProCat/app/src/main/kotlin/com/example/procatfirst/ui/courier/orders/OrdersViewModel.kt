@@ -9,6 +9,7 @@ import com.example.procatfirst.data.Notification
 import com.example.procatfirst.data.NotificationDataProvider
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.OrderDataProvider
+import com.example.procatfirst.data.Point
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
@@ -88,6 +89,21 @@ class CourierOrdersViewModel: ViewModel() {
 
     //val orders: MutableStateFlow<List<Order>> = MutableStateFlow(
     //       DataCoordinator.shared.getAllOrders())
+
+    fun createRoute() {
+        viewModelScope.launch {
+            val callback = {status: String, result: List<Point> ->
+                if(status == "SUCCESS" && result != null) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            points = result
+                        )
+                    }
+                }
+            }
+            ApiCalls.shared.createRoute(callback)
+        }
+    }
 
 
 }

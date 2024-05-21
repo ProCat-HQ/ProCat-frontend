@@ -29,6 +29,7 @@ import com.example.procatfirst.data.PaymentPayload
 import com.example.procatfirst.data.PaymentResponse
 import com.example.procatfirst.data.RegistrationResponse
 import com.example.procatfirst.data.RoutePayload
+import com.example.procatfirst.data.RouteResponse
 import com.example.procatfirst.data.SimpleDeliveryman
 import com.example.procatfirst.data.SubscriptionResponse
 import com.example.procatfirst.data.User
@@ -121,11 +122,10 @@ interface UserService {
 
     //TODO
     @PATCH("/users/deliverymen/deliveries/{deliveryId}")
-    suspend fun changeStatusForDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int, requestBody: RequestBody): Call<ResponseBody>
-
+    fun changeStatusForDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int, requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/deliverymen/deliveries/create-route")
-    suspend fun createRouteFromDeliveryman(@Body requestBody: RequestBody): Call<RoutePayload>
+    fun createRoute(@Header("Authorization") token: String?): Call<RouteResponse>
 
     @POST("/users/admin/cluster")
     fun makeCluster(@Header("Authorization") token: String?): Call<ClusterResponse>

@@ -80,7 +80,8 @@ fun AdminDelivery(
                     onDeliverymanChange = { deliveryId, newDeliverymanId ->
                         adminDeliveryViewModel.changeDeliveryman(deliveryId, newDeliverymanId)
                     },
-                    deliverymanId = deliveries.deliverymanId
+                    deliverymanId = deliveries.deliverymanId,
+                    deliverymanName = adminDeliveryViewModel.getDeliverymanName(deliveries.deliverymanId)
                     )
             }
         }
@@ -97,6 +98,7 @@ fun AdminDelivery(
 
 @Composable
 fun DeliveryCard(
+    deliverymanName: String,
     deliveries: ClusterResult,
     onLocationClick: (Int) -> Unit,
     deliverymenIds: List<Int>,
@@ -113,7 +115,7 @@ fun DeliveryCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Курьер: ${deliveries.deliverymanId}",
+                text = "Курьер: ${deliveries.deliverymanId} ${deliverymanName}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )

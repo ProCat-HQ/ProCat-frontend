@@ -21,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -84,6 +85,14 @@ fun CourierOrdersScreen(
                 },
                 deliveriesUiState
                 )
+        }
+        OutlinedButton(
+            onClick = { courierOrdersViewModel.createRoute() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text("Создать маршрут")
         }
 
         Button(

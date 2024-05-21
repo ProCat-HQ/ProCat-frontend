@@ -40,6 +40,7 @@ fun StoresScreen(
 ) {
     val storesUiState by storesViewModel.uiState.collectAsState()
     val isEditing = remember { mutableStateOf(false) }
+    val isCreating = remember { mutableStateOf(false) }
     val selectedStore = remember { mutableStateOf<Store?>(null) }
 
     LazyColumn(
@@ -61,7 +62,7 @@ fun StoresScreen(
         }
         item {
             Button(
-                onClick = {},
+                onClick = { isCreating.value = true },
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .fillMaxWidth()
@@ -80,6 +81,18 @@ fun StoresScreen(
             },
             onCancel = {
                 isEditing.value = false
+            }
+        )
+    }
+    if (isCreating.value) {
+        EditStoreDialog(
+            store = Store(0, "", "", "", "", "", ""),
+            onSave = { store ->
+                storesViewModel.createStore(store)
+                isCreating.value = false
+            },
+            onCancel = {
+                isCreating.value = false
             }
         )
     }

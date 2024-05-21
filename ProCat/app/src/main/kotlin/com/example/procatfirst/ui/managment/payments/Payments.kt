@@ -57,7 +57,7 @@ fun PaymentsScreen(
             style = MaterialTheme.typography.titleLarge,
         )
         Button(
-            onClick = { paymentsViewModel.loadFakeData(orderId) },
+            onClick = { paymentsViewModel.loadPayments(orderId) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp, bottom = 16.dp)

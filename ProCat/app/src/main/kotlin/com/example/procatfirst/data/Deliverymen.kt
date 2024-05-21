@@ -60,13 +60,20 @@ data class DeliveryOrder(
 )
 
 // ---------------------------
+
+data class RouteResponse(
+    val status: Int,
+    val message: String,
+    val payload: RoutePayload
+)
 data class RoutePayload(
     val points: List<Point>
 )
 
 data class Point(
-    val lat: Double,
-    val lon: Double
+    val orderId: Int,
+    val lat: String,
+    val lon: String
 )
 
 //------------------------------

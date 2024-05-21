@@ -1,5 +1,6 @@
 package com.example.procatfirst.repository.api
 
+import com.example.procatfirst.data.NewStoreResponse
 import com.example.procatfirst.data.StoreRequest
 import com.example.procatfirst.data.StoreResponse
 import okhttp3.RequestBody
@@ -20,7 +21,7 @@ interface StoresService {
     fun getAllStores(): Call<StoreResponse>
 
     @POST("/stores")
-    suspend fun createNewStore(@Body requestBody: StoreRequest)
+    fun createNewStore(@Header("Authorization") token: String?, @Body requestBody: RequestBody): Call<NewStoreResponse>
 
     @DELETE("/stores/{storeId}")
     suspend fun deleteStore(@Query("storeId") storeId: Int): Call<ResponseBody>

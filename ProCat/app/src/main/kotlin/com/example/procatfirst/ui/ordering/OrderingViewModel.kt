@@ -25,7 +25,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.Calendar
+import java.util.Locale
 
 class OrderingViewModel(): ViewModel() {
     private val _uiState = MutableStateFlow(OrderingUiState())
@@ -42,6 +45,7 @@ class OrderingViewModel(): ViewModel() {
     init{
         open()
         getStoresAddresses()
+        _uiState.value = _uiState.value.copy(selectedDate = getTomorrowDate())
     }
 
     private fun open(){
@@ -50,6 +54,13 @@ class OrderingViewModel(): ViewModel() {
                 _uiState.value = OrderingUiState(tools = DataCoordinator.shared.getUserCart().values.toList())
             }
         }
+    }
+
+    private fun getTomorrowDate(): String {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, 1)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(calendar.time)
     }
 
     fun updateSelectedPeriod(selectedPeriod: Int) {
@@ -62,10 +73,38 @@ class OrderingViewModel(): ViewModel() {
 
     fun updateSelectedTimeFrom(selectedTimeFromHour: Int, selectedTimeFromMinute: Int) {
         _uiState.value = _uiState.value.copy(selectedTimeFromHour = selectedTimeFromHour, selectedTimeFromMinute = selectedTimeFromMinute)
+        validateEndTime()
+
     }
 
     fun updateSelectedTimeTo(selectedTimeToHour: Int, selectedTimeToMinute: Int) {
-        _uiState.value = _uiState.value.copy(selectedTimeToHour = selectedTimeToHour, selectedTimeToMinute = selectedTimeToMinute)
+        if (isValidEndTime(selectedTimeToHour, selectedTimeToMinute)) {
+            _uiState.value = _uiState.value.copy(
+                selectedTimeToHour = selectedTimeToHour,
+                selectedTimeToMinute = selectedTimeToMinute
+            )
+        }
+    }
+
+    private fun isValidEndTime(endHour: Int, endMinute: Int): Boolean {
+        val startMinutes = _uiState.value.selectedTimeFromHour * 60 + _uiState.value.selectedTimeFromMinute
+        val endMinutes = endHour * 60 + endMinute
+        return (endMinutes - startMinutes) >= 120
+    }
+
+    private fun validateEndTime() {
+        val startMinutes = _uiState.value.selectedTimeFromHour * 60 + _uiState.value.selectedTimeFromMinute
+        val endMinutes = _uiState.value.selectedTimeToHour * 60 + _uiState.value.selectedTimeToMinute
+        if ((endMinutes - startMinutes) < 120) {
+            // Adjust end time to be at least two hours after start time
+            val newEndTimeMinutes = startMinutes + 120
+            _uiState.update { currentState ->
+                currentState.copy(
+                    selectedTimeToHour = newEndTimeMinutes / 60,
+                    selectedTimeToMinute = newEndTimeMinutes % 60
+                )
+            }
+        }
     }
 
     private fun updateSelectedAddress(address: String) {
