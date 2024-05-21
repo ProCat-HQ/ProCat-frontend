@@ -1,6 +1,7 @@
 package com.example.procatfirst.repository.cache
 
 import com.example.procatfirst.data.OrderFull
+import com.example.procatfirst.data.OrderSmall
 
 class UserOrdersCache {
 
@@ -10,6 +11,7 @@ class UserOrdersCache {
     }
 
     private var orders : MutableMap<Int, OrderFull> = HashMap()
+    private var orderResponse: OrderSmall? = null
 
     fun getOrders() : List<OrderFull> {
         return orders.values.toList()
@@ -28,6 +30,14 @@ class UserOrdersCache {
 
     fun changeStatus(id : Int, status : String) {
         orders[id]?.status = status
+    }
+
+    fun getOrderResponse() : OrderSmall? {
+        return orderResponse
+    }
+
+    fun setOrderResponse(order: OrderSmall?) {
+        orderResponse = order
     }
 
 }

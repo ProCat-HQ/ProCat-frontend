@@ -5,16 +5,14 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import com.example.procatfirst.data.AllDeliveriesForDeliverymanResponse
 import com.example.procatfirst.data.AllDeliveriesToSortResponse
-import com.example.procatfirst.data.ClusterPayload
-import com.example.procatfirst.data.ClusterResult
-import com.example.procatfirst.data.Deliveryman
-import com.example.procatfirst.data.DeliverymenPayload
-import com.example.procatfirst.data.DeliverymenResponse
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
 import com.example.procatfirst.data.ClusterResponse
+import com.example.procatfirst.data.ClusterResult
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryResponse
+import com.example.procatfirst.data.Deliveryman
+import com.example.procatfirst.data.DeliverymenResponse
 import com.example.procatfirst.data.ItemFullPayload
 import com.example.procatfirst.data.ItemFullResponse
 import com.example.procatfirst.data.ItemResponse
@@ -25,8 +23,6 @@ import com.example.procatfirst.data.OrderSmall
 import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
 import com.example.procatfirst.data.RegistrationResponse
-import com.example.procatfirst.data.Store
-import com.example.procatfirst.data.StoreResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
@@ -46,7 +42,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.dublgis.dgismobile.mapsdk.LonLat
-import java.io.InputStream
 import java.net.URL
 
 class ApiCalls {

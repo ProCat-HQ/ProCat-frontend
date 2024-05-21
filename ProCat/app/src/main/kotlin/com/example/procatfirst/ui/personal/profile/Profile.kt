@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.personal.profile
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,6 +49,7 @@ import com.example.procatfirst.ui.theme.md_theme_light_tertiary
 @Composable
 fun ProfileScreen(
     profileViewModel: ProfileViewModel = viewModel(),
+    context: Context? = null,
     //modifier: Modifier = Modifier
 ) {
     var isChangePasswordDialogVisible by remember { mutableStateOf(false) }
@@ -99,7 +101,7 @@ fun ProfileScreen(
             userInput = profileViewModel.userInputIdentificationNumber,
             onUserInputChanged = { profileViewModel.updateUserIdentificationNumber(it) },
             onKeyboardDone = { profileViewModel.saveUserIdentificationNumber() },
-            saveChanges = { profileViewModel.fullSaveUserIdentificationNumber(it) },
+            saveChanges = { profileViewModel.fullSaveUserIdentificationNumber(it, context = context!!) },
             profileViewModel = profileViewModel
         )
         if (profileViewModel.uiState.value.isConfirmed) {
@@ -159,7 +161,6 @@ fun ProfileScreen(
 fun MutableField(
     title: String = "",
     data: String = "",
-
     userInput: String,
     onUserInputChanged: (String) -> Unit,
     onKeyboardDone: () -> Unit,

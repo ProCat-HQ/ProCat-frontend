@@ -1,6 +1,8 @@
 package com.example.procatfirst.ui.personal.profile
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -109,14 +111,15 @@ class ProfileViewModel: ViewModel() {
         updateUserIdentificationNumber(userInputIdentificationNumber)
     }
 
-    fun fullSaveUserIdentificationNumber(password: String) {
+    fun fullSaveUserIdentificationNumber(password: String, context: Context) {
         viewModelScope.launch {
             ApiCalls.shared.changeIin(userInputIdentificationNumber, password) {
                 if (it == "SUCCESS") {
                     getUserProfileInfo()
+                    Toast.makeText(context, "Успех", Toast.LENGTH_SHORT).show()
                 }
                 else {
-                    errorDialog("Ваш ИИН некорректен или не соответствует указанному ФИО")
+                    errorDialog("Ваш ИИН некорректен или не соответствует указанному ФИО $it")
                 }
             }
         }
