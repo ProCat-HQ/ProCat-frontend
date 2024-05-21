@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.data.Store
-import com.example.procatfirst.ui.managment.deliverymen.DeliveryManCard
+import com.example.procatfirst.ui.editing.deliverymen.DeliveryManCard
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 

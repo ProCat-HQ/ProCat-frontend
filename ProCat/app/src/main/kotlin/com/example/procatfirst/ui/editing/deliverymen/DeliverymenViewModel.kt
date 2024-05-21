@@ -1,4 +1,4 @@
-package com.example.procatfirst.ui.managment.deliverymen
+package com.example.procatfirst.ui.editing.deliverymen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

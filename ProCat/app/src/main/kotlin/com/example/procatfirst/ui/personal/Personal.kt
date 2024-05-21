@@ -112,7 +112,7 @@ fun PersonalScreen(
         }
 
 
-        if(userRole == "deliveryman" || userRole == "admin") {
+        if(userRole == "deliveryman" /*|| userRole == "admin" */) {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -134,7 +134,7 @@ fun PersonalScreen(
                 onClick = { onToManagerClicked() }
             ) {
                 Text(
-                    text = "Я менеджер",
+                    text = "Все заказы",
                     fontSize = 16.sp
                 )
             }
@@ -152,20 +152,6 @@ fun PersonalScreen(
                 )
             }
         }
-        /*
-        if(userRole == "admin") {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                onClick = { onToAllDeliverymenClicked() }
-            ) {
-                Text(
-                    text = stringResource(R.string.deliverymen),
-                    fontSize = 16.sp
-                )
-            }
-        } */
         if(userRole == "admin") {
             Button(
                 modifier = Modifier

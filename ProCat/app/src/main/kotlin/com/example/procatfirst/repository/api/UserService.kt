@@ -145,7 +145,7 @@ interface UserService {
     fun deleteItemFromCart(@Path("itemId") id : Int, @Query("count") count : Int, @Header("Authorization") token: String?): Call<ResponseBody>
 
     @GET("/users/orders")
-    suspend fun getAllOrders(): Call<OrdersPayload>
+    fun getAllOrders(@Header("Authorization") token: String?): Call<OrdersResponse>
 
     @GET("/users/orders")
     fun getUserOrders(@Query("userId") id : Int, @Header("Authorization") token: String?): Call<OrdersResponse>
@@ -160,7 +160,7 @@ interface UserService {
     fun cancelOrder(@Header("Authorization") token: String?, @Path("orderId") orderId: Int): Call<ResponseBody>
 
     @PATCH("/users/orders/status/{orderId}")
-    suspend fun changeStatusOfOrder(@Query("orderId") orderId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
+    fun changeStatusOfOrder(@Header("Authorization") token: String?, @Path("orderId") orderId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/orders/payment/{orderId}")
     suspend fun getInfoAboutPayments(@Query("orderId") orderId: Int): Call<PaymentPayload>

@@ -14,10 +14,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -36,27 +39,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.MapActivity
 import com.example.procatfirst.R
-import com.example.procatfirst.data.Order
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.setOrderStatus
-
-var currentOrder : Order? = null
+import com.example.procatfirst.data.DeliveryOrder
+import com.example.procatfirst.data.OrderFull
+import com.example.procatfirst.data.OrderItem
 
 @Composable
 fun OrdersManagerScreen(
     controller : Context,
-    ordersViewModel: OrdersViewModel = viewModel()
+    ordersViewModel: OrdersManagerViewModel = viewModel()
 ) {
+    val ordersUiState by ordersViewModel.uiState.collectAsState()
+
     var changeStatusDialogVisible by remember { mutableStateOf(false) }
-    val orders by ordersViewModel.orders.collectAsState()
+    var currentOrder by remember { mutableStateOf<OrderFull?>(null) }
 
     Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -66,11 +68,19 @@ fun OrdersManagerScreen(
             style = MaterialTheme.typography.titleLarge,
         )
 
-        orders.forEach { order ->
-            orderItem(
-                {changeStatusDialogVisible = true},
-                order
-            )
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(16.dp),
+        ) {
+            items(ordersUiState.orders) { orderFull ->
+                OrderItemFull(
+                    orderFull = orderFull,
+                    changeStatus = {
+                        changeStatusDialogVisible = true
+                        currentOrder = orderFull
+                    },
+                )
+            }
         }
 
         Button(
@@ -81,28 +91,24 @@ fun OrdersManagerScreen(
         ) {
             Text("Показать карту")
         }
-    }
-    if (changeStatusDialogVisible) {
-        ChangeStatusDialog(onDismiss = { changeStatusDialogVisible = false }, onChangeStatus = {status ->
-            currentOrder?.let {
-                DataCoordinator.shared.setOrderStatus(
-                    it, status)
-            }
-            changeStatusDialogVisible = false
-        })
+        if (changeStatusDialogVisible) {
+            ChangeStatusDialog(
+                currentOrder = currentOrder!!,
+                onDismiss = { changeStatusDialogVisible = false },
+                onChangeStatus = { newStatus ->
+                    ordersViewModel.changeOrderStatus(currentOrder!!.id, newStatus)
+                    changeStatusDialogVisible = false
+                }
+            )
+        }
     }
 }
 
 @Composable
-fun orderItem(
-    changeStatus : () -> Unit,
-    order : Order,
-    orderId : Int = order.orderId,
-    rentalPeriod : String = order.rentalPeriod,
-    status : String = order.status,
-    address : String = order.address,
-    totalPrice : Int = order.totalPrice,
-    ){
+fun OrderItemFull(
+    changeStatus: (OrderFull) -> Unit,
+    orderFull : OrderFull
+){
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     ElevatedCard(
@@ -135,42 +141,97 @@ fun orderItem(
                     .weight(3f)
             ) {
                 Text(
-                    text = "Заказ $orderId",
+                    text = "Заказ ${orderFull.id}",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Row(
-
-                ){
-                    Text(
-                        text = rentalPeriod.substringAfterLast("-"),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-
-                }
                 Text(
-                    text = totalPrice.toString(),
+                    text = "Адрес ${orderFull.address}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "Компания: ${orderFull.companyName}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "Депозит ${orderFull.deposit}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "Период доставки: ${orderFull.rentalPeriodStart} - ${orderFull.rentalPeriodEnd}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "Статус: ${orderFull.status}",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = "Итог: ${orderFull.totalPrice}",
                     style = MaterialTheme.typography.bodyLarge
                 )
 
-                if (expanded) {
-                    Text(
-                        text = address,
-                    )
+                if (expanded && orderFull.items != null) {
+                    orderFull.items.forEach { item ->
+                        OrderItemCard(
+                            orderItem = item
+                        )
+                    }
                 }
 
             }
             TextButton(
-                onClick = { currentOrder = order; changeStatus() },
+                onClick = { changeStatus(orderFull) },
                 modifier = Modifier
-                    .weight(3f)
+                    .weight(2f)
                     .padding(4.dp)
             ) {
                 Text(
-                    text = status,
+                    text = orderFull.status,
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun OrderItemCard(
+    orderItem: OrderItem
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.small)
+            .padding(vertical = 8.dp),
+            //.clickable { onClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            disabledContentColor = MaterialTheme.colorScheme.onTertiaryContainer
+        ),
+
+        ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Id: ${orderItem.id}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Название: ${orderItem.name}",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
+                text = "Количество: ${orderItem.count}",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
+                text = "Цена: ${orderItem.price}",
+                style = MaterialTheme.typography.bodyMedium,
+            )
         }
     }
 }
@@ -179,27 +240,49 @@ fun orderItem(
 
 @Composable
 fun ChangeStatusDialog(
+    currentOrder: OrderFull,
     onDismiss: () -> Unit,
     onChangeStatus: (String) -> Unit,
-    ) {
+) {
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Обновить стaтус заказа") },
+        title = { Text("Обновить стaтус заказа ${currentOrder.id}") },
         text = {
             Column {
-
+                Text("Выберите новый статус для заказа")
             }
         },
         confirmButton = {
-            Button(onClick = { onChangeStatus("Принят в обработку") }) {
-                Text("Принят в обработку")
+            Button(onClick = { onChangeStatus("Waiting for payment") }) {
+                Text("Ожидание оплаты")
             }
-            Button(onClick = { onChangeStatus("Ожидает доставки") }) {
-                Text("Ожидает доставки")
+            Button(onClick = { onChangeStatus("Order collection") }) {
+                Text("Сбор заказа")
             }
-            Button(onClick = { onChangeStatus("Ожидает возврата") }) {
-                Text("Ожидает возврата")
+            Button(onClick = { onChangeStatus("Order is ready for dispatch") }) {
+                Text("Готов к выдаче")
+            }
+            Button(onClick = { onChangeStatus("Pending delivery") }) {
+                Text("В ожидании доставки")
+            }
+            Button(onClick = { onChangeStatus("Delivery") }) {
+                Text("Доставка")
+            }
+            Button(onClick = { onChangeStatus("On hire") }) {
+                Text("В аренде")
+            }
+            Button(onClick = { onChangeStatus("Lease expires") }) {
+                Text("Истекает срок аренды")
+            }
+            Button(onClick = { onChangeStatus("Rental expired") }) {
+                Text("Просрочен срок аренды")
+            }
+            Button(onClick = { onChangeStatus("Problem with instrument") }) {
+                Text("Проблема с инструментом")
+            }
+            Button(onClick = { onChangeStatus("Waiting for payment for repairs") }) {
+                Text("Ожидание оплаты за ремонт")
             }
         },
         dismissButton = {

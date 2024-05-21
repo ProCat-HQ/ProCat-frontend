@@ -47,7 +47,7 @@ import com.example.procatfirst.ui.editing.stores.StoresScreen
 import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.managment.OrdersManagerScreen
 import com.example.procatfirst.ui.managment.delivery.AdminDelivery
-import com.example.procatfirst.ui.managment.deliverymen.Deliverymen
+import com.example.procatfirst.ui.editing.deliverymen.Deliverymen
 import com.example.procatfirst.ui.ordering.OrderConfirmation
 import com.example.procatfirst.ui.ordering.OrderingScreen
 import com.example.procatfirst.ui.personal.PersonalScreen

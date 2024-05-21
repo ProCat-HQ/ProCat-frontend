@@ -40,7 +40,7 @@ import com.example.procatfirst.R
 import com.example.procatfirst.data.ClusterResult
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryLocation
-import com.example.procatfirst.ui.managment.deliverymen.DeliverymenViewModel
+import com.example.procatfirst.ui.editing.deliverymen.DeliverymenViewModel
 
 @Composable
 fun AdminDelivery(

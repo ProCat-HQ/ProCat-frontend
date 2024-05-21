@@ -1,4 +1,4 @@
-package com.example.procatfirst.ui.managment.deliverymen
+package com.example.procatfirst.ui.editing.deliverymen
 
 import com.example.procatfirst.data.Deliveryman
 import com.example.procatfirst.data.User
