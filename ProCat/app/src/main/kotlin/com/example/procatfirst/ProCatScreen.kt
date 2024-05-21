@@ -28,12 +28,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.bundleOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -245,7 +247,7 @@ fun ProCatApp (
                         navController.navigate(ProCatScreen.Tool.name)
                     },
                     onNextButtonClicked1 = {
-                        CatalogCache.shared.setCurrent(it)
+                        CatalogCache.shared.setCurrentID(it.id)
                         navController.navigate(ProCatScreen.Tool.name)
                     },
                     modifier = Modifier
@@ -258,7 +260,7 @@ fun ProCatApp (
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Cart.name)
                     },
-                    tool = CatalogCache.shared.getCurrent(),
+                    toolId = CatalogCache.shared.getCurrentId(),
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp)

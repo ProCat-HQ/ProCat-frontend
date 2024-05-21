@@ -44,6 +44,12 @@ data class ItemStore(
         val workingHoursEnd: String
 )
 
+data class ItemFullResponse(
+        val status: Int,
+        val message: String,
+        val payload: ItemFullPayload
+)
+
 data class ItemFullPayload(
         val id: Int,
         val name: String,

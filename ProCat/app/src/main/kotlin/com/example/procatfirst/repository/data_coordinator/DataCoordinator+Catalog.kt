@@ -1,6 +1,8 @@
 package com.example.procatfirst.repository.data_coordinator
 
 import android.graphics.Bitmap
+import com.example.procatfirst.data.Item
+import com.example.procatfirst.data.ItemFullPayload
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.CatalogCache
@@ -28,5 +30,22 @@ suspend fun DataCoordinator.getImage(img: String, callback: (Bitmap) -> Unit) {
     }
     else {
         callback(CatalogCache.shared.getImage(img)!!)
+    }
+}
+
+suspend fun DataCoordinator.getCurrentTool(id: Int, callback: (ItemFullPayload?) -> Unit) {
+    if (CatalogCache.shared.getCurrent() == null || CatalogCache.shared.getCurrent()!!.id != id) {
+        ApiCalls.shared.getItemApi(id) {
+            if (it == null) {
+                callback(null)
+            }
+            else {
+                CatalogCache.shared.setCurrent(it)
+                callback(it)
+            }
+        }
+    }
+    else {
+        callback(CatalogCache.shared.getCurrent())
     }
 }

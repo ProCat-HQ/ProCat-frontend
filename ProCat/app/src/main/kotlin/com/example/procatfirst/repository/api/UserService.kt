@@ -189,9 +189,6 @@ interface UserService {
     @GET("geocode?q=Новосибирск, Пирогова 1&fields=items.point&key=${BuildConfig.apiKey}")
     fun geocoder(): Call<ResponseBody>
 
-    @GET("/items")
-    fun getItems(): Call<ItemResponse>
-
     @GET("/users/{userId}")
     fun getUser(@Header("Authorization") token: String?, @Path("userId") userId: Int): Call<UserResponse>
 
