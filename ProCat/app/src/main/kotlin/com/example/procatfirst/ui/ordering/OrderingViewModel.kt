@@ -9,10 +9,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.OrderRequest
+import com.example.procatfirst.data.OrderSmall
 import com.example.procatfirst.data.Store
 import com.example.procatfirst.data.User
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.api.StoreApiCalls
+import com.example.procatfirst.repository.cache.UserOrdersCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.createNewOrder
 import getUserCart
@@ -35,7 +37,7 @@ class OrderingViewModel(): ViewModel() {
 
     var delivery by mutableStateOf(true)
 
-    var orderStatus by mutableStateOf("В ожидании подтверждения")
+    var orderStatus by mutableStateOf("В обработке")
 
     init{
         open()
@@ -104,15 +106,16 @@ class OrderingViewModel(): ViewModel() {
                 }
                 else {
                     //TODO show result
-                    nextPage(this@OrderingViewModel)
+                    UserOrdersCache.shared.setOrderResponse(it)
                     Log.i("NEW ORDER", "It's OK")
+                    nextPage(this@OrderingViewModel)
                 }
             }
 
         }
     }
 
-    fun getStoresAddresses() {
+    private fun getStoresAddresses() {
         viewModelScope.launch {
             val callback = {status: String, result: List<Store> ->
                 if(status == "SUCCESS") {
@@ -127,5 +130,8 @@ class OrderingViewModel(): ViewModel() {
         }
     }
 
+    fun getOrderResponse() : OrderSmall? {
+        return UserOrdersCache.shared.getOrderResponse()
+    }
 
 }

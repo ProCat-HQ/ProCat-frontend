@@ -320,6 +320,7 @@ fun ProCatApp (
             }
             composable(route = ProCatScreen.Profile.name) {
                 ProfileScreen(
+                    context = controller,
                 )
             }
             composable(route = ProCatScreen.Orders.name) {
