@@ -26,6 +26,7 @@ import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
 import com.example.procatfirst.data.PaymentPayload
+import com.example.procatfirst.data.PaymentResponse
 import com.example.procatfirst.data.RegistrationResponse
 import com.example.procatfirst.data.RoutePayload
 import com.example.procatfirst.data.SimpleDeliveryman
@@ -163,10 +164,10 @@ interface UserService {
     fun changeStatusOfOrder(@Header("Authorization") token: String?, @Path("orderId") orderId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/orders/payment/{orderId}")
-    suspend fun getInfoAboutPayments(@Query("orderId") orderId: Int): Call<PaymentPayload>
+    fun getInfoAboutPayments(@Header("Authorization") token: String?, @Path("orderId") orderId: Int): Call<PaymentResponse>
 
     @PATCH("/users/orders/payment/{paymentId}")
-    suspend fun updatePaymentInfo(@Body requestBody: RequestBody): Call<ResponseBody>
+    fun updatePaymentInfo(@Header("Authorization") token: String?, @Path("paymentId") paymentId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @GET("/users/subscriptions/")
     suspend fun getAllSubsForUser(): Call<SubscriptionResponse>

@@ -24,6 +24,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -42,7 +43,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.procatfirst.MapActivity
+import com.example.procatfirst.ProCatScreen
 import com.example.procatfirst.R
 import com.example.procatfirst.data.DeliveryOrder
 import com.example.procatfirst.data.OrderFull
@@ -51,7 +54,8 @@ import com.example.procatfirst.data.OrderItem
 @Composable
 fun OrdersManagerScreen(
     controller : Context,
-    ordersViewModel: OrdersManagerViewModel = viewModel()
+    ordersViewModel: OrdersManagerViewModel = viewModel(),
+    navController: NavController
 ) {
     val ordersUiState by ordersViewModel.uiState.collectAsState()
 
@@ -79,6 +83,9 @@ fun OrdersManagerScreen(
                         changeStatusDialogVisible = true
                         currentOrder = orderFull
                     },
+                    onViewPaymentsClicked = { orderId ->
+                        navController.navigate("${ProCatScreen.Payments.name}/$orderId")
+                    }
                 )
             }
         }
@@ -107,7 +114,8 @@ fun OrdersManagerScreen(
 @Composable
 fun OrderItemFull(
     changeStatus: (OrderFull) -> Unit,
-    orderFull : OrderFull
+    orderFull : OrderFull,
+    onViewPaymentsClicked: (Int) -> Unit
 ){
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -142,7 +150,8 @@ fun OrderItemFull(
             ) {
                 Text(
                     text = "Заказ ${orderFull.id}",
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = "Адрес ${orderFull.address}",
@@ -168,6 +177,16 @@ fun OrderItemFull(
                     text = "Итог: ${orderFull.totalPrice}",
                     style = MaterialTheme.typography.bodyLarge
                 )
+                OutlinedButton(
+                    onClick = { onViewPaymentsClicked(orderFull.id) },
+                    modifier = Modifier
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = "Посмотреть платежи",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                }
 
                 if (expanded && orderFull.items != null) {
                     orderFull.items.forEach { item ->

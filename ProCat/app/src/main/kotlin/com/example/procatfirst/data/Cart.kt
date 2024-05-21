@@ -92,6 +92,12 @@ data class OrderItemSmall(
     val priceDeposit: Int,
 )
 
+data class PaymentResponse(
+    val status: Int,
+    val message: String,
+    val payload: PaymentPayload
+)
+
 data class PaymentPayload(
     val payments: List<Payment>
 )
