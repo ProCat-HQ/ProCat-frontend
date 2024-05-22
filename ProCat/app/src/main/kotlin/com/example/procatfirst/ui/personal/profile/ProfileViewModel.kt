@@ -115,6 +115,7 @@ class ProfileViewModel: ViewModel() {
         viewModelScope.launch {
             ApiCalls.shared.changeIin(userInputIdentificationNumber, password) {
                 if (it == "SUCCESS") {
+                    Log.d("IIN", userInputIdentificationNumber + " " + password)
                     getUserProfileInfo()
                     Toast.makeText(context, "Успех", Toast.LENGTH_SHORT).show()
                 }

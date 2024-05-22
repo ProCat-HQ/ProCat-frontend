@@ -134,11 +134,18 @@ class OrderingViewModel(): ViewModel() {
             dateEnd = dateEnd.plusDays(order.periodInDays.toLong())
             Log.v("DATE", dateEnd.toString())
             val deliveryTimeFrom = order.selectedDate + ' ' + timeFromHour + ':' + timeFromMinutes + ":00"
-            val deliveryTimeTo = "$dateEnd $timeToHour:$timeToMinutes:00"
+            val deliveryTimeTo = "${order.selectedDate} $timeToHour:$timeToMinutes:00"
 
             DataCoordinator.shared.createNewOrder(
-                OrderRequest(deliveryTimeFrom,
-                    "$dateEnd 00:00:00", order.address, null, type, deliveryTimeFrom, deliveryTimeTo)) {
+                OrderRequest(
+                    rentalPeriodStart = deliveryTimeFrom,
+                    rentalPeriodEnd = "$dateEnd 00:00:00",
+                    address = order.address,
+                    companyName = null,
+                    deliveryMethod = type,
+                    deliveryTimeStart = deliveryTimeFrom,
+                    deliveryTimeEnd = deliveryTimeTo
+                )) {
                 if (it == null) {
                     Toast.makeText(context, "Ошибка при оформлении заказа", Toast.LENGTH_SHORT).show()
                     Log.e("NEW ORDER", "It's null!")

@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -272,37 +274,131 @@ fun ChangeStatusDialog(
                 Text("Выберите новый статус для заказа")
             }
         },
+        /*
         confirmButton = {
-            Button(onClick = { onChangeStatus("Waiting for payment") }) {
-                Text("Ожидание оплаты")
+            LazyColumn {
+                items(items = listOf(
+                    "awaitingPayment", "accepted", "readyToPickup", "readyToDelivery", "delivering",
+                    "rent", "shouldBeReturned", "expired", "problem", "deliveryBack", "returned",
+                    "itemsCheck", "awaitingRepairPayment", "closed"
+                )) { status ->
+                    Button(
+                        onClick = { onChangeStatus(status) },
+                        //modifier = Modifier
+                        //    .size(width = 200.dp, height = 40.dp)
+                        //    .padding(vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = status,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
             }
-            Button(onClick = { onChangeStatus("Order collection") }) {
-                Text("Сбор заказа")
+        }, */
+
+        confirmButton = {
+            //if (currentOrder.status == "awaitingPayment") {
+            Button(onClick = { onChangeStatus("awaitingPayment") },
+            ) {
+                Text("Ожидание оплаты",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
-            Button(onClick = { onChangeStatus("Order is ready for dispatch") }) {
-                Text("Готов к выдаче")
+            Button(onClick = { onChangeStatus("accepted") }) {
+                Text("Принято в обработку",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
-            Button(onClick = { onChangeStatus("Pending delivery") }) {
-                Text("В ожидании доставки")
+            Button(onClick = { onChangeStatus("awaitingRejection") }) {
+                Text("Запрос об отмене",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
-            Button(onClick = { onChangeStatus("Delivery") }) {
-                Text("Доставка")
+            Button(onClick = { onChangeStatus("awaitingMoneyBack") }) {
+                Text("Возврат денег",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
-            Button(onClick = { onChangeStatus("On hire") }) {
-                Text("В аренде")
+            Button(onClick = { onChangeStatus("rejected") }) {
+                Text("Отменен",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
-            Button(onClick = { onChangeStatus("Lease expires") }) {
-                Text("Истекает срок аренды")
+            Button(onClick = { onChangeStatus("readyToPickup") }) {
+                Text("Готов к выдаче",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
-            Button(onClick = { onChangeStatus("Rental expired") }) {
-                Text("Просрочен срок аренды")
+            Button(onClick = { onChangeStatus("readyToDelivery") }) {
+                Text("В ожидании доставки",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
-            Button(onClick = { onChangeStatus("Problem with instrument") }) {
-                Text("Проблема с инструментом")
+            Button(onClick = { onChangeStatus("delivering") }) {
+                Text("Доставляется",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
-            Button(onClick = { onChangeStatus("Waiting for payment for repairs") }) {
-                Text("Ожидание оплаты за ремонт")
+            Button(onClick = { onChangeStatus("rent") }) {
+                Text("В аренде",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
+            Button(onClick = { onChangeStatus("shouldBeReturned") }) {
+                Text("Истекает срок аренды",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            /*
+            Button(onClick = { onChangeStatus("expired") }) {
+                Text("Просрочено",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Button(onClick = { onChangeStatus("extensionRequest") }) {
+                Text("Запрос на продление",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Button(onClick = { onChangeStatus("extended") }) {
+                Text("Продлено",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
+            Button(onClick = { onChangeStatus("problem") }) {
+                Text("Проблема с инструментом",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Button(onClick = { onChangeStatus("deliveryBack") }) {
+                Text("Доставка обратно",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Button(onClick = { onChangeStatus("returned") }) {
+                Text("Возвращен",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Button(onClick = { onChangeStatus("itemsCheck") }) {
+                Text("Поверка инструмента",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Button(onClick = { onChangeStatus("awaitingRepairPayment") }) {
+                Text("Ожидание оплаты за ремонт",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            } */
+            Button(onClick = { onChangeStatus("closed") }) {
+                Text("Закрыт",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
