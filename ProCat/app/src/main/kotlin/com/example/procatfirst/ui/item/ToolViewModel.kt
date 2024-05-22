@@ -68,7 +68,6 @@ class ToolViewModel(toolId: Int): ViewModel() {
                 }
             }
         }
-
     }
 
 }

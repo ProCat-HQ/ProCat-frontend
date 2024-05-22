@@ -123,7 +123,6 @@ interface UserService {
     @GET("/users/deliverymen/deliveries/delivery/{deliveryId}")
     fun getDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int): Call<DeliveryResponse>
 
-    //TODO
     @PATCH("/users/deliverymen/deliveries/{deliveryId}")
     fun changeStatusForDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int, requestBody: RequestBody): Call<ResponseBody>
 

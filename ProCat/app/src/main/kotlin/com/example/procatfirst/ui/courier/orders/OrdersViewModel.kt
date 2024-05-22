@@ -74,7 +74,6 @@ class CourierOrdersViewModel: ViewModel() {
                 orderStatus = orderStatus
             )
         }
-        /*
         viewModelScope.launch {
             val callback = {status: String ->
                 if(status == "SUCCESS") {
@@ -85,14 +84,11 @@ class CourierOrdersViewModel: ViewModel() {
                     }
                 }
             }
-            ApiCalls.shared.(orderId, orderStatus, callback)
-        } */
+            ApiCalls.shared.changeStatusForDeliveryFromDeliveryIdApi(orderId, orderStatus, callback)
+        }
 
     }
 
-
-    //val orders: MutableStateFlow<List<Order>> = MutableStateFlow(
-    //       DataCoordinator.shared.getAllOrders())
 
     fun createRoute() {
         viewModelScope.launch {

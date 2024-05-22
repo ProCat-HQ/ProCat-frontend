@@ -847,8 +847,8 @@ class ApiCalls {
         })
     }
 
-    /*
-    fun changeStatusForDeliveryFromDeliveryIdApi(id: Int, status: String, callback: (String) -> Unit) {
+
+    fun changeStatusForDeliveryFromDeliveryIdApi(deliveryId: Int, status: String, callback: (String) -> Unit) {
         val url = BACKEND_URL
         val service = Retrofit.Builder()
             .baseUrl(url)
@@ -856,15 +856,18 @@ class ApiCalls {
             .build()
             .create(UserService::class.java)
 
+        val jsonObject = JSONObject()
+        jsonObject.put("status", status)
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
 
-        service.changeStatusForDeliveryFromDeliveryId("Bearer " + UserDataCache.shared.getUserToken(), requestBody).enqueue(object : Callback<AllDeliveriesForDeliverymanResponse> {
+        service.changeStatusForDeliveryFromDeliveryId("Bearer " + UserDataCache.shared.getUserToken(), deliveryId, requestBody).enqueue(object : Callback<ResponseBody> {
 
-            override fun onFailure(call: Call<AllDeliveriesForDeliverymanResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 t.printStackTrace()
                 Log.i("API", t.toString())
             }
 
-            override fun onResponse(call: Call<AllDeliveriesForDeliverymanResponse>, response: Response<AllDeliveriesForDeliverymanResponse>) {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 Log.i("RESPONSE", response.raw().toString())
                 response.body()?.let {
                     callback("SUCCESS")
@@ -873,7 +876,7 @@ class ApiCalls {
 
         })
     }
-    */
+
 
     fun createRoute(callback: (String, List<Point>) -> Unit) {
         val service = getUserService()
