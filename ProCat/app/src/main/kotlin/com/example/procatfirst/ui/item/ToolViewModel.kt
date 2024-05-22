@@ -51,6 +51,14 @@ class ToolViewModel(toolId: Int): ViewModel() {
         }
     }
 
+    fun fav() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                favourite = !uiState.value.favourite
+            )
+        }
+    }
+
     fun addToCart(tool : ItemFullPayload, context: Context) {
         val newAmount = _uiState.value.amount.plus(1)
         _uiState.update { currentState ->

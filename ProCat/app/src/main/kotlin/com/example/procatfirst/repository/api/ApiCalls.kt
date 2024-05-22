@@ -287,18 +287,12 @@ class ApiCalls {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == 200) {
                     response.body()?.let {
-                        if(it.string().contains("\"status\": 200")) {
-                            callback("SUCCESS")
-                        }
-                        else {
-                            response.errorBody()?.string()?.let { it1 -> callback(it1) }
-                            callback("Fail")
-                        }
+                        callback("SUCCESS")
                     }
                 }
                 else {
                     Log.e("API", response.raw().toString())
-                    callback("FAKE")
+                    response.errorBody()?.string()?.let { it1 -> callback(it1) }
                 }
             }
         })
