@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.courier.orders
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.Delivery
@@ -60,7 +61,9 @@ class CourierOrdersViewModel: ViewModel() {
                 }
             }
             if (userId != null) {
-                ApiCalls.shared.getDeliveriesForDeliverymanApi(userId, callback)
+                ApiCalls.shared.getSimpleDeliveryManIdApi(userId) {
+                    ApiCalls.shared.getDeliveriesForDeliverymanApi(it.id, callback) //!!
+                }
             }
         }
     }
@@ -95,6 +98,7 @@ class CourierOrdersViewModel: ViewModel() {
         viewModelScope.launch {
             val callback = {status: String, result: List<Point> ->
                 if(status == "SUCCESS" && result != null) {
+                    Log.v("Points", result.toString())
                     _uiState.update { currentState ->
                         currentState.copy(
                             points = result,

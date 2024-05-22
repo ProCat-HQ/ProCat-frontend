@@ -79,16 +79,18 @@ fun OrdersManagerScreen(
             modifier = Modifier.padding(16.dp),
         ) {
             items(ordersUiState.orders) { orderFull ->
-                OrderItemFull(
-                    orderFull = orderFull,
-                    changeStatus = {
-                        changeStatusDialogVisible = true
-                        currentOrder = orderFull
-                    },
-                    onViewPaymentsClicked = { orderId ->
-                        navController.navigate("${ProCatScreen.Payments.name}/$orderId")
-                    }
-                )
+                if (orderFull.status != "closed") {
+                    OrderItemFull(
+                        orderFull = orderFull,
+                        changeStatus = {
+                            changeStatusDialogVisible = true
+                            currentOrder = orderFull
+                        },
+                        onViewPaymentsClicked = { orderId ->
+                            navController.navigate("${ProCatScreen.Payments.name}/$orderId")
+                        }
+                    )
+                }
             }
         }
 

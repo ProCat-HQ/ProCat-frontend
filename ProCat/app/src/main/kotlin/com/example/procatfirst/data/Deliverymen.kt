@@ -22,7 +22,14 @@ data class Deliveryman(
     val phoneNumber: String
 )
 
+data class SimpleDeliverymenResponse(
+    val status: Int,
+    val message: String,
+    val payload: SimpleDeliveryman
+)
+
 data class SimpleDeliveryman(
+    val id: Int,
     val carCapacity: String,
     val workingHoursStart: String,
     val workingHoursEnd: String,

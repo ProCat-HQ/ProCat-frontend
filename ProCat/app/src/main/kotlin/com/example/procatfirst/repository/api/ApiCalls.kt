@@ -30,6 +30,8 @@ import com.example.procatfirst.data.PaymentResponse
 import com.example.procatfirst.data.Point
 import com.example.procatfirst.data.RegistrationResponse
 import com.example.procatfirst.data.RouteResponse
+import com.example.procatfirst.data.SimpleDeliveryman
+import com.example.procatfirst.data.SimpleDeliverymenResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataResponse
 import com.example.procatfirst.data.UserResponse
@@ -471,7 +473,7 @@ class ApiCalls {
     fun getAllOrdersApi(callback: (String, List<OrderFull>) -> Unit) {
         val service = getUserService()
 
-        service.getAllOrders("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<OrdersResponse> {
+        service.getAllOrders("Bearer " + UserDataCache.shared.getUserToken(), 100).enqueue(object : Callback<OrdersResponse> {
 
             override fun onFailure(call: Call<OrdersResponse>, t: Throwable) {
                 t.printStackTrace()
@@ -776,7 +778,7 @@ class ApiCalls {
     }
 
     fun getDeliveriesForDeliverymanApi(id: Int, callback: (String, List<Delivery>) -> Unit) {
-        val url = BACKEND_URL
+
         val service = getUserService()
 
         service.getDeliveriesForDeliveryman("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<AllDeliveriesForDeliverymanResponse> {
@@ -789,8 +791,11 @@ class ApiCalls {
             override fun onResponse(call: Call<AllDeliveriesForDeliverymanResponse>, response: Response<AllDeliveriesForDeliverymanResponse>) {
                 Log.i("RESPONSE", response.raw().toString())
                 response.body()?.let {
-                    Log.d("USER_DATA", it.payload.toString())
+                    Log.d("Delivery", it.payload.toString())
                     callback("SUCCESS", it.payload.rows) }
+                if (response.code() != 200) {
+                    response.errorBody()?.string()?.let { Log.e("API_ERROR", it) }
+                }
             }
 
         })
@@ -814,6 +819,29 @@ class ApiCalls {
                 response.body()?.let {
                     Log.d("DELIVERY", it.payload.toString())
                     callback("SUCCESS", it.payload) }
+            }
+
+        })
+    }
+
+    fun getSimpleDeliveryManIdApi(id: Int, callback: (SimpleDeliveryman) -> Unit) {
+
+        val service = getUserService()
+
+        Log.d("DELIVERY", id.toString())
+
+        service.getDeliveryManInfo("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<SimpleDeliverymenResponse> {
+
+            override fun onFailure(call: Call<SimpleDeliverymenResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<SimpleDeliverymenResponse>, response: Response<SimpleDeliverymenResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("DELIVERY", it.payload.toString())
+                    callback(it.payload) }
             }
 
         })
@@ -850,7 +878,7 @@ class ApiCalls {
     fun createRoute(callback: (String, List<Point>) -> Unit) {
         val service = getUserService()
 
-        service.createRoute("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<RouteResponse> {
+        service.createRoute("Bearer " + UserDataCache.shared.getUserToken(), 1).enqueue(object : Callback<RouteResponse> {
 
             override fun onFailure(call: Call<RouteResponse>, t: Throwable) {
                 t.printStackTrace()
@@ -861,6 +889,7 @@ class ApiCalls {
                 if (response.isSuccessful) {
                     Log.i("RESPONSE", response.raw().toString())
                     response.body()?.let {
+                        Log.d("RESPONSE!!!", it.payload.toString())
                         callback("SUCCESS", it.payload.points)
                     }
                 } else {
