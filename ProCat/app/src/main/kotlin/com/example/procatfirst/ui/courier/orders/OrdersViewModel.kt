@@ -11,7 +11,9 @@ import com.example.procatfirst.data.NotificationDataProvider
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.OrderDataProvider
 import com.example.procatfirst.data.Point
+import com.example.procatfirst.data.Store
 import com.example.procatfirst.repository.api.ApiCalls
+import com.example.procatfirst.repository.api.StoreApiCalls
 import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.dublgis.dgismobile.mapsdk.LonLat
 
 class CourierOrdersViewModel: ViewModel() {
 
@@ -105,6 +108,11 @@ class CourierOrdersViewModel: ViewModel() {
                 }
             }
             ApiCalls.shared.createRoute(callback)
+            StoreApiCalls.shared.getAllStoresApi() {
+                    _: String, payload: List<Store> ->
+                AllOrdersCache.shared.storage = LonLat(payload[0].latitude.toDouble(), payload[0].longitude.toDouble())
+            }
+
         }
     }
 

@@ -78,9 +78,10 @@ data class RoutePayload(
 )
 
 data class Point(
-    val orderId: Int,
-    val lat: String,
-    val lon: String
+    val address: String,
+    val latitude: String,
+    val longitude: String,
+    val deliveryId: Int,
 )
 
 //------------------------------
