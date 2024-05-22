@@ -786,7 +786,7 @@ class ApiCalls {
             override fun onResponse(call: Call<AllDeliveriesForDeliverymanResponse>, response: Response<AllDeliveriesForDeliverymanResponse>) {
                 Log.i("RESPONSE", response.raw().toString())
                 response.body()?.let {
-                    Log.d("USER_DATA", it.payload.toString())
+                    Log.d("Delivery", it.payload.toString())
                     callback("SUCCESS", it.payload.rows) }
             }
 
