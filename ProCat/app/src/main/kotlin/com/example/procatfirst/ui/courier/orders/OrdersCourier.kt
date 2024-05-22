@@ -77,14 +77,16 @@ fun CourierOrdersScreen(
         )
 
         deliveriesUiState.deliveries.forEach { delivery ->
-            DeliveryCard(
-                delivery = delivery,
-                changeStatus = {
-                    changeStatusDialogVisible = true
-                    currentOrder = delivery.order
-                },
-                deliveriesUiState
+            if (delivery.order.status != "closed") {
+                DeliveryCard(
+                    delivery = delivery,
+                    changeStatus = {
+                        changeStatusDialogVisible = true
+                        currentOrder = delivery.order
+                    },
+                    deliveriesUiState
                 )
+            }
         }
         OutlinedButton(
             onClick = { courierOrdersViewModel.createRoute() },

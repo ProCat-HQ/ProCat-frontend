@@ -33,6 +33,7 @@ import com.example.procatfirst.data.RegistrationResponse
 import com.example.procatfirst.data.RoutePayload
 import com.example.procatfirst.data.RouteResponse
 import com.example.procatfirst.data.SimpleDeliveryman
+import com.example.procatfirst.data.SimpleDeliverymenResponse
 import com.example.procatfirst.data.SubscriptionResponse
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserResponse
@@ -127,7 +128,10 @@ interface UserService {
     fun changeStatusForDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int, requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/deliverymen/deliveries/create-route")
-    fun createRoute(@Header("Authorization") token: String?): Call<RouteResponse>
+    fun createRoute(@Header("Authorization") token: String?, @Query("storeId") store: Int): Call<RouteResponse>
+
+    @GET("/users/deliverymen/{id}")
+    fun getDeliveryManInfo(@Header("Authorization") token: String?, @Path("id") id: Int): Call<SimpleDeliverymenResponse>
 
     @POST("/users/admin/cluster")
     fun makeCluster(@Header("Authorization") token: String?): Call<ClusterResponse>
@@ -148,7 +152,7 @@ interface UserService {
     fun deleteItemFromCart(@Path("itemId") id : Int, @Query("count") count : Int, @Header("Authorization") token: String?): Call<ResponseBody>
 
     @GET("/users/orders")
-    fun getAllOrders(@Header("Authorization") token: String?): Call<OrdersResponse>
+    fun getAllOrders(@Header("Authorization") token: String?, @Query("limit") limit: Int): Call<OrdersResponse>
 
     @GET("/users/orders")
     fun getUserOrders(@Query("userId") id : Int, @Header("Authorization") token: String?): Call<OrdersResponse>
