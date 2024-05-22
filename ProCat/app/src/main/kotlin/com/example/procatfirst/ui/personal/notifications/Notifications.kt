@@ -11,12 +11,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,20 +41,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import com.example.procatfirst.ui.theme.md_theme_light_outline
 import com.example.procatfirst.ui.theme.md_theme_light_scrim
 import com.example.procatfirst.ui.theme.md_theme_light_surface
 import com.example.procatfirst.ui.theme.md_theme_light_surfaceVariant
 import com.example.procatfirst.ui.theme.md_theme_light_tertiaryContainer
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun NotificationsScreen(
     context: Context,
-    notificationViewModel: NotificationViewModel = viewModel(),
-    ) {
+    notificationViewModel: NotificationViewModel = viewModel()
+) {
+    val notificationsUiState by notificationViewModel.uiState.collectAsState()
+    val userRole = UserDataCache.shared.getUserRole()
+    var showDialog by remember { mutableStateOf(false) }
 
-    val notifications by notificationViewModel.notifications.collectAsState()
 
     Column(
         modifier = Modifier
@@ -62,7 +74,7 @@ fun NotificationsScreen(
         )
 
 
-        notifications.forEach { notification ->
+        notificationsUiState.notifications.forEach { notification ->
             notification(
                 title = notification.title,
                 date = notification.createdAt,
@@ -70,29 +82,55 @@ fun NotificationsScreen(
                 isViewed = notification.isViewed,
                 onClick = {
                     notificationViewModel.markAsRead(notification)
+                },
+                onDelete = {
+                    notificationViewModel.deleteNotification(notification)
                 }
             )
         }
 
-        //переходить в новый диалог с установленной темой
-        FilledTonalButton(onClick = {  }) {
+        FilledTonalButton(onClick = {  },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        ) {
             Text(
                 text = stringResource(R.string.ask_question)
             )
         }
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            onClick = { makeNotification(context = context, "Уведомление!", "Нажми и посмотри") }
-        ) {
-            Text(
-                text = stringResource(R.string.send_notification),
-                fontSize = 16.sp
+        if (userRole == "admin") {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                onClick = {
+                    showDialog = true
+                }
+            ) {
+                Text(
+                    text = stringResource(R.string.send_notification),
+                    fontSize = 16.sp
+                )
+            }
+        }
+
+        if (showDialog) {
+            SendNotificationDialog(
+                onDismiss = { showDialog = false },
+                onSend = { userId, title, body ->
+                    makeNotification(context = context, title, body)
+                    notificationViewModel.sendNotification(userId, title, body)
+                }
             )
         }
 
     }
+}
+
+fun formatTime(datetime: String): String {
+    val zonedDateTime = ZonedDateTime.parse(datetime)
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    return zonedDateTime.format(formatter)
 }
 
 @Composable
@@ -101,7 +139,8 @@ fun notification(
     date: String,
     description: String,
     isViewed: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDelete: () -> Unit
 ) {
     var isCardClicked by remember { mutableStateOf(false) }
 
@@ -136,11 +175,19 @@ fun notification(
 
             )
             Text(
-                text = date,
+                text = formatTime(date),
                 textAlign = TextAlign.Right,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.outline
             )
+            /*
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = "Delete notification"
+                )
+            } */
+
         }
         Text(
             text = description,
@@ -154,3 +201,54 @@ fun notification(
 
     }
 }
+
+@Composable
+fun SendNotificationDialog(
+    onDismiss: () -> Unit,
+    onSend: (userId: Int, title: String, body: String) -> Unit
+) {
+    var userId by remember { mutableStateOf("") }
+    var title by remember { mutableStateOf("") }
+    var body by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "Send Notification") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = userId,
+                    onValueChange = { userId = it },
+                    label = { Text("User ID") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text("Title") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = body,
+                    onValueChange = { body = it },
+                    label = { Text("Body") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                onSend(userId.toInt(), title, body)
+                onDismiss()
+            }) {
+                Text("Send")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+

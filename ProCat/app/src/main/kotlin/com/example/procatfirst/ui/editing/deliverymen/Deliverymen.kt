@@ -187,7 +187,7 @@ fun UserNameCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = user.fullName,
+                text = "${user.id} ${user.fullName}",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
