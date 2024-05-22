@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.cart
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,7 +38,8 @@ import com.example.procatfirst.data.CartPayload
 
 @Composable
 fun ToolsScreenCart(
-    tools: CartPayload
+    tools: CartPayload,
+    context: Context,
 ) {
         Column(
             modifier = Modifier
@@ -47,7 +48,7 @@ fun ToolsScreenCart(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             for (tool in tools.items)
-                ToolCardCart(tool = tool)
+                ToolCardCart(tool = tool, context = context)
         }
 }
 
@@ -55,6 +56,7 @@ fun ToolsScreenCart(
 fun ToolCardCart(
     tool: CartItem,
     toolViewModel: ToolViewModel = ToolViewModel(tool),
+    context: Context,
 ) {
 
     val toolUiState by toolViewModel.uiState.collectAsState()
@@ -99,7 +101,7 @@ fun ToolCardCart(
                 )
                 QuantityButton(
                     quantity =  toolViewModel.uiState.value.tool.count,
-                    onIncrease = { toolViewModel.increaseAmount() },
+                    onIncrease = { toolViewModel.increaseAmount(context) },
                     onDecrease = { toolViewModel.decreaseAmount() }
                 )
             }

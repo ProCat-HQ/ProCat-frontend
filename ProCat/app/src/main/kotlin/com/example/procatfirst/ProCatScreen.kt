@@ -272,7 +272,8 @@ fun ProCatApp (
                     toolId = CatalogCache.shared.getCurrentId(),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    context = controller,
                 )
             }
             composable(route = ProCatScreen.Cart.name) {
@@ -285,7 +286,8 @@ fun ProCatApp (
                     },
                     onGoToProfile = {
                         navController.navigate(ProCatScreen.Profile.name)
-                    }
+                    },
+                    context = controller,
                 )
             }
             composable(route = ProCatScreen.Personal.name) {

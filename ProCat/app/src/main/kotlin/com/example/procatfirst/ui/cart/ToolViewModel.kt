@@ -1,5 +1,7 @@
 package com.example.procatfirst.ui.cart
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.CartItem
@@ -41,10 +43,14 @@ class ToolViewModel(tool : CartItem): ViewModel()  {
         }
     }
 
-    fun increaseAmount() {
+    fun increaseAmount(context: Context) {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
-                DataCoordinator.shared.increaseToolCount(uiState.value.tool.id)
+                DataCoordinator.shared.increaseToolCount(uiState.value.tool.id) {
+                    if (it != "") {
+                        Toast.makeText(context, "Инструмента нет в наличии", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
             NotificationCoordinator.shared.sendIntent(SystemNotifications.delInCartIntent)
         }

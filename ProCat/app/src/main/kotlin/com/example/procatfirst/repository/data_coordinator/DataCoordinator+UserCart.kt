@@ -18,18 +18,17 @@ import com.example.procatfirst.repository.data_storage.DataStorage
         return UserCartCache.shared.getUserCartStuff()
     }
     suspend fun DataCoordinator.getUserCartPayload(): CartPayload {
-//        if (UserCartCache.shared.getUserCartStuff().isEmpty()) {
-//            UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
-//        }
-
         return UserCartCache.shared.getUserCartPayload()
     }
 
-    suspend fun DataCoordinator.addToolToUserCart(tool : Tool){
-        UserCartCache.shared.addUserCartStuff(tool)
-        ApiCalls.shared.postCart(tool.id, 1)
+    suspend fun DataCoordinator.addToolToUserCart(tool : Tool, callback: (String) -> Unit){
+        ApiCalls.shared.postCart(tool.id, 1) {
+            if (it == "") {
+                UserCartCache.shared.addUserCartStuff(tool)
+            }
+            callback(it)
+        }
         NotificationCoordinator.shared.sendIntent(SystemNotifications.cartLoaded)
-        //DataStorage.shared.setUserCartToMemory(UserCartCache.shared.getUserCartStuff())
     }
 
     suspend fun DataCoordinator.removeToolFromUserCart(id : Int) {
@@ -38,10 +37,14 @@ import com.example.procatfirst.repository.data_storage.DataStorage
         //DataStorage.shared.setUserCartToMemory(UserCartCache.shared.getUserCartStuff())
     }
 
-    suspend fun DataCoordinator.increaseToolCount(id : Int) {
-        UserCartCache.shared.increaseAmount(id)
-        //DataStorage.shared.setUserCartToMemory(UserCartCache.shared.getUserCartStuff())
-        ApiCalls.shared.postCart(id, 1)
+    suspend fun DataCoordinator.increaseToolCount(id : Int, callback: (String) -> Unit) {
+        ApiCalls.shared.postCart(id, 1) {
+            if (it == "") {
+                UserCartCache.shared.increaseAmount(id)
+            }
+            callback(it)
+        }
+
     }
 
     suspend fun DataCoordinator.decreaseToolCount(id : Int) {

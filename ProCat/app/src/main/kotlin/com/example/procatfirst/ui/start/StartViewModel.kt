@@ -33,17 +33,6 @@ class StartViewModel(context: Context, nextPageAction : () -> Unit): ViewModel()
     private fun open(context: Context) {
         authorise(context, false) {}
         Log.v("OPEN", "OPEN")
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                DataCoordinator.shared.getImage("hammer.jpg") {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            bitmap = it
-                        )
-                    }
-                }
-            }
-        }
     }
 
     fun authorise(context: Context, manual: Boolean, nextPageAction : () -> Unit) {

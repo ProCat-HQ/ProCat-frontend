@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.cart
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +29,8 @@ fun Cart(
     modifier: Modifier = Modifier,
     onToOrderingClicked: () -> Unit,
     onGoToProfile: () -> Unit,
-    cartViewModel: CartViewModel = viewModel()
+    cartViewModel: CartViewModel = viewModel(),
+    context: Context,
 ) {
     val cartUiState by cartViewModel.uiState.collectAsState()
 
@@ -44,7 +46,7 @@ fun Cart(
             color = MaterialTheme.colorScheme.onSurface
         )
 
-        ToolCard()
+        ToolCard(context = context)
 
         if (cartUiState.confirmIinDialog) {
             ConfirmInnDialog(

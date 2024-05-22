@@ -1,6 +1,7 @@
 package com.example.procatfirst.ui.item
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -39,10 +40,11 @@ import com.example.procatfirst.ui.theme.md_theme_light_onSurfaceVariant
 
 @Composable
 fun ToolScreen(
-        toolId : Int,
-        toolViewModel: ToolViewModel = ToolViewModel(toolId),
-        onNextButtonClicked: () -> Unit,
-        modifier: Modifier = Modifier
+    toolId : Int,
+    toolViewModel: ToolViewModel = ToolViewModel(toolId),
+    onNextButtonClicked: () -> Unit,
+    modifier: Modifier = Modifier,
+    context: Context,
     ) {
     val toolUiState by toolViewModel.uiState.collectAsState()
 
@@ -105,7 +107,7 @@ fun ToolScreen(
                 }
             }
             BottomBar(
-                addToCart = { toolViewModel.addToCart(toolUiState.tool!!) },
+                addToCart = { toolViewModel.addToCart(toolUiState.tool!!, context) },
                 toolViewModel
             )
         }

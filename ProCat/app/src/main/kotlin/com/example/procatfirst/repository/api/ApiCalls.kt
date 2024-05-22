@@ -419,7 +419,7 @@ class ApiCalls {
         })
     }
 
-    fun postCart(itemId : Int, count: Int) {
+    fun postCart(itemId : Int, count: Int, callback: (String) -> Unit) {
         val service = getUserService()
 
         val jsonObject = JSONObject()
@@ -431,10 +431,19 @@ class ApiCalls {
         service.postCart( requestBody, "Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 Log.d("RESPONSE", response.raw().toString())
+                if (response.code() == 200) {
+                    callback("")
+                }
+                else {
+                    response.errorBody()?.string()?.let {
+                        callback(it)
+                    }
+                }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Log.d("RESPONSE", t.message.toString())
+                callback(t.message.toString())
             }
 
         })

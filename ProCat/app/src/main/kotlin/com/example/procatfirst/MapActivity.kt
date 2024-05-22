@@ -1,5 +1,6 @@
 package com.example.procatfirst
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,7 +8,8 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.example.procatfirst.data.OrderDataProvider
+import com.example.procatfirst.data.Point
+import com.example.procatfirst.repository.cache.AllOrdersCache
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
 import ru.dublgis.dgismobile.mapsdk.MapFragment
@@ -21,14 +23,13 @@ import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
 import ru.dublgis.dgismobile.mapsdk.mapObjectsByIds
-import android.content.Intent
-import com.example.procatfirst.repository.cache.AllOrdersCache
 
 
 class MapActivity : AppCompatActivity() {
 
     private var location = LonLat(54.843243, 83.088801)
     private var direct : Directions? = null
+    private var points : MutableList<Point>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -43,8 +44,6 @@ class MapActivity : AppCompatActivity() {
         )
 
         mapFragment.mapReadyCallback = this::onDGisMapReady
-        //mapFragment.mapReadyCallback = this::onClickListenerReady
-        //mapFragment.mapReadyCallback = this::onDirectionReady
 
     }
 
@@ -53,27 +52,27 @@ class MapActivity : AppCompatActivity() {
         val markers = mutableListOf<Marker?>()
         val goButton = addActionButton {
             onDirectionReady(map)
-            it.visibility = View.INVISIBLE
+            //it.visibility = View.INVISIBLE
         }
-        goButton.visibility = View.INVISIBLE
+        //goButton.visibility = View.INVISIBLE
 
         val outButton = addOutButton {
             //start main activity
             startActivity(Intent(this, MainActivity().javaClass))
         }
 
-        val orders = AllOrdersCache.shared.getAllOrders()//OrderDataProvider.deliveryOrders
+        points = (AllOrdersCache.shared.getPoints() as MutableList<Point>?)!!
         map?.let {
-            for (order in orders) {
+            for (order in points!!) {
                 val marker = it.addMarker(
                     MarkerOptions(
-                        LonLat(order.companyName.substring(10).toDouble(), order.companyName.substring(0, 8).toDouble())
+                        LonLat(order.lon.toDouble(), order.lat.toDouble())
                     )
                 )
                 marker.setOnClickListener {
                     location = marker.position
                     Log.i("LOCATION", location.toString())
-                    labels.add(showLabel(map, marker.position, "Заказ №" + order.orderId + ", " + order.address))
+                    labels.add(showLabel(map, marker.position, "Заказ №" + order.orderId))
                     goButton.visibility = View.VISIBLE
                 }
                 markers.add(marker)
@@ -83,7 +82,7 @@ class MapActivity : AppCompatActivity() {
             for (i in labels) {
                 i?.hide()
             }
-            goButton.visibility = View.INVISIBLE
+            //goButton.visibility = View.INVISIBLE
             direct?.clear()
         }
 
@@ -101,10 +100,13 @@ class MapActivity : AppCompatActivity() {
 
     private fun onDirectionReady(map: Map?) {
         map?.enableUserLocation(UserLocationOptions(isVisible = true))
-        map?.userLocation?.observe(this, Observer {})
         direct = map?.createDirections(DirectionsOptions(BuildConfig.apiKey))
-        //createToast(map?.userLocation?.value.toString()) //null
-        val opt = CarRouteOptions(listOf(LonLat(83.088801, 54.843243), location))
+        points?.add(0, Point(0, map?.userLocation?.value?.longitude.toString(), map?.userLocation?.value?.latitude.toString() ))
+        val pointList = mutableListOf<LonLat>()
+        for (point in points!!) {
+            pointList.add(LonLat(point.lon.toDouble(), point.lat.toDouble()))
+        }
+        val opt = CarRouteOptions(pointList)
         direct?.carRoute(opt)
     }
 

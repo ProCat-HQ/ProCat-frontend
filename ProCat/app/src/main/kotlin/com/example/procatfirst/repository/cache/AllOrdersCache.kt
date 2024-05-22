@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.OrderDataProvider
+import com.example.procatfirst.data.Point
 import com.example.procatfirst.data.User
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
@@ -12,6 +13,7 @@ class AllOrdersCache {
 
     var orders : MutableList<Order> = OrderDataProvider.deliveryOrders.toMutableList()
     var adressToCoords : MutableState<LonLat> = mutableStateOf( LonLat(54.843243, 83.088801) )
+    var ordersToDelivery: List<Point>? = null
 
     companion object {
         val shared = AllOrdersCache()
@@ -40,6 +42,14 @@ class AllOrdersCache {
 
     fun getCoords() : LonLat {
         return adressToCoords.value
+    }
+
+    fun setPoints(points : List<Point>) {
+        ordersToDelivery = points
+    }
+
+    fun getPoints() : List<Point>? {
+        return ordersToDelivery
     }
 
 }

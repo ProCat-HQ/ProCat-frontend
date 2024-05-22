@@ -6,5 +6,6 @@ import com.example.procatfirst.data.Point
 data class CourierOrdersUiState (
     val deliveries: List<Delivery> = emptyList(),
     val orderStatus: String = "",
-    val points: List<Point> = emptyList()
+    val points: List<Point> = emptyList(),
+    val mapButtonVisible: Boolean = false,
 )

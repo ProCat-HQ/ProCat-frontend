@@ -11,6 +11,7 @@ import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.OrderDataProvider
 import com.example.procatfirst.data.Point
 import com.example.procatfirst.repository.api.ApiCalls
+import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.getAllOrders
@@ -53,7 +54,7 @@ class CourierOrdersViewModel: ViewModel() {
                 if(status == "SUCCESS" && result != null) {
                     _uiState.update { currentState ->
                         currentState.copy(
-                            deliveries = result
+                            deliveries = result,
                         )
                     }
                 }
@@ -96,9 +97,11 @@ class CourierOrdersViewModel: ViewModel() {
                 if(status == "SUCCESS" && result != null) {
                     _uiState.update { currentState ->
                         currentState.copy(
-                            points = result
+                            points = result,
+                            mapButtonVisible = true,
                         )
                     }
+                    AllOrdersCache.shared.setPoints(result)
                 }
             }
             ApiCalls.shared.createRoute(callback)

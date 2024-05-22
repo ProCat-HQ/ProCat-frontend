@@ -1,10 +1,8 @@
 package com.example.procatfirst.ui.cart
 
-import android.util.Log
-import androidx.compose.material3.Button
+import android.content.Context
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DontMemoize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.sp
@@ -15,6 +13,7 @@ import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 @Composable
 fun ToolCard(
     toolViewModel: ToolCartViewModel = viewModel(),
+    context: Context,
 ) {
 
     val toolUiState by toolViewModel.uiState.collectAsState()
@@ -27,7 +26,7 @@ fun ToolCard(
     receiver1.CreateReceiver(intentToReact = SystemNotifications.delInCartIntent)
 
     if(toolUiState.tools.items.isNotEmpty() && toolUiState.isActive) {
-        ToolsScreenCart(toolUiState.tools)
+        ToolsScreenCart(toolUiState.tools, context)
     } else {
         Text(text = "Ваша корзина пуста", fontSize = 18.sp)
     }

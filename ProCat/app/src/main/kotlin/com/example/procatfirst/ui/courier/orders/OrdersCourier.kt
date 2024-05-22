@@ -95,13 +95,15 @@ fun CourierOrdersScreen(
             Text("Создать маршрут")
         }
 
-        Button(
+        if (deliveriesUiState.mapButtonVisible) {
+            Button(
                 onClick = { controller.startActivity(Intent(controller, MapActivity().javaClass)) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-        ) {
-            Text("Показать карту")
+                    .padding(16.dp),
+            ) {
+                Text("Показать карту")
+            }
         }
 
         if (changeStatusDialogVisible) {
