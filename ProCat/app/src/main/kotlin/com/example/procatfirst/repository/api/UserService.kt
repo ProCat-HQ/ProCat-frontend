@@ -20,6 +20,8 @@ import com.example.procatfirst.data.NewOrderResponse
 import com.example.procatfirst.data.Notification
 import com.example.procatfirst.data.NotificationItem
 import com.example.procatfirst.data.NotificationPayload
+import com.example.procatfirst.data.NotificationReadResponse
+import com.example.procatfirst.data.NotificationResponse
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.OrderRequest
@@ -175,17 +177,17 @@ interface UserService {
     @POST("/users/subscriptions/")
     suspend fun addItemIdToSubs(@Body requestBody: RequestBody): Call<ResponseBody>
 
-    @GET("/users/notifications/")
-    suspend fun getAllNotifications(): Call<NotificationPayload>
+    @GET("/users/notifications")
+    fun getAllNotifications(@Header("Authorization") token: String?): Call<NotificationResponse>
 
     @POST("/users/notifications/{usersId}")
-    suspend fun sendNotification(@Query("usersId") usersId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
+    fun sendNotification(@Header("Authorization") token: String?, @Path("usersId") usersId: Int, @Body requestBody: RequestBody): Call<RegistrationResponse>
 
     @PATCH("/users/notifications/{notificationId}")
-    suspend fun setNotificationToViewed(@Query("notificationId") notificationId: Int, @Body requestBody: NotificationItem): Call<ResponseBody>
+    fun setNotificationToViewed(@Header("Authorization") token: String?, @Path("notificationId") notificationId: Int): Call<NotificationReadResponse>
 
     @DELETE("/users/notifications/{notificationId}")
-    suspend fun deleteNotification(@Query("notificationId") notificationId: Int): Call<ResponseBody>
+    fun deleteNotification(@Header("Authorization") token: String?, @Path("notificationId") notificationId: Int): Call<ResponseBody>
 
     @GET("geocode?q=Новосибирск, Пирогова 1&fields=items.point&key=${BuildConfig.apiKey}")
     fun geocoder(): Call<ResponseBody>

@@ -11,16 +11,27 @@ data class Notification(
     val createdAt: Int
 )
 
+data class NotificationResponse(
+    val status: Int,
+    val message: String,
+    val payload: NotificationPayload
+)
+
+data class NotificationReadResponse(
+    val status: Int,
+    val message: String,
+    val payload: NotificationItem
+)
+data class NotificationPayload(
+    val notifications: List<NotificationItem>
+)
+
 data class NotificationItem(
     val id: Int,
     val title: String,
     val description: String,
     var isViewed: Boolean,
     val createdAt: String
-)
-
-data class NotificationPayload(
-    val notifications: List<Notification>
 )
 
 object NotificationDataProvider {

@@ -298,7 +298,26 @@ fun ChangeStatusDialog(
         }, */
 
         confirmButton = {
-            //if (currentOrder.status == "awaitingPayment") {
+            if (currentOrder.status == "accepted") {
+                Button(onClick = { onChangeStatus("readyToPickup") }) {
+                    Text("Готов к выдаче",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+            if (currentOrder.status == "awaitingRejection" || currentOrder.status == "awaitingMoneyBack") {
+                Button(onClick = { onChangeStatus("rejected") }) {
+                    Text("Отменен",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+            Button(onClick = { onChangeStatus("closed") }) {
+                Text("Закрыт",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            /*
             Button(onClick = { onChangeStatus("awaitingPayment") },
             ) {
                 Text("Ожидание оплаты",
@@ -397,7 +416,7 @@ fun ChangeStatusDialog(
                 Text("Закрыт",
                     style = MaterialTheme.typography.bodySmall
                 )
-            }
+            } */
 
         },
         dismissButton = {

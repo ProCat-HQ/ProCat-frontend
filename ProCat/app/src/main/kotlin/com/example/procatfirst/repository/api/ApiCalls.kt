@@ -17,6 +17,9 @@ import com.example.procatfirst.data.ItemFullPayload
 import com.example.procatfirst.data.ItemFullResponse
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.NewOrderResponse
+import com.example.procatfirst.data.NotificationItem
+import com.example.procatfirst.data.NotificationReadResponse
+import com.example.procatfirst.data.NotificationResponse
 import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrderSmall
@@ -1001,6 +1004,105 @@ class ApiCalls {
                 Log.i("RESPONSE", response.raw().toString())
                 response.body()?.let {
                     callback("SUCCESS") }
+            }
+
+        })
+    }
+
+    fun getNotificationsApi(callback: (String, List<NotificationItem>) -> Unit) {
+        val service = getUserService()
+
+        service.getAllNotifications("Bearer " + UserDataCache.shared.getUserToken()).enqueue(object : Callback<NotificationResponse> {
+
+            override fun onFailure(call: Call<NotificationResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<NotificationResponse>, response: Response<NotificationResponse>) {
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    val notifications = response.body()?.payload?.notifications ?: emptyList()
+                    callback("SUCCESS", notifications)
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}", emptyList())
+                }
+            }
+
+        })
+    }
+
+    fun sendNotificationApi(userId: Int, title: String, description: String, callback: (String) -> Unit) {
+        val service = getUserService()
+
+        val jsonObject = JSONObject()
+        jsonObject.put("title", title)
+        jsonObject.put("description", description)
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString())
+
+
+        service.sendNotification("Bearer " + UserDataCache.shared.getUserToken(), userId, requestBody).enqueue(object : Callback<RegistrationResponse> {
+
+            override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<RegistrationResponse>, response: Response<RegistrationResponse>) {
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    callback("SUCCESS")
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}")
+                }
+            }
+
+        })
+    }
+
+    fun setNotificationToViewedApi(id: Int, callback: (String) -> Unit) {
+        val service = getUserService()
+
+        service.setNotificationToViewed("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<NotificationReadResponse> {
+
+            override fun onFailure(call: Call<NotificationReadResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<NotificationReadResponse>, response: Response<NotificationReadResponse>) {
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    callback("SUCCESS")
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}")
+                }
+            }
+
+        })
+    }
+
+    fun deleteNotificationApi(id: Int, callback: (String) -> Unit) {
+        val service = getUserService()
+
+        service.deleteNotification("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<ResponseBody> {
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    callback("SUCCESS")
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}")
+                }
             }
 
         })

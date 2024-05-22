@@ -218,35 +218,17 @@ fun ChangeStatusDialog(
             }
         },
         confirmButton = {
-            Button(onClick = { onChangeStatus("Waiting for payment") }) {
-                Text("Ожидание оплаты")
-            }
-            Button(onClick = { onChangeStatus("Order collection") }) {
-                Text("Сбор заказа")
-            }
-            Button(onClick = { onChangeStatus("Order is ready for dispatch") }) {
-                Text("Готов к выдаче")
-            }
-            Button(onClick = { onChangeStatus("Pending delivery") }) {
-                Text("В ожидании доставки")
-            }
-            Button(onClick = { onChangeStatus("Delivery") }) {
-                Text("Доставка")
-            }
-            Button(onClick = { onChangeStatus("On hire") }) {
-                Text("В аренде")
-            }
-            Button(onClick = { onChangeStatus("Lease expires") }) {
-                Text("Истекает срок аренды")
-            }
-            Button(onClick = { onChangeStatus("Rental expired") }) {
-                Text("Просрочен срок аренды")
-            }
-            Button(onClick = { onChangeStatus("Problem with instrument") }) {
-                Text("Проблема с инструментом")
-            }
-            Button(onClick = { onChangeStatus("Waiting for payment for repairs") }) {
-                Text("Ожидание оплаты за ремонт")
+            if (currentOrder.status == "delivering") {
+                Button(onClick = { onChangeStatus("rent") }) {
+                    Text("В аренде",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Button(onClick = { onChangeStatus("returned") }) {
+                    Text("Возвращен",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         },
         dismissButton = {
