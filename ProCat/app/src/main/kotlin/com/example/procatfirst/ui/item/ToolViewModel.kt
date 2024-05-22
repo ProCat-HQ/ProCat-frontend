@@ -61,7 +61,12 @@ class ToolViewModel(toolId: Int): ViewModel() {
         }
         this.viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                DataCoordinator.shared.addToolToUserCart(Tool(tool.id, tool.name, tool.description, tool.price, tool.isInStock, tool.categoryId, tool.images[0].image)) {
+                var img = "hammer.jpg"
+                //Fake
+                if (tool.images != null && tool.images[0] != null) {
+                    img = tool.images[0].image
+                }
+                DataCoordinator.shared.addToolToUserCart(Tool(tool.id, tool.name, tool.description, tool.price, tool.isInStock, tool.categoryId, img)) {
                     if (it != "") {
                         Toast.makeText(context, "Инструмента нет в наличии", Toast.LENGTH_SHORT).show()
                     }
