@@ -116,6 +116,7 @@ class OrderingViewModel(): ViewModel() {
         // send request to make order with date, time, address and items!
         updateSelectedAddress(address)
         viewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
             val order = uiState.value
             val type : String = if (delivery) {
                 "by car"
@@ -156,6 +157,7 @@ class OrderingViewModel(): ViewModel() {
                     Log.i("NEW ORDER", "It's OK")
                     nextPage(this@OrderingViewModel)
                 }
+                _uiState.update { currentState -> currentState.copy(loading = false) }
             }
 
         }

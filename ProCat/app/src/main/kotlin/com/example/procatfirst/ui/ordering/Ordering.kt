@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -54,6 +55,8 @@ fun OrderingScreen(
 
     //-----------------------------------------------------
     val orderingUiState by orderingViewModel.uiState.collectAsState()
+    val isLoading = orderingUiState.loading
+
 
     /*
     val addresses = listOf(
@@ -80,99 +83,107 @@ fun OrderingScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-
-        ) {
-
-            Text(
-                text = stringResource(R.string.delivery)
-            )
-            Switch(
-                checked = orderingViewModel.delivery,
-                onCheckedChange = {
-                    orderingViewModel.delivery = it
-                    orderingViewModel.address = ""
-                }
-            )
-        }
-
-
-        if (orderingViewModel.delivery) {
-            OutlinedTextField(
-                value = orderingViewModel.country,
-                onValueChange = { orderingViewModel.country = it },
-                label = { Text(text = stringResource(R.string.enter_country)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            )
-            OutlinedTextField(
-                value = orderingViewModel.city,
-                onValueChange = { orderingViewModel.city = it },
-                label = { Text(text = stringResource(R.string.enter_city)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            )
-            OutlinedTextField(
-                value = orderingViewModel.address,
-                onValueChange = { orderingViewModel.address = it },
-                label = { Text(text = stringResource(R.string.enter_address)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            )
+        if (isLoading) {
+            CircularProgressIndicator()
         } else {
-            AddressSelectionSection(addresses, onOptionClicked)
-        }
+            Row(
 
-        DateTimePickerComponent(orderingViewModel)
+            ) {
 
-        OutlinedTextField(
-            value = orderingUiState.periodInDays.toString(),
-            onValueChange = { try { orderingViewModel.updateSelectedPeriod(it.toInt()) }
-            catch (e : NumberFormatException ) { orderingViewModel.updateSelectedPeriod(0)} },
-            label = { Text("Длительность аренды в днях") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        )
-
-        if(orderingViewModel.uiState.value.tools.isNotEmpty()) {
-            ToolsScreenCartSmall(orderingViewModel.uiState.value.tools)
-        } else {
-            Text(text = "Ваша корзина пуста", fontSize = 18.sp)
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-        var sum = 0
-        for (t in orderingViewModel.uiState.value.tools) {
-            sum += t.price * t.count
-        }
-
-        Column(
-
-        ) {
-            Row (){
                 Text(
-                    text = stringResource(R.string.final_price),
-                    modifier = Modifier.weight(5f)
+                    text = stringResource(R.string.delivery)
                 )
-
-                Text(
-                    text = sum.toString(),
-                    modifier = Modifier.weight(1f)
-
+                Switch(
+                    checked = orderingViewModel.delivery,
+                    onCheckedChange = {
+                        orderingViewModel.delivery = it
+                        orderingViewModel.address = ""
+                    }
                 )
             }
-            Button (
+
+            if (orderingViewModel.delivery) {
+                OutlinedTextField(
+                    value = orderingViewModel.country,
+                    onValueChange = { orderingViewModel.country = it },
+                    label = { Text(text = stringResource(R.string.enter_country)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                )
+                OutlinedTextField(
+                    value = orderingViewModel.city,
+                    onValueChange = { orderingViewModel.city = it },
+                    label = { Text(text = stringResource(R.string.enter_city)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                )
+                OutlinedTextField(
+                    value = orderingViewModel.address,
+                    onValueChange = { orderingViewModel.address = it },
+                    label = { Text(text = stringResource(R.string.enter_address)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                )
+            } else {
+                AddressSelectionSection(addresses, onOptionClicked)
+            }
+
+            DateTimePickerComponent(orderingViewModel)
+
+            OutlinedTextField(
+                value = orderingUiState.periodInDays.toString(),
+                onValueChange = {
+                    try {
+                        orderingViewModel.updateSelectedPeriod(it.toInt())
+                    } catch (e: NumberFormatException) {
+                        orderingViewModel.updateSelectedPeriod(0)
+                    }
+                },
+                label = { Text("Длительность аренды в днях") },
                 modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = {
-                    orderingViewModel.order(context, onToConfirmationClicked)
-                }
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            )
+
+            if (orderingViewModel.uiState.value.tools.isNotEmpty()) {
+                ToolsScreenCartSmall(orderingViewModel.uiState.value.tools)
+            } else {
+                Text(text = "Ваша корзина пуста", fontSize = 18.sp)
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+            var sum = 0
+            for (t in orderingViewModel.uiState.value.tools) {
+                sum += t.price * t.count
+            }
+
+            Column(
+
             ) {
-                Text(text = stringResource(R.string.order))
+                Row() {
+                    Text(
+                        text = stringResource(R.string.final_price),
+                        modifier = Modifier.weight(5f)
+                    )
+
+                    Text(
+                        text = sum.toString(),
+                        modifier = Modifier.weight(1f)
+
+                    )
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onClick = {
+                        orderingViewModel.order(context, onToConfirmationClicked)
+                    }
+                ) {
+                    Text(text = stringResource(R.string.order))
+                }
             }
         }
     }

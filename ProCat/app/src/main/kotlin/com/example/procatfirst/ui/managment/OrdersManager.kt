@@ -317,6 +317,16 @@ fun ChangeStatusDialog(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
+            Button(onClick = { onChangeStatus("readyToDelivery") }) {
+                Text("В ожидании доставки",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            Button(onClick = { onChangeStatus("accepted") }) {
+                Text("Принято в обработку",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
             /*
             Button(onClick = { onChangeStatus("awaitingPayment") },
             ) {

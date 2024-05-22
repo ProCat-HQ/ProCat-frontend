@@ -13,6 +13,7 @@ data class OrderingUiState(
     val selectedTimeToHour: Int = 17,
     val selectedTimeToMinute: Int = 0,
     val periodInDays: Int = 1,
+    val loading: Boolean = false,
 
     val stores: List<Store> = emptyList()
 )
