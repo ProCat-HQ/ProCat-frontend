@@ -647,10 +647,14 @@ class ApiCalls {
             }
 
             override fun onResponse(call: Call<ClusterResponse>, response: Response<ClusterResponse>) {
-                Log.i("RESPONSE", response.raw().toString())
-                response.body()?.let {
-                    Log.d("RESPONSE_R", it.payload.result.toString())
-                    callback("SUCCESS", it.payload.result)
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    response.body()?.let {
+                        callback("SUCCESS", it.payload.result)
+                    }
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}", emptyList())
                 }
             }
 
@@ -740,11 +744,20 @@ class ApiCalls {
             }
 
             override fun onResponse(call: Call<AllDeliveriesToSortResponse>, response: Response<AllDeliveriesToSortResponse>) {
-                Log.i("RESPONSE", response.raw().toString())
+                /*Log.i("RESPONSE", response.raw().toString())
                 response.body()?.let {
                     Log.d("DELIVERIES_COUNT", it.payload.count.toString())
                     Log.d("DELIVERIES_RESULT", it.payload.rows.toString())
-                    callback("SUCCESS", it.payload.rows) }
+                    callback("SUCCESS", it.payload.rows) } */
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    response.body()?.let {
+                        callback("SUCCESS", it.payload.rows)
+                    }
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}", emptyList())
+                }
             }
 
         })
