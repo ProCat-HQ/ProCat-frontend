@@ -18,7 +18,7 @@ data class ItemResponse(
 
 data class ItemPayload(
         val count: Int,
-        val rows: List<Item>
+        val rows: List<Item2>
 )
 
 //------------------

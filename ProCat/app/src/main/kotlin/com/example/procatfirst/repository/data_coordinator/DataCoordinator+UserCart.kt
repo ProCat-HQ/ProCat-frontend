@@ -1,5 +1,6 @@
 import com.example.procatfirst.data.CartItem
 import com.example.procatfirst.data.CartPayload
+import com.example.procatfirst.data.Item2
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.data.ToolWithCnt
 import com.example.procatfirst.intents.NotificationCoordinator
@@ -21,7 +22,7 @@ import com.example.procatfirst.repository.data_storage.DataStorage
         return UserCartCache.shared.getUserCartPayload()
     }
 
-    suspend fun DataCoordinator.addToolToUserCart(tool : Tool, callback: (String) -> Unit){
+    suspend fun DataCoordinator.addToolToUserCart(tool : Item2, callback: (String) -> Unit){
         ApiCalls.shared.postCart(tool.id, 1) {
             if (it == "") {
                 UserCartCache.shared.addUserCartStuff(tool)

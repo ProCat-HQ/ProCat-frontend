@@ -541,9 +541,15 @@ class ApiCalls {
             }
 
             override fun onResponse(call: Call<OrdersResponse>, response: Response<OrdersResponse>) {
-                Log.i("RESPONSE", response.raw().toString())
-                response.body()?.let {
-                    callback("SUCCESS", it.payload.rows) }
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    response.body()?.let {
+                        callback("SUCCESS", it.payload.rows)
+                    }
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}", emptyList())
+                }
             }
 
         })

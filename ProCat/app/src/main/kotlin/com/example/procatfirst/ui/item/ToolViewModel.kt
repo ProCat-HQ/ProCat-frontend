@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.procatfirst.data.Item2
 import com.example.procatfirst.data.ItemFullPayload
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
@@ -66,7 +67,7 @@ class ToolViewModel(toolId: Int): ViewModel() {
                 if (tool.images != null && tool.images[0] != null) {
                     img = tool.images[0].image
                 }
-                DataCoordinator.shared.addToolToUserCart(Tool(tool.id, tool.name, tool.description, tool.price, tool.isInStock, tool.categoryId, img)) {
+                DataCoordinator.shared.addToolToUserCart(Item2(tool.id, tool.name, tool.description, tool.price, tool.isInStock, tool.categoryId, tool.categoryName, img)) {
                     if (it != "") {
                         Toast.makeText(context, "Инструмента нет в наличии", Toast.LENGTH_SHORT).show()
                     }

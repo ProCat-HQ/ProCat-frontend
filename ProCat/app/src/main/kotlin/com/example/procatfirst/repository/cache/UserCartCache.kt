@@ -3,6 +3,7 @@ package com.example.procatfirst.repository.cache
 import android.util.Log
 import com.example.procatfirst.data.CartItem
 import com.example.procatfirst.data.CartPayload
+import com.example.procatfirst.data.Item2
 import com.example.procatfirst.data.Tool
 
 class UserCartCache {
@@ -14,7 +15,7 @@ class UserCartCache {
         const val identifier = "[UserCartCache]"
     }
 
-    fun addUserCartStuff(tool : Tool) {
+    fun addUserCartStuff(tool : Item2) {
         Log.v("AddTool", tool.toString())
         if (toolsStorage.containsKey(tool.id)) {
             toolsStorage[tool.id] = toolsStorage[tool.id]!!.copy(count = toolsStorage[tool.id]!!.count + 1)
