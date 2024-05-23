@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.icu.util.TimeUnit
 import android.util.Log
+import com.example.procatfirst.R
 import com.example.procatfirst.data.AllDeliveriesForDeliverymanResponse
 import com.example.procatfirst.data.AllDeliveriesToSortResponse
 import com.example.procatfirst.data.CartPayload
@@ -44,6 +45,7 @@ import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.google.gson.Gson
 import okhttp3.MediaType
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -55,6 +57,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import ru.dublgis.dgismobile.mapsdk.LonLat
+import java.io.File
 import java.net.URL
 
 class ApiCalls {
@@ -157,6 +160,63 @@ class ApiCalls {
             }
         })
     }
+
+
+    /*fun createItem(callback : (String) -> Unit) {
+        val service = getItemsService()
+
+        val name = "Новое имя"
+        val description = "Новое описание"
+        val price = 2500
+        val priceDeposit = 25000
+        val categoryId = 0
+
+        val resourceId = R.drawable.drel
+        val inputStream = resources.openRawResource(resourceId)
+        val imageFile = File.createTempFile("image", ".jpeg", context.cacheDir)
+
+        imageFile.outputStream().use { output ->
+            inputStream.copyTo(output)
+        }
+
+        //val imageFile = File("res/drawable/drel.jpeg")
+
+        val imagePart = MultipartBody.Part.createFormData(
+            "images",
+            imageFile.name,
+            RequestBody.create(MediaType.parse("image/*"), imageFile)
+        )
+
+        service.createItem(
+            "Bearer " + UserDataCache.shared.getUserToken(),
+            name,
+            description,
+            price,
+            priceDeposit,
+            categoryId,
+            listOf(imagePart)
+        ).enqueue(object : Callback<RegistrationResponse> {
+
+            override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<RegistrationResponse>, response: Response<RegistrationResponse>) {
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    callback("SUCCESS")
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}")
+                }
+            }
+
+        })
+    }
+     */
+     */
+
 
     fun getUserDataApi(id: Int, callback: (String, UserDataResponse) -> Unit) {
 
@@ -487,9 +547,15 @@ class ApiCalls {
             }
 
             override fun onResponse(call: Call<OrdersResponse>, response: Response<OrdersResponse>) {
-                Log.i("RESPONSE", response.raw().toString())
-                response.body()?.let {
-                    callback("SUCCESS", it.payload.rows) }
+                if (response.isSuccessful) {
+                    Log.i("RESPONSE", response.raw().toString())
+                    response.body()?.let {
+                        callback("SUCCESS", it.payload.rows)
+                    }
+                } else {
+                    Log.i("RESPONSE_ERROR", response.errorBody()?.string().orEmpty())
+                    callback("FAILURE: ${response.errorBody()?.string().orEmpty()}", emptyList())
+                }
             }
 
         })

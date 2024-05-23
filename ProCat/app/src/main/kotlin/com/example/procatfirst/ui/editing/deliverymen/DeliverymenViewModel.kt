@@ -20,7 +20,6 @@ class DeliverymenViewModel(): ViewModel()  {
 
     init{
         loadDeliverymen()
-
     }
 
     private fun loadDeliverymen() {

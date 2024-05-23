@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
+import com.example.procatfirst.data.Item2
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
@@ -57,7 +58,7 @@ import com.example.procatfirst.ui.theme.ProCatFirstTheme
 @Composable
 fun ToolsScreen(
     onNextButtonClicked: () -> Unit,
-    onNextButtonClicked1: (Tool) -> Unit,
+    onNextButtonClicked1: (Item2) -> Unit,
     toolsViewModel: ToolsViewModel = viewModel(),
     modifier: Modifier = Modifier
     ) {
@@ -127,11 +128,11 @@ fun ToolsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    val groupedTools = searchUiState.tools.groupBy { it.categoryId }
-                    groupedTools.forEach { (categoryId, tools) ->
+                    val groupedTools = searchUiState.tools.groupBy { it.categoryName }
+                    groupedTools.forEach { (categoryName, tools) ->
                         item {
                             Text(
-                                text = categoryId.toString(),
+                                text = categoryName.toString(),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold
                             )
@@ -141,8 +142,6 @@ fun ToolsScreen(
                         }
                     }
                 }
-
-
             } else {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -197,8 +196,9 @@ fun ToolsScreen(
 
 @Composable
 fun ToolCard(
-    tool: Tool,
-    onNextButtonClicked: (Tool) -> Unit,
+    tool: Item2,
+    //tool: Tool,
+    onNextButtonClicked: (Item2) -> Unit,
     toolViewModel: ToolViewModel = ToolViewModel(tool)
 ) {
 

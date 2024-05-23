@@ -20,6 +20,7 @@ import com.example.procatfirst.R
 fun EditingScreen(
     onToStoresClicked: () -> Unit,
     onToAllDeliverymenClicked: () -> Unit,
+    onToItemsEditingClicked: () -> Unit
 ){
     Column(
         modifier = Modifier
@@ -47,6 +48,18 @@ fun EditingScreen(
         ) {
             Text(
                 text = stringResource(R.string.deliverymen),
+                fontSize = 16.sp
+            )
+        }
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            onClick = { onToItemsEditingClicked() }
+        ) {
+            Text(
+                text = stringResource(R.string.items),
                 fontSize = 16.sp
             )
         }

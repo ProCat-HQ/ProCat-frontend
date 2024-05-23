@@ -2,6 +2,7 @@ package com.example.procatfirst.repository.data_coordinator
 
 import android.graphics.Bitmap
 import com.example.procatfirst.data.Item
+import com.example.procatfirst.data.Item2
 import com.example.procatfirst.data.ItemFullPayload
 import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.api.ApiCalls
@@ -17,7 +18,7 @@ suspend fun DataCoordinator.loadCatalog(callback : () -> Unit) {
     }
 }
 
-fun DataCoordinator.getCatalog() : List<Tool> {
+fun DataCoordinator.getCatalog() : List<Item2> {
     return CatalogCache.shared.getCatalogStuff()
 }
 
