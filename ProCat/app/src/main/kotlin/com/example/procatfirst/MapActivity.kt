@@ -89,7 +89,8 @@ class MapActivity : AppCompatActivity() {
                     location = marker.position
                     Log.i("LOCATION", location.toString())
                     getAndShowOrderInfo(order.deliveryId) {
-                        labels.add(showLabel(map, marker.position, "Заказ №" + order.deliveryId))
+                        createToast(it)
+                        labels.add(showLabel(map, marker.position, it))
                     }
                     goButton.visibility = View.INVISIBLE
                     finishButton.visibility = View.VISIBLE
@@ -115,8 +116,9 @@ class MapActivity : AppCompatActivity() {
             LabelOptions(
                 coordinates = coords,
                 text = text,
+                haloRadius = 1f,
                 fontSize = 14f,
-                color = 2258161111.toInt(),
+                haloColor = 2258161111.toInt(),
             )
 
         )
@@ -126,9 +128,9 @@ class MapActivity : AppCompatActivity() {
         lifecycleScope.launch {
             ApiCalls.shared.getOrderApi(id) {
                 if (it?.items != null) {
-                    var result = "Номер заказа: $id\n"
+                    var result = "Номер заказа: $id, инструмент: "
                     for (i in it.items) {
-                        result += "${i.name}: ${i.count}\n"
+                        result += "${i.name}: ${i.count} "
                     }
                     callback(result)
                 }
