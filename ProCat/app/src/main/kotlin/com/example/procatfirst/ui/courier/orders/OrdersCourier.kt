@@ -47,7 +47,9 @@ import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.setOrderStatus
 import com.example.procatfirst.ui.managment.delivery.AdminDeliveryUiState
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
-
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
 @Composable
@@ -121,6 +123,13 @@ fun CourierOrdersScreen(
     }
 }
 
+fun formatDateTime(dateTimeString: String): String {
+    val zonedDateTime = ZonedDateTime.parse(dateTimeString)
+    val localDateTime = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
+    val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm")
+    return localDateTime.format(formatter)
+}
+
 @Composable
 fun DeliveryCard(
     delivery: Delivery,
@@ -163,7 +172,7 @@ fun DeliveryCard(
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Время ${delivery.timeStart} - ${delivery.timeEnd}",
+                    text = "Время ${formatDateTime(delivery.timeStart)} - ${formatDateTime(delivery.timeEnd)}",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
