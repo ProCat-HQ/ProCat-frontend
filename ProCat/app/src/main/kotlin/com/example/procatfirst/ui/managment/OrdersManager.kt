@@ -52,6 +52,10 @@ import com.example.procatfirst.R
 import com.example.procatfirst.data.DeliveryOrder
 import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.OrderItem
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun OrdersManagerScreen(
@@ -117,6 +121,13 @@ fun OrdersManagerScreen(
     }
 }
 
+fun formatDateTime(dateTimeString: String): String {
+    val zonedDateTime = ZonedDateTime.parse(dateTimeString)
+    val localDateTime = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
+    val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm")
+    return localDateTime.format(formatter)
+}
+
 @Composable
 fun OrderItemFull(
     changeStatus: (OrderFull) -> Unit,
@@ -172,7 +183,7 @@ fun OrderItemFull(
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Период доставки: ${orderFull.rentalPeriodStart} - ${orderFull.rentalPeriodEnd}",
+                    text = "Период доставки: ${formatDateTime(orderFull.rentalPeriodStart)} - ${formatDateTime(orderFull.rentalPeriodEnd)}",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
