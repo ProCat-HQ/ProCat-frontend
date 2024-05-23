@@ -18,17 +18,14 @@ class OrdersManagerViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(OrdersManagerUiState(listOf()))
     val uiState: StateFlow<OrdersManagerUiState> = _uiState.asStateFlow()
 
-    //val orders: MutableStateFlow<List<Order>> = MutableStateFlow(
-    //    DataCoordinator.shared.getAllOrders())
-
     init {
         getAllOrders()
     }
 
     private fun getAllOrders() {
         viewModelScope.launch {
-            val callback = {status: String, result: List<OrderFull> ->
-                if(status == "SUCCESS") {
+            val callback = {status: String, result: List<OrderFull>? ->
+                if(status == "SUCCESS" && result != null) {
                     _uiState.update { currentState ->
                         currentState.copy(
                             orders = result,

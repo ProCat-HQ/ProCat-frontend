@@ -37,6 +37,12 @@ data class OrdersPayload(
     val rows: List<OrderFull>
 )
 
+data class OrderFullResponse (
+    val status: Int,
+    val message: String,
+    val payload: OrderFull,
+)
+
 data class OrderFull(
     val id: Int,
     var status: String,

@@ -119,16 +119,18 @@ fun DeliveryCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            deliveries.deliveries.forEach { delivery ->
-                DeliveryLocationCard(
-                    deliveryLocation = delivery,
-                    onClick = { onLocationClick(delivery.deliveryId) },
-                    deliverymenIds = deliverymenIds,
-                    onDeliverymanChange = { newDeliverymanId ->
-                        onDeliverymanChange(delivery.deliveryId, newDeliverymanId)
-                    },
-                    deliverymanId
-                )
+            if (deliveries.deliveries != null) {
+                deliveries.deliveries.forEach { delivery ->
+                    DeliveryLocationCard(
+                        deliveryLocation = delivery,
+                        onClick = { onLocationClick(delivery.deliveryId) },
+                        deliverymenIds = deliverymenIds,
+                        onDeliverymanChange = { newDeliverymanId ->
+                            onDeliverymanChange(delivery.deliveryId, newDeliverymanId)
+                        },
+                        deliverymanId
+                    )
+                }
             }
         }
     }

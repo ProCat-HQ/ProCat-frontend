@@ -23,6 +23,7 @@ import com.example.procatfirst.data.NotificationItem
 import com.example.procatfirst.data.NotificationReadResponse
 import com.example.procatfirst.data.NotificationResponse
 import com.example.procatfirst.data.OrderFull
+import com.example.procatfirst.data.OrderFullResponse
 import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrderSmall
 import com.example.procatfirst.data.OrdersPayload
@@ -535,7 +536,7 @@ class ApiCalls {
     }
 
 
-    fun getAllOrdersApi(callback: (String, List<OrderFull>) -> Unit) {
+    fun getAllOrdersApi(callback: (String, List<OrderFull>?) -> Unit) {
         val service = getUserService()
 
         service.getAllOrders("Bearer " + UserDataCache.shared.getUserToken(), 100).enqueue(object : Callback<OrdersResponse> {
@@ -901,6 +902,29 @@ class ApiCalls {
                 response.body()?.let {
                     Log.d("DELIVERY", it.payload.toString())
                     callback("SUCCESS", it.payload) }
+            }
+
+        })
+    }
+
+    fun getOrderApi(id: Int, callback: (OrderFull?) -> Unit) {
+
+        val service = getUserService()
+
+        Log.d("DELIVERY", id.toString())
+
+        service.getOrder("Bearer " + UserDataCache.shared.getUserToken(), id).enqueue(object : Callback<OrderFullResponse> {
+
+            override fun onFailure(call: Call<OrderFullResponse>, t: Throwable) {
+                t.printStackTrace()
+                Log.i("API", t.toString())
+            }
+
+            override fun onResponse(call: Call<OrderFullResponse>, response: Response<OrderFullResponse>) {
+                Log.i("RESPONSE", response.raw().toString())
+                response.body()?.let {
+                    Log.d("DELIVERY", it.payload.toString())
+                    callback(it.payload) }
             }
 
         })
