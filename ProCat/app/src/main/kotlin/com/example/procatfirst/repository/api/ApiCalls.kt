@@ -2,6 +2,7 @@ package com.example.procatfirst.repository.api
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.icu.util.TimeUnit
 import android.util.Log
 import com.example.procatfirst.R
 import com.example.procatfirst.data.AllDeliveriesForDeliverymanResponse
@@ -44,6 +45,7 @@ import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinato
 import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import okhttp3.Route
@@ -320,7 +322,16 @@ class ApiCalls {
     }
 
     fun changeIin(iin: String, password: String, callback: (String) -> Unit) {
-        val service = getUserService()
+        val client = OkHttpClient.Builder()
+            .readTimeout(20, java.util.concurrent.TimeUnit.SECONDS)
+            .build()
+
+        val service = Retrofit.Builder()
+            .client(client)
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
 
         val jsonObject = JSONObject()
         jsonObject.put("password", password)
@@ -336,18 +347,12 @@ class ApiCalls {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == 200) {
                     response.body()?.let {
-                        if(it.string().contains("\"status\": 200")) {
-                            callback("SUCCESS")
-                        }
-                        else {
-                            response.errorBody()?.string()?.let { it1 -> callback(it1) }
-                            callback("Fail")
-                        }
+                        callback("SUCCESS")
                     }
                 }
                 else {
                     Log.e("API", response.raw().toString())
-                    callback("FAKE")
+                    response.errorBody()?.string()?.let { it1 -> callback(it1) }
                 }
             }
         })
@@ -601,7 +606,18 @@ class ApiCalls {
     }
 
     fun createNewOrder(order : OrderRequest, callback: (OrderSmall?) -> Unit) {
-        val service = getUserService()
+
+        val client = OkHttpClient.Builder()
+            .readTimeout(20, java.util.concurrent.TimeUnit.SECONDS)
+            .build()
+
+        val service = Retrofit.Builder()
+            .client(client)
+            .baseUrl(BACKEND_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(UserService::class.java)
+
 
         val jsonObject = Gson().toJson(order)
         Log.d("RequestJSON", jsonObject.toString())

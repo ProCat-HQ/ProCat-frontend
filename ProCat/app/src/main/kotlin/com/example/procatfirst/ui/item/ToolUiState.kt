@@ -8,4 +8,5 @@ data class ToolUiState(
     val amount: Int = 0,
     val bitmap: Bitmap? = null,
     val tool: ItemFullPayload? = null,
+    val favourite: Boolean = false,
 )

@@ -8,8 +8,11 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.procatfirst.data.Point
+import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.AllOrdersCache
+import kotlinx.coroutines.launch
 import ru.dublgis.dgismobile.mapsdk.LonLat
 import ru.dublgis.dgismobile.mapsdk.Map
 import ru.dublgis.dgismobile.mapsdk.MapFragment
@@ -49,12 +52,14 @@ class MapActivity : AppCompatActivity() {
 
     private fun onDGisMapReady(map: Map?) {
         val labels = mutableListOf<Label?>()
-        val markers = mutableListOf<Marker?>()
+        val markers = mutableMapOf<Int, Marker?>()
+        val finishes = mutableListOf<Button>()
         val goButton = addActionButton {
             onDirectionReady(map)
-            //it.visibility = View.INVISIBLE
+            it.visibility = View.INVISIBLE
         }
-        //goButton.visibility = View.INVISIBLE
+
+        map?.enableUserLocation(UserLocationOptions(isVisible = true))
 
         val outButton = addOutButton {
             //start main activity
@@ -62,27 +67,38 @@ class MapActivity : AppCompatActivity() {
         }
 
         points = (AllOrdersCache.shared.getPoints() as MutableList<Point>?)!!
-        map?.let {
+        map?.let { map1 ->
             for (order in points!!) {
-                val marker = it.addMarker(
+                val marker = map1.addMarker(
                     MarkerOptions(
-                        LonLat(order.lon.toDouble(), order.lat.toDouble())
+                        LonLat(order.longitude.toDouble(), order.latitude.toDouble())
                     )
                 )
+                val finishButton = addFinishButton {
+                    it.visibility = View.INVISIBLE
+                    marker.hide()
+                    finishOrder(order.deliveryId)
+                }
+                finishButton.visibility = View.INVISIBLE
+                finishes.add(finishButton)
                 marker.setOnClickListener {
                     location = marker.position
                     Log.i("LOCATION", location.toString())
-                    labels.add(showLabel(map, marker.position, "Заказ №" + order.orderId))
-                    goButton.visibility = View.VISIBLE
+                    labels.add(showLabel(map, marker.position, "Заказ №" + order.deliveryId))
+                    goButton.visibility = View.INVISIBLE
+                    finishButton.visibility = View.VISIBLE
                 }
-                markers.add(marker)
+                markers[order.deliveryId] = marker
             }
         }
         map?.setOnClickListener {
             for (i in labels) {
                 i?.hide()
             }
-            //goButton.visibility = View.INVISIBLE
+            for (i in finishes) {
+                i.visibility = View.INVISIBLE
+            }
+            goButton.visibility = View.VISIBLE
             direct?.clear()
         }
 
@@ -98,13 +114,22 @@ class MapActivity : AppCompatActivity() {
         )
     }
 
+    private fun finishOrder(id: Int) {
+        lifecycleScope.launch {
+            ApiCalls.shared.changeStatusForDeliveryFromDeliveryIdApi(id, "rent") {
+                Log.d("MAP-ORDER", it)
+            }
+        }
+    }
+
     private fun onDirectionReady(map: Map?) {
-        map?.enableUserLocation(UserLocationOptions(isVisible = true))
+
         direct = map?.createDirections(DirectionsOptions(BuildConfig.apiKey))
-        points?.add(0, Point(0, map?.userLocation?.value?.longitude.toString(), map?.userLocation?.value?.latitude.toString() ))
+        //points?.add(0, Point("Склад", map?.userLocation?.value?.longitude.toString(), map?.userLocation?.value?.latitude.toString(), 0 ))
+        points?.add(0, Point("Склад", AllOrdersCache.shared.storage!!.lon.toString(), AllOrdersCache.shared.storage!!.lat.toString(), 0 ))
         val pointList = mutableListOf<LonLat>()
         for (point in points!!) {
-            pointList.add(LonLat(point.lon.toDouble(), point.lat.toDouble()))
+            pointList.add(LonLat(point.longitude.toDouble(), point.latitude.toDouble()))
         }
         val opt = CarRouteOptions(pointList)
         direct?.carRoute(opt)
@@ -131,15 +156,16 @@ class MapActivity : AppCompatActivity() {
             return btn
     }
 
-    private fun addOutButton(action: (View) -> Unit) : Button {
-        val btn = findViewById<Button>(R.id.out)
+    private fun addFinishButton(action: (View) -> Unit) : Button {
+        val btn = findViewById<Button>(R.id.finish_button)
         btn.setOnClickListener( action )
         return btn
     }
 
-    private fun createToast(@Suppress("UNUSED_PARAMETER") view: View?, body: String?) {
-        val myToast = Toast.makeText(this, body, Toast.LENGTH_SHORT)
-        myToast.show()
+    private fun addOutButton(action: (View) -> Unit) : Button {
+        val btn = findViewById<Button>(R.id.out)
+        btn.setOnClickListener( action )
+        return btn
     }
 
     private fun createToast(body: String?) {

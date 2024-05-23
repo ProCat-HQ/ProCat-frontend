@@ -124,7 +124,7 @@ interface UserService {
     fun getDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int): Call<DeliveryResponse>
 
     @PATCH("/users/deliverymen/deliveries/{deliveryId}")
-    fun changeStatusForDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int, requestBody: RequestBody): Call<ResponseBody>
+    fun changeStatusForDeliveryFromDeliveryId(@Header("Authorization") token: String?, @Path("deliveryId") deliveryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
     @POST("/users/deliverymen/deliveries/create-route")
     fun createRoute(@Header("Authorization") token: String?, @Query("storeId") store: Int): Call<RouteResponse>
