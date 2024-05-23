@@ -100,7 +100,9 @@ class CourierOrdersViewModel: ViewModel() {
                             mapButtonVisible = true,
                         )
                     }
-                    AllOrdersCache.shared.setPoints(result)
+                    if (result.isNotEmpty()) {
+                        AllOrdersCache.shared.setPoints(result)
+                    }
                 }
                 loadOrders()
             }

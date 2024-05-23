@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.getUserData
+import getUserCart
 import getUserCartPayload
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,14 @@ class CartViewModel: ViewModel() {
 
     init {
         _uiState.value = CartUiState()
+        open()
+    }
+
+    private fun open() {
+        viewModelScope.launch { withContext(Dispatchers.IO) {
+            DataCoordinator.shared.getUserCart()
+
+        } }
     }
 
     fun closeDialog() {

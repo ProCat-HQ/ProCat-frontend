@@ -20,7 +20,7 @@ import java.util.Base64
 
 suspend fun DataCoordinator.getUserData(callback: (User) -> Unit) {
 
-    if (UserDataCache.shared.getUserData()?.phoneNumber == "") {
+    //if (UserDataCache.shared.getUserData()?.phoneNumber == "") {
         ApiCalls.shared.getUserDataApi(UserDataCache.shared.getUserData()!!.id) {
                 status: String, user: UserDataResponse ->
             if (status == "SUCCESS") {
@@ -28,8 +28,8 @@ suspend fun DataCoordinator.getUserData(callback: (User) -> Unit) {
                 callback(UserDataCache.shared.getUserData()!!)
             }
         }
-    }
-    callback(UserDataCache.shared.getUserData()!!)
+    //}
+    //callback(UserDataCache.shared.getUserData()!!)
 }
 
 suspend fun DataCoordinator.setUserData(user: User)  {

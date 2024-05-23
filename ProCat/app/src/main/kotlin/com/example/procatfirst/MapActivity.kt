@@ -80,8 +80,15 @@ class MapActivity : AppCompatActivity() {
                 )
                 val finishButton = addFinishButton {
                     it.visibility = View.INVISIBLE
-                    marker.hide()
-                    finishOrder(order.deliveryId)
+                   // map.hideMarker(marker)
+//                    for (m in markers) {
+//                        if (m.value == marker) {
+//                            markers.remove(m.key)
+//                            break
+//                        }
+//                    }
+                    finishOrder(AllOrdersCache.shared.ordersToDelivery!!.size - order.deliveryId + 1)
+                    //finishOrder(order.deliveryId)
                 }
                 finishButton.visibility = View.INVISIBLE
                 finishes.add(finishButton)
@@ -89,7 +96,6 @@ class MapActivity : AppCompatActivity() {
                     location = marker.position
                     Log.i("LOCATION", location.toString())
                     getAndShowOrderInfo(order.deliveryId) {
-                        createToast(it)
                         labels.add(showLabel(map, marker.position, it))
                     }
                     goButton.visibility = View.INVISIBLE
@@ -139,7 +145,14 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun finishOrder(id: Int) {
+        Log.v("FINISED", id.toString())
         lifecycleScope.launch {
+            for (or in AllOrdersCache.shared.ordersToDelivery!!) {
+                if (or.deliveryId == id) {
+                    AllOrdersCache.shared.ordersToDelivery?.remove(or)
+                    break
+                }
+            }
             ApiCalls.shared.getOrderApi(id) {
                 val newStatus = if (it?.status == "delivering") {
                     "rent"

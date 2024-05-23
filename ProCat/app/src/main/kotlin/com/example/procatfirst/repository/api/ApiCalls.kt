@@ -609,7 +609,7 @@ class ApiCalls {
     fun createNewOrder(order : OrderRequest, callback: (OrderSmall?) -> Unit) {
 
         val client = OkHttpClient.Builder()
-            .readTimeout(20, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
             .build()
 
         val service = Retrofit.Builder()

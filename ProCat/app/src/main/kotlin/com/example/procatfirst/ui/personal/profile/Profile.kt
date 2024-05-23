@@ -92,7 +92,7 @@ fun ProfileScreen(
             userInput = profileViewModel.userInputEmail,
             onUserInputChanged = { profileViewModel.updateUserEmail(it) },
             onKeyboardDone = { profileViewModel.saveUserEmail() },
-            saveChanges = { profileViewModel.fullSaveUserEmail(it) },
+            saveChanges = { profileViewModel.fullSaveUserEmail(it, context!!) },
             profileViewModel = profileViewModel
         )
         MutableField(
