@@ -106,6 +106,7 @@ class CourierOrdersViewModel: ViewModel() {
                     }
                     AllOrdersCache.shared.setPoints(result)
                 }
+                loadOrders()
             }
             ApiCalls.shared.createRoute(callback)
             StoreApiCalls.shared.getAllStoresApi() {

@@ -1,13 +1,17 @@
 package com.example.procatfirst
 
 import android.content.Intent
+import android.graphics.ColorSpace
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.compose.material3.Text
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.lifecycle.lifecycleScope
 import com.example.procatfirst.data.Point
 import com.example.procatfirst.repository.api.ApiCalls
@@ -22,6 +26,7 @@ import ru.dublgis.dgismobile.mapsdk.MarkerOptions
 import ru.dublgis.dgismobile.mapsdk.directions.CarRouteOptions
 import ru.dublgis.dgismobile.mapsdk.directions.Directions
 import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
+import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
@@ -65,7 +70,6 @@ class MapActivity : AppCompatActivity() {
             //start main activity
             startActivity(Intent(this, MainActivity().javaClass))
         }
-
         points = (AllOrdersCache.shared.getPoints() as MutableList<Point>?)!!
         map?.let { map1 ->
             for (order in points!!) {
@@ -84,7 +88,9 @@ class MapActivity : AppCompatActivity() {
                 marker.setOnClickListener {
                     location = marker.position
                     Log.i("LOCATION", location.toString())
-                    labels.add(showLabel(map, marker.position, "Заказ №" + order.deliveryId))
+                    getAndShowOrderInfo(order.deliveryId) {
+                        labels.add(showLabel(map, marker.position, "Заказ №" + order.deliveryId))
+                    }
                     goButton.visibility = View.INVISIBLE
                     finishButton.visibility = View.VISIBLE
                 }
@@ -109,15 +115,38 @@ class MapActivity : AppCompatActivity() {
             LabelOptions(
                 coordinates = coords,
                 text = text,
-                fontSize = 18f
+                fontSize = 14f,
+                color = 2258161111.toInt(),
             )
+
         )
+    }
+
+    private fun getAndShowOrderInfo(id: Int, callback: (String) -> Unit) {
+        lifecycleScope.launch {
+            ApiCalls.shared.getOrderApi(id) {
+                if (it?.items != null) {
+                    var result = "Номер заказа: $id\n"
+                    for (i in it.items) {
+                        result += "${i.name}: ${i.count}\n"
+                    }
+                    callback(result)
+                }
+            }
+        }
     }
 
     private fun finishOrder(id: Int) {
         lifecycleScope.launch {
-            ApiCalls.shared.changeStatusForDeliveryFromDeliveryIdApi(id, "rent") {
-                Log.d("MAP-ORDER", it)
+            ApiCalls.shared.getOrderApi(id) {
+                val newStatus = if (it?.status == "delivering") {
+                    "rent"
+                } else {
+                    "returned"
+                }
+                ApiCalls.shared.changeStatusForDeliveryFromDeliveryIdApi(id, newStatus) {it1 ->
+                    Log.d("MAP-ORDER", it1)
+                }
             }
         }
     }

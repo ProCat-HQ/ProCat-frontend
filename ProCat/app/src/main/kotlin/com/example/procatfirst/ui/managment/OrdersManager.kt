@@ -74,22 +74,24 @@ fun OrdersManagerScreen(
             style = MaterialTheme.typography.titleLarge,
         )
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(16.dp),
-        ) {
-            items(ordersUiState.orders) { orderFull ->
-                if (orderFull.status != "closed") {
-                    OrderItemFull(
-                        orderFull = orderFull,
-                        changeStatus = {
-                            changeStatusDialogVisible = true
-                            currentOrder = orderFull
-                        },
-                        onViewPaymentsClicked = { orderId ->
-                            navController.navigate("${ProCatScreen.Payments.name}/$orderId")
-                        }
-                    )
+        if (ordersUiState.orders != null) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(16.dp),
+            ) {
+                items(ordersUiState.orders!!) { orderFull ->
+                    if (orderFull.status != "closed") {
+                        OrderItemFull(
+                            orderFull = orderFull,
+                            changeStatus = {
+                                changeStatusDialogVisible = true
+                                currentOrder = orderFull
+                            },
+                            onViewPaymentsClicked = { orderId ->
+                                navController.navigate("${ProCatScreen.Payments.name}/$orderId")
+                            }
+                        )
+                    }
                 }
             }
         }

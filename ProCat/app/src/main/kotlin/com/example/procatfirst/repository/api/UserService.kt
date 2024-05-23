@@ -24,6 +24,7 @@ import com.example.procatfirst.data.NotificationReadResponse
 import com.example.procatfirst.data.NotificationResponse
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.OrderFull
+import com.example.procatfirst.data.OrderFullResponse
 import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
@@ -157,7 +158,7 @@ interface UserService {
     fun getUserOrders(@Query("userId") id : Int, @Header("Authorization") token: String?): Call<OrdersResponse>
 
     @GET("/users/orders/{orderId}")
-    suspend fun getOrder(@Path("orderId", ) orderId: Int): Call<OrderFull>
+    fun getOrder(@Header("Authorization") token: String?, @Path("orderId") orderId: Int): Call<OrderFullResponse>
 
     @POST("/users/orders")
     fun createNewOrder(@Body requestBody: RequestBody, @Header("Authorization") token: String?): Call<NewOrderResponse>
