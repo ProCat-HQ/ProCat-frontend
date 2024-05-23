@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Item(
-        //place for Vadim
         val id: Int,
         val name: String,
         val description: String,
@@ -13,8 +12,6 @@ data class Item(
         val isInStock: Boolean,
         val image: String,
         val categoryId: Int?,
-
-
 )
 
 @Serializable

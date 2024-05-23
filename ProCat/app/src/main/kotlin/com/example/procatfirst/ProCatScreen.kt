@@ -48,6 +48,7 @@ import com.example.procatfirst.ui.item.ToolScreen
 import com.example.procatfirst.ui.managment.OrdersManagerScreen
 import com.example.procatfirst.ui.managment.delivery.AdminDelivery
 import com.example.procatfirst.ui.editing.deliverymen.Deliverymen
+import com.example.procatfirst.ui.editing.items.ItemsEditingScreen
 import com.example.procatfirst.ui.managment.payments.PaymentsScreen
 import com.example.procatfirst.ui.ordering.OrderConfirmation
 import com.example.procatfirst.ui.ordering.OrderingScreen
@@ -84,7 +85,8 @@ enum class ProCatScreen(@StringRes val title: Int) {
     AllDeliverymen(title = R.string.deliverymen),
     Stores(title = R.string.stores),
     Editing(title = R.string.editing),
-    Payments(title = R.string.payments)
+    Payments(title = R.string.payments),
+    ItemsEditing(title = R.string.items)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -388,10 +390,18 @@ fun ProCatApp (
                     onToAllDeliverymenClicked = {
                         navController.navigate(ProCatScreen.AllDeliverymen.name)
                     },
+                    onToItemsEditingClicked = {
+                        navController.navigate(ProCatScreen.ItemsEditing.name)
+                    }
                 )
             }
             composable(route = ProCatScreen.Stores.name) {
                 StoresScreen(
+
+                )
+            }
+            composable(route = ProCatScreen.ItemsEditing.name) {
+                ItemsEditingScreen(
 
                 )
             }

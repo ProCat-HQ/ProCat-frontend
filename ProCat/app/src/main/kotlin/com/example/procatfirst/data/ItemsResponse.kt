@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ItemsResponse(
-
     val status: String,
     val message: String,
     val payload : List<Item>
@@ -30,7 +29,7 @@ data class ItemInfo(
         val description: String
 )
 
-data class ItemImage(
+data class ItemImageWithId(
         val id: Int,
         val image: String
 )
@@ -59,8 +58,23 @@ data class ItemFullPayload(
         val categoryId: Int,
         val categoryName: String,
         val info: List<ItemInfo>,
-        val images: List<ItemImage>,
+        val images: List<ItemImageWithId>,
         val itemStores: List<ItemStore>
+)
+
+//------------------------------------
+
+data class ItemCreation(
+        val name: String,
+        val description: String,
+        val price: Int,
+        val priceDeposit: Int,
+        val categoryId: Int,
+        val images: List<ItemImage>
+)
+
+data class ItemImage(
+        val image: String
 )
 
 

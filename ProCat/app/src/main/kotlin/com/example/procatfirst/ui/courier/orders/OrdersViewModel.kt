@@ -77,11 +77,7 @@ class CourierOrdersViewModel: ViewModel() {
         viewModelScope.launch {
             val callback = {status: String ->
                 if(status == "SUCCESS") {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            orderStatus = orderStatus
-                        )
-                    }
+                    loadOrders()
                 }
             }
             ApiCalls.shared.changeStatusForDeliveryFromDeliveryIdApi(orderId, orderStatus, callback)
