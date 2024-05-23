@@ -13,12 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,7 +50,7 @@ fun ListOfChatsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        md_theme_light_onPrimary, RoundedCornerShape(
+                        MaterialTheme.colorScheme.background, RoundedCornerShape(
                             topStart = 30.dp, topEnd = 30.dp
                         )
                     )
@@ -60,7 +59,7 @@ fun ListOfChatsScreen(
                 LazyColumn(
                     modifier = Modifier.padding(bottom = 15.dp, top = 30.dp)
                 ) {
-                    items(users, key = { it.userId }) {
+                    items(users, key = { it.id }) {
                         UserEachRow(
                             user = it,
                             onToChatClicked = onToChatClicked
@@ -85,25 +84,29 @@ fun UserEachRow(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .clickable { onToChatClicked() }
             .padding(horizontal = 20.dp, vertical = 5.dp),
     ) {
-        Column {
+        Column(
+            modifier = Modifier.padding(8.dp)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row {
-                    Column {
+                    Column (
+                        modifier = Modifier.padding(8.dp)
+                    ){
                         Text(
                             text = user.fullName, style = TextStyle(
-                                color = md_theme_light_scrim, fontSize = 15.sp, fontWeight = FontWeight.Bold
+                                color = MaterialTheme.colorScheme.scrim, fontSize = 15.sp, fontWeight = FontWeight.Bold
                             )
                         )
                         Text( //lastMessage?
                             text = user.phoneNumber, style = TextStyle(
-                                color = md_theme_light_outline, fontSize = 14.sp
+                                color = MaterialTheme.colorScheme.outline, fontSize = 14.sp
                             )
                         )
                     }
@@ -111,11 +114,11 @@ fun UserEachRow(
                 }
                 Text( //date of last message?
                     text = user.role, style = TextStyle(
-                        color = md_theme_light_outline, fontSize = 12.sp
+                        color = MaterialTheme.colorScheme.outline, fontSize = 12.sp
                     )
                 )
             }
-            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Black)
+            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = MaterialTheme.colorScheme.onPrimaryContainer)
         }
     }
 

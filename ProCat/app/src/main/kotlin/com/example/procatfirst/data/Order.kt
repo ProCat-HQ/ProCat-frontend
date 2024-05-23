@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Order(
     val orderId: Int,
-    val status: String,
+    var status: String,
     val totalPrice: Int,
     val rentalPeriod: String,
     val address: String,
@@ -59,19 +59,10 @@ object OrderDataProvider {
         )
     )
     val deliveryOrders = listOf(
+
         Order(
             orderId = 1,
             status = "Ожидает доставки",
-            totalPrice = 8000,
-            rentalPeriod = "30.04.2023-23.06.2023",
-            address = "Пирогова, 1",
-            companyName = "54.843243 83.088801",
-            contract = 897,
-            userId = 1
-        ),
-        Order(
-            orderId = 2,
-            status = "Ожидает возврата",
             totalPrice = 900,
             rentalPeriod = "30.04.2023-23.06.2023",
             address = "Николаева, 11/5",
@@ -80,8 +71,8 @@ object OrderDataProvider {
             userId = 2
         ),
         Order(
-            orderId = 3,
-            status = "Ожидает доставки",
+            orderId = 2,
+            status = "Ожидает возврата",
             totalPrice = 1700,
             rentalPeriod = "30.04.2023-23.06.2023",
             address = "Терешковой, 19",

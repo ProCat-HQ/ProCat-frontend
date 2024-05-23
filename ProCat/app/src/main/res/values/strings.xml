@@ -10,6 +10,7 @@
     <string name="next">Далее</string>
 
     <string name="auth">Авторизация</string>
+    <string name="authorize">Авторизироваться</string>
     <string name="sign_in_intro">Вход</string>
     <string name="sign_in">Войти</string>
     <string name="forgot_password">Забыл пароль</string>
@@ -17,6 +18,21 @@
     <string name="wrong_password">Неправильный пароль</string>
     <string name="enter_phone_number">Введите номер телефона</string>
     <string name="wrong_phone_number">Неправильный номер телефона</string>
+    <string name="to_register">Нет аккаунта? Зарегистрируйтесь!</string>
+
+    <string name="registration">Регистрация</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="enter_last_name">Введите фамилию</string>
+    <string name="enter_first_name">Введите имя</string>
+    <string name="enter_father_name">Введите отчество</string>
+    <string name="wrong_last_name">Неправильная фамилия</string>
+    <string name="wrong_first_name">Неправильное имя</string>
+    <string name="wrong_father_name">Неправильное отчество</string>
+    <string name="to_auth">Есть аккаунт? Войдите!</string>
+
+
+    <string name="save">Сохранить</string>
+
 
     <string name="hammer">Молоток</string>
     <string name="tool">Инструмент</string>
@@ -43,6 +59,36 @@
     <string name="confirm_inn_text">Чтобы продолжить офромление заказа необходимо ввести ИИН в Личном кабинете и дождаться его проверки</string>
     <string name="to_personal">Перейти в личный кабинет</string>
 
+    <string name="enter_country">Введите страну</string>
+    <string name="enter_city">Введите город</string>
+    <string name="enter_address">Введите адрес доставки</string>
+
+    <string name="choose_address_from_list">Выберите адрес пункта</string>
+    <string name="pick_date">Выберите дату</string>
+    <string name="from">От:</string>
+    <string name="to">До:</string>
+    <string name="order">Заказать</string>
+
+    <string name="editing">Редактирование</string>
+    <string name="stores">Магазины</string>
+    <string name="payments">Платежи</string>
+    <string name="items">Инструменты</string>
+    <string name="createItem">Добавить инструмент</string>
+
+
+    <string name="order_confirmation">Подтверждение заказа</string>
+
+    <string name="send_notification">Послать уведомление</string>
+
+    <string name="sort_by_price">Сортировать по цене</string>
+    <string name="ascending">По возрастанию</string>
+    <string name="descending">По убыванию</string>
+
+    <string name="cancel">Закрыть</string>
+    <string name="apply">Применить</string>
+    <string name="category_group">По категориям</string>
+    <string name="reset">Сбросить</string>
+
 
     <string name="personal">Меню</string>
     <string name="profile">Профиль</string>
@@ -62,8 +108,17 @@
     <string name="list_of_orders">Список заказов</string>
     <string name="ask_question">Задать вопрос</string>
 
+    <string name="deliveries">Доставки</string>
+    <string name="make_cluster">Распределить</string>
+    <string name="deliverymen">Курьеры и клиенты</string>
+
+
     <string name="list_of_chats">Чаты</string>
     <string name="type_message">Введите сообщение</string>
     <string name="chat">Чат</string>
     <string name="go_go_go">В путь!</string>
+    <string name="manager">Страница администратора</string>
+    <string name="delivery_page">Страница курьера</string>
+    <string name="finished">Доставлено</string>
+
 </resources>

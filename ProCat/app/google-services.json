@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "812542850068",
+    "project_id": "procat-4bad1",
+    "storage_bucket": "procat-4bad1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812542850068:android:c9010b806d10d9a2e72301",
+        "android_client_info": {
+          "package_name": "com.example.procatfirst"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDkADWKsafyajAgPz4gRK3c5HWjEWFZOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

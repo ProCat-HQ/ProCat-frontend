@@ -1,7 +1,4 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import java.util.Properties
-
-//val apiKey: String = gradleLocalProperties(rootDir).getProperty("apiKey")
 
 
 task("testClasses")
@@ -11,6 +8,11 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization") version "1.9.22"
+    //id("kotlin-kapt")
+    //id("com.google.dagger.hilt.android")
+
+    id("com.google.gms.google-services")
+
 }
 
 
@@ -20,13 +22,12 @@ android {
 
     defaultConfig {
         applicationId = "com.example.procatfirst"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         buildFeatures.buildConfig = true
-        //buildConfigField("String", "apiKey", apiKey)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -80,6 +81,7 @@ android {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
+
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0-alpha02")
 
@@ -90,27 +92,23 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
-    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
-    testImplementation("junit:junit:4.13.2")
-    //androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    //androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
-    //debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx")
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-    //implementation("androidx.datastore:datastore-preferences-rxjava2:1.0.0")
     implementation("androidx.datastore:datastore-preferences-rxjava3:1.0.0")
     implementation("com.android.volley:volley:1.2.1")
 
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-moshi:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.1.0")
 
     implementation ("com.google.code.gson:gson:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
@@ -121,4 +119,14 @@ dependencies {
 
     implementation("ru.dublgis.dgismobile.mapsdk:mapsdk:latest.release")
 
+    //implementation("com.google.dagger:hilt-android:2.44")
+    //kapt("com.google.dagger:hilt-compiler:2.44")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
+
+/*
+kapt {
+    correctErrorTypes true
+} */

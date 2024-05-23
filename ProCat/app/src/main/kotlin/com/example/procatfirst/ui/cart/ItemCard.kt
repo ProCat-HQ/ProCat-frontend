@@ -1,5 +1,6 @@
 package com.example.procatfirst.ui.cart
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,39 +16,30 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
-import com.example.procatfirst.data.Tool
-import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
-import com.example.procatfirst.repository.data_storage_deprecated.updateRemoveToolsInCart
-import com.example.procatfirst.intents.NotificationCoordinator
-import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.intents.sendIntent
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.data.CartItem
+import com.example.procatfirst.data.CartPayload
 
 @Composable
 fun ToolsScreenCart(
-    tools: List<Tool>
+    tools: CartPayload,
+    context: Context,
 ) {
         Column(
             modifier = Modifier
@@ -54,16 +47,20 @@ fun ToolsScreenCart(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            for (tool in tools)
-                ToolCardCart(tool = tool)
+            for (tool in tools.items)
+                ToolCardCart(tool = tool, context = context)
         }
 }
 
 @Composable
 fun ToolCardCart(
-    toolViewModel: ToolViewModel = viewModel(),
-    tool: Tool
+    tool: CartItem,
+    toolViewModel: ToolViewModel = ToolViewModel(tool),
+    context: Context,
 ) {
+
+    val toolUiState by toolViewModel.uiState.collectAsState()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -95,10 +92,6 @@ fun ToolCardCart(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = tool.description,
-                    style = MaterialTheme.typography.bodyMedium
-                )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = (stringResource(id = R.string.tool_price, tool.price)),
@@ -107,8 +100,8 @@ fun ToolCardCart(
                     modifier = Modifier.fillMaxWidth()
                 )
                 QuantityButton(
-                    quantity = toolViewModel.quantity,
-                    onIncrease = { toolViewModel.increaseAmount() },
+                    quantity =  toolViewModel.uiState.value.tool.count,
+                    onIncrease = { toolViewModel.increaseAmount(context) },
                     onDecrease = { toolViewModel.decreaseAmount() }
                 )
             }
@@ -120,14 +113,16 @@ fun ToolCardCart(
 
             ){
                 Spacer(modifier = Modifier.height(10.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.hammer),//(id = tool.imageResId),
-                    contentDescription = tool.name,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                )
+                if (toolUiState.bitmap != null) {
+                    Image(
+                        bitmap = toolUiState.bitmap!!.asImageBitmap(),
+                        contentDescription = stringResource(id = R.string.logo),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1.0f) // Сохраняет соотношение сторон 1:1
+                            .padding(top = 5.dp, bottom = 5.dp)
+                    )
+                }
             }
 
         }

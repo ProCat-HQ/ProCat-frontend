@@ -1,16 +1,13 @@
 package com.example.procatfirst
 
 import android.content.Context
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -21,39 +18,48 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.procatfirst.repository.cache.CatalogCache
 import com.example.procatfirst.ui.auth.AuthScreen
-
-import com.example.procatfirst.ui.auth.AuthViewModel
 import com.example.procatfirst.ui.cart.Cart
+import com.example.procatfirst.ui.courier.orders.CourierOrdersScreen
+import com.example.procatfirst.ui.editing.EditingScreen
+import com.example.procatfirst.ui.editing.stores.StoresScreen
 import com.example.procatfirst.ui.item.ToolScreen
-import com.example.procatfirst.ui.item.ToolViewModel
+import com.example.procatfirst.ui.managment.OrdersManagerScreen
+import com.example.procatfirst.ui.managment.delivery.AdminDelivery
+import com.example.procatfirst.ui.editing.deliverymen.Deliverymen
+import com.example.procatfirst.ui.editing.items.ItemsEditingScreen
+import com.example.procatfirst.ui.managment.payments.PaymentsScreen
+import com.example.procatfirst.ui.ordering.OrderConfirmation
 import com.example.procatfirst.ui.ordering.OrderingScreen
 import com.example.procatfirst.ui.personal.PersonalScreen
 import com.example.procatfirst.ui.personal.chats.ChatScreen
 import com.example.procatfirst.ui.personal.chats.ListOfChatsScreen
 import com.example.procatfirst.ui.personal.notifications.NotificationsScreen
-import com.example.procatfirst.ui.personal.orders.OrdersDeliveryScreen
 import com.example.procatfirst.ui.personal.orders.OrdersScreen
 import com.example.procatfirst.ui.personal.profile.ProfileScreen
+import com.example.procatfirst.ui.registration.RegistrationScreen
 import com.example.procatfirst.ui.start.StartScreen
-import com.example.procatfirst.ui.theme.md_theme_light_inversePrimary
-import com.example.procatfirst.ui.theme.md_theme_light_secondaryContainer
 import com.example.procatfirst.ui.tools.ToolsScreen
 
 
@@ -71,8 +77,16 @@ enum class ProCatScreen(@StringRes val title: Int) {
     ListOfChatsScreen(title = R.string.list_of_chats),
     Chat(title = R.string.chat),
     Ordering(title = R.string.ordering),
-    Delivery(title = R.string.ordering), // damn
-
+    Delivery(title = R.string.delivery_page), // damn
+    Registration(title = R.string.registration),
+    Manager(title = R.string.manager), // damn
+    OrderConfirmation(title = R.string.order_confirmation),
+    AdminDelivery(title = R.string.delivery),
+    AllDeliverymen(title = R.string.deliverymen),
+    Stores(title = R.string.stores),
+    Editing(title = R.string.editing),
+    Payments(title = R.string.payments),
+    ItemsEditing(title = R.string.items)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,7 +107,7 @@ fun ProCatAppBar(
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back_button)
                     )
                 }
@@ -120,15 +134,20 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavItem.Personal
     )
     BottomNavigation(
-        backgroundColor = md_theme_light_secondaryContainer,
-        contentColor = md_theme_light_secondaryContainer
+        backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.secondaryContainer
     ) {
         items.forEach { item ->
             BottomNavigationItem(
                 icon = { Icon(item.icon, contentDescription = item.label) },
-                label = { Text(text = item.label, fontSize = 12.sp) },
-                selectedContentColor = md_theme_light_inversePrimary,
-                unselectedContentColor = Color.White.copy(0.4f),
+                label = {
+                    Text(
+                        text = item.label,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    ) },
+                selectedContentColor = MaterialTheme.colorScheme.inversePrimary,
+                unselectedContentColor = MaterialTheme.colorScheme.inversePrimary,
                 alwaysShowLabel = true,
                 selected = false,
                 onClick = {
@@ -139,7 +158,7 @@ fun BottomNavigationBar(navController: NavController) {
                             }
                         }
                         launchSingleTop = true
-                        restoreState = true
+                        restoreState = false//true
                     }
                 }
             )
@@ -147,17 +166,30 @@ fun BottomNavigationBar(navController: NavController) {
     }
 }
 
+private const val USER_ROLE_NAME = "guest"
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = USER_ROLE_NAME
+)
+
+fun getProCatScreenFromRoute(route: String?): ProCatScreen {
+    return when {
+        route == null -> ProCatScreen.Start
+        route.startsWith(ProCatScreen.Payments.name) -> ProCatScreen.Payments
+        else -> ProCatScreen.valueOf(route)
+    }
+}
+
+
+
 @Composable
 fun ProCatApp (
-    controller : Context,
-    authViewModel: AuthViewModel = viewModel(),
-    toolViewModel: ToolViewModel = viewModel(),
+    controller: Context,
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = ProCatScreen.valueOf(
-        backStackEntry?.destination?.route ?: ProCatScreen.Start.name
-    )
+    //val currentScreen = ProCatScreen.valueOf(backStackEntry?.destination?.route ?: ProCatScreen.Start.name)
+    val currentScreen = getProCatScreenFromRoute(backStackEntry?.destination?.route)
+
 
     Scaffold(
         topBar = {
@@ -174,7 +206,7 @@ fun ProCatApp (
         }
 
     ) { innerPadding ->
-        //val uiState by viewModel.uiState.collectAsState()
+
 
         NavHost(
             navController = navController,
@@ -197,6 +229,24 @@ fun ProCatApp (
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Tools.name)
                     },
+                    context = controller,
+                    onToRegistrationClick = {
+                        navController.navigate(ProCatScreen.Registration.name)
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                )
+            }
+            composable(route = ProCatScreen.Registration.name) {
+                RegistrationScreen(
+                    context = controller,
+                    onNextButtonClicked = {
+                        navController.navigate(ProCatScreen.Tools.name)
+                    },
+                    onToAuthClick = {
+                        navController.navigate(ProCatScreen.Auth.name)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp)
@@ -205,6 +255,10 @@ fun ProCatApp (
             composable(route = ProCatScreen.Tools.name) {
                 ToolsScreen(
                     onNextButtonClicked = {
+                        navController.navigate(ProCatScreen.Tool.name)
+                    },
+                    onNextButtonClicked1 = {
+                        CatalogCache.shared.setCurrentID(it.id)
                         navController.navigate(ProCatScreen.Tool.name)
                     },
                     modifier = Modifier
@@ -217,21 +271,13 @@ fun ProCatApp (
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Cart.name)
                     },
+                    toolId = CatalogCache.shared.getCurrentId(),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    context = controller,
                 )
             }
-      /*      composable(route = ProCatScreen.Misha.name) {
-                TestButtons(
-                    onNextButtonClicked = {
-                        navController.navigate(ProCatScreen.Cart.name)
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                )
-            }*/
             composable(route = ProCatScreen.Cart.name) {
                 Cart(
                     modifier = Modifier
@@ -242,11 +288,13 @@ fun ProCatApp (
                     },
                     onGoToProfile = {
                         navController.navigate(ProCatScreen.Profile.name)
-                    }
+                    },
+                    context = controller,
                 )
             }
             composable(route = ProCatScreen.Personal.name) {
                 PersonalScreen(
+                    context = controller,
                     onToProfileClicked = {
                         navController.navigate(ProCatScreen.Profile.name)
                     },
@@ -262,75 +310,105 @@ fun ProCatApp (
                     onToDeliveryClicked = {
                         navController.navigate(ProCatScreen.Delivery.name)
                     },
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
+                    onToManagerClicked = {
+                        navController.navigate(ProCatScreen.Manager.name)
+                    },
+                    onToAdminDeliveryClicked = {
+                        navController.navigate(ProCatScreen.AdminDelivery.name)
+                    },
+                    onToEditingClicked = {
+                        navController.navigate(ProCatScreen.Editing.name)
+                    }
+
                 )
             }
             composable(route = ProCatScreen.Profile.name) {
                 ProfileScreen(
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
+                    context = controller,
                 )
             }
             composable(route = ProCatScreen.Orders.name) {
                 OrdersScreen(
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
+
                 )
             }
             composable(route = ProCatScreen.Delivery.name) {
-                OrdersDeliveryScreen(
-                    controller
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
+
+                CourierOrdersScreen(controller)
+            }
+            composable(route = ProCatScreen.Manager.name) {
+                OrdersManagerScreen(
+                    controller,
+                    navController = navController
                 )
             }
             composable(route = ProCatScreen.Notifications.name) {
                 NotificationsScreen(
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
-                )
+                    context = LocalContext.current,
+                    )
             }
             composable(route = ProCatScreen.ListOfChatsScreen.name) {
                 ListOfChatsScreen(
                     onToChatClicked = {
                         navController.navigate(ProCatScreen.Chat.name)
                     },
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
                 )
             }
             composable(route = ProCatScreen.Chat.name) {
                 ChatScreen(
 
-                    /*
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        */
                 )
             }
             composable(route = ProCatScreen.Ordering.name) {
                 OrderingScreen(
+                    context = controller,
+                    onToConfirmationClicked = {
+                        navController.navigate(ProCatScreen.OrderConfirmation.name)
+                    }
+                )
+            }
+            composable(route = ProCatScreen.OrderConfirmation.name) {
+                OrderConfirmation(
+                    orderingViewModel = viewModel()
+                )
+            }
+            composable(route = ProCatScreen.AdminDelivery.name) {
+                AdminDelivery(
 
+                )
+            }
+            composable(route = ProCatScreen.AllDeliverymen.name) {
+                Deliverymen(
+
+                )
+            }
+            composable(route = ProCatScreen.Editing.name) {
+                EditingScreen(
+                    onToStoresClicked = {
+                        navController.navigate(ProCatScreen.Stores.name)
+                    },
+                    onToAllDeliverymenClicked = {
+                        navController.navigate(ProCatScreen.AllDeliverymen.name)
+                    },
+                    onToItemsEditingClicked = {
+                        navController.navigate(ProCatScreen.ItemsEditing.name)
+                    }
+                )
+            }
+            composable(route = ProCatScreen.Stores.name) {
+                StoresScreen(
+
+                )
+            }
+            composable(route = ProCatScreen.ItemsEditing.name) {
+                ItemsEditingScreen(
+
+                )
+            }
+            composable(route = "${ProCatScreen.Payments.name}/{orderId}") { backStackEntry ->
+                val orderId = backStackEntry.arguments?.getString("orderId")?.toInt()
+                PaymentsScreen(
+                    orderId = orderId ?: -1
                 )
             }
         }

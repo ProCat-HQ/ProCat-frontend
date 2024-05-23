@@ -1,29 +1,24 @@
 package com.example.procatfirst.ui.personal.orders
 
+import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,17 +33,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
-import com.example.procatfirst.ui.personal.notifications.notification
+import com.example.procatfirst.repository.cache.UserOrdersCache
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun OrdersScreen(
     ordersViewModel: OrdersViewModel = viewModel()
 ) {
-    val orders by ordersViewModel.orders.collectAsState()
+    val ordersUiState by ordersViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -57,30 +54,39 @@ fun OrdersScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(
-            text = stringResource(R.string.list_of_orders),
-            style = MaterialTheme.typography.titleLarge,
-        )
-
-        orders.forEach { order ->
-            orderItem(
-                orderId = order.orderId,
-                status = order.status,
-                totalPrice = order.totalPrice,
-                rentalPeriod = order.rentalPeriod,
-                address = order.address,
+        if (ordersUiState.orders.isEmpty()) {
+            Text(
+                text = "Ваш список заказов пуст",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
+        }
+        else {
+            ordersUiState.orders.forEach { order ->
+                OrderItem(
+                    orderId = order.id,
+                    status = order.status,
+                    totalPrice = order.totalPrice,
+                    rentalPeriod = LocalDate.parse(order.rentalPeriodStart.substringBefore('T')).format(
+                        DateTimeFormatter.ofPattern("dd.MM.yyyy")
+                    ).toString() + " - " + LocalDate.parse(order.rentalPeriodEnd.substringBefore('T')).format(
+                        DateTimeFormatter.ofPattern("dd.MM.yyyy")).toString(),
+                    address = order.address,
+                    onCancelOrder = { ordersViewModel.cancelOrder(order.id) }
+                )
+            }
         }
     }
 }
 
 @Composable
-fun orderItem(
+fun OrderItem(
     orderId: Int,
     status: String,
     totalPrice: Int,
     rentalPeriod: String,
     address: String,
+    onCancelOrder: () -> Unit
 ){
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -92,13 +98,13 @@ fun orderItem(
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.colorScheme.background)
-            .clickable { expanded = !expanded  }
+            .clickable { expanded = !expanded }
             .padding(16.dp)
     ) {
 
         Row(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(6.dp)
                 .animateContentSize(
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioMediumBouncy,
@@ -111,7 +117,7 @@ fun orderItem(
             Column(
                 modifier = Modifier
                     .padding(6.dp)
-                    .weight(3f)
+                    .weight(4f)
             ) {
                 Text(
                     text = "Заказ $orderId",
@@ -121,7 +127,7 @@ fun orderItem(
 
                 ){
                     Text(
-                        text = rentalPeriod.substringAfterLast("-"),
+                        text = rentalPeriod,
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -136,6 +142,14 @@ fun orderItem(
                     Text(
                         text = address,
                     )
+                    TextButton(
+                        onClick = { onCancelOrder() },
+                    ) {
+                        Text(
+                            text = "Отменить заказ",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
                 }
 
             }
@@ -151,6 +165,7 @@ fun orderItem(
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
+
         }
     }
 }

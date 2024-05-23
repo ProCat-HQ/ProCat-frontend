@@ -1,15 +1,17 @@
 package com.example.procatfirst.ui.auth
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
@@ -17,6 +19,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,40 +27,34 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 
-import com.example.procatfirst.ui.theme.md_theme_light_scrim
-import com.example.procatfirst.ui.theme.md_theme_light_tertiary
-
 
 @Composable
 fun AuthScreen(
     onNextButtonClicked: () -> Unit,
+    onToRegistrationClick: () -> Unit,
     authViewModel: AuthViewModel = viewModel(),
+    context: Context,
     modifier: Modifier = Modifier
 ) {
 
     val authUiState by authViewModel.uiState.collectAsState()
 
     val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
-        var counter = 0
         override fun howToReactOnIntent() {
-            if (counter == 0) {
-                counter++
-            } else {
-                onNextButtonClicked()
-            }
+            authViewModel.wrongPassword()
         }
     }
-
     receiver.CreateReceiver(intentToReact = SystemNotifications.loginIntent)
 
     Column(
@@ -69,7 +66,7 @@ fun AuthScreen(
         Text(
             text = stringResource(R.string.app_name),
             style = typography.titleLarge,
-            color = md_theme_light_scrim
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         inputField(
@@ -86,8 +83,10 @@ fun AuthScreen(
 
 
         Button(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            onClick = { authViewModel.check()}
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            onClick = { authViewModel.signIn(onNextButtonClicked, context = context)}
         ) {
             Text(
                 text = stringResource(R.string.sign_in),
@@ -96,10 +95,21 @@ fun AuthScreen(
         }
 
         OutlinedButton(
+            onClick = { onToRegistrationClick() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(text = stringResource(R.string.to_register))
+        }
+
+        TextButton(
 
             onClick = { authViewModel.forgotPassword() },
 
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
             Text(
                 text = stringResource(R.string.forgot_password),
@@ -107,12 +117,6 @@ fun AuthScreen(
             )
         }
 
-        Button(
-            onClick = { onNextButtonClicked() },
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        ) {
-            Text(stringResource(R.string.next))
-        }
     }
 
 }
@@ -143,7 +147,10 @@ fun inputField(
                 unfocusedContainerColor = colorScheme.surface,
                 disabledContainerColor = colorScheme.surface,
             ),
-            onValueChange = { onUserPhoneNumberChanged(it) },
+            onValueChange = { newValue ->
+                val newPhoneNumber = if (newValue.startsWith("+")) newValue else "+$newValue"
+                onUserPhoneNumberChanged(newPhoneNumber)
+            },
             label = {
                 if (isPhoneNumberWrong) {
                     Text(stringResource(R.string.wrong_phone_number))
@@ -178,9 +185,11 @@ fun inputField(
                     Text(stringResource(R.string.enter_password))
                 }
             },
+            visualTransformation = PasswordVisualTransformation(),
             isError = isPasswordWrong,
             keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
             ),
             keyboardActions = KeyboardActions(
                 onDone = { onKeyboardDone() }

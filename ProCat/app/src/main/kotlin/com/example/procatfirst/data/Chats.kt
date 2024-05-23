@@ -16,6 +16,7 @@ data class Chat(
     val direction: Boolean
 )
 
+
 data class Message(
     val messageId: Int,
     val text: String,
@@ -24,61 +25,63 @@ data class Message(
     val date: String //not in DB model
 )
 
-val messageList = listOf(
-    Message(
-        1,
-        "Hey! How have you been?",
-        1,
-        1,
-        "23:15"
-    ),
-    Message(
-        2,
-        "Fine, thanks",
-        2,
-        1,
-        "23:15"
-    ),
-    Message(
-        3,
-        "Tell me more",
-        1,
-        1,
-        "23:15"
-    ),
-    Message(
-        4,
-        "I want to know more",
-        1,
-        1,
-        "23:15"
-    ),
-    Message(
-        5,
-        "I don't want to",
-        2,
-        1,
-        "23:15"
-    ),
-    Message(
-        6,
-        "Leave me alone",
-        2,
-        1,
-        "23:15"
-    ),
-    Message(
-        7,
-        "Okay",
-        1,
-        1,
-        "23:15"
-    ),
-    Message(
-        8,
-        "It was a joke. Come back",
-        2,
-        1,
-        "23:15"
-    ),
-)
+object ChatDataProvider {
+    val messageList = listOf(
+        Message(
+            1,
+            "Hey! How have you been?",
+            1,
+            1,
+            "23:15"
+        ),
+        Message(
+            2,
+            "Fine, thanks",
+            2,
+            1,
+            "23:15"
+        ),
+        Message(
+            3,
+            "Tell me more",
+            1,
+            1,
+            "23:15"
+        ),
+        Message(
+            4,
+            "I want to know more",
+            1,
+            1,
+            "23:15"
+        ),
+        Message(
+            5,
+            "I don't want to",
+            2,
+            1,
+            "23:15"
+        ),
+        Message(
+            6,
+            "Leave me alone",
+            2,
+            1,
+            "23:15"
+        ),
+        Message(
+            7,
+            "Okay",
+            1,
+            1,
+            "23:15"
+        ),
+        Message(
+            8,
+            "It was a joke. Come back",
+            2,
+            1,
+            "23:15"
+        ),
+    )
+}
