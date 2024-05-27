@@ -71,7 +71,6 @@ class ToolViewModel(toolId: Int): ViewModel() {
         this.viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 var img = "hammer.jpg"
-                //Fake
                 if (tool.images != null && tool.images[0] != null) {
                     img = tool.images[0].image
                 }

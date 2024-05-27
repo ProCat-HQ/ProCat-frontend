@@ -1,7 +1,6 @@
 package com.example.procatfirst.ui.auth
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,8 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.procatfirst.R
@@ -44,10 +41,8 @@ fun AuthScreen(
     onNextButtonClicked: () -> Unit,
     onToRegistrationClick: () -> Unit,
     authViewModel: AuthViewModel = viewModel(),
-    context: Context,
-    modifier: Modifier = Modifier
+    context: Context
 ) {
-
     val authUiState by authViewModel.uiState.collectAsState()
 
     val receiver: IntentsReceiverAbstractObject = object : IntentsReceiverAbstractObject() {
@@ -132,7 +127,6 @@ fun inputField(
     userInputPhoneNumber: String,
     onUserPhoneNumberChanged: (String) -> Unit,
     onKeyboardDone2: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
@@ -196,14 +190,5 @@ fun inputField(
             )
         )
 
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun AuthPreview() {
-    ProCatFirstTheme {
-        //AuthScreen()
     }
 }

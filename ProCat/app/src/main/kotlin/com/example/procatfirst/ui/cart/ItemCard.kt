@@ -66,7 +66,7 @@ fun ToolCardCart(
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.colorScheme.background)
-            .clickable { /* Handle click on the card if needed */ }
+            .clickable {}
             .padding(16.dp)
     ) {
         Row(
@@ -76,7 +76,7 @@ fun ToolCardCart(
             Column(
                 modifier = Modifier
                     .padding(6.dp)
-                    .weight(3f) // Adjust the weight for text content
+                    .weight(3f)
             ) {
                 IconButton(
                     onClick = { toolViewModel.removeFromCart(tool) },

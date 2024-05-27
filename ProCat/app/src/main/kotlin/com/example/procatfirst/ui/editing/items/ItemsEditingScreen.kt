@@ -21,7 +21,6 @@ import com.example.procatfirst.ui.editing.deliverymen.DeliveryManCard
 @Composable
 fun ItemsEditingScreen(
     itemsEditingViewModel: ItemsEditingViewModel = viewModel()
-
 ) {
     val itemsEditingUiState by itemsEditingViewModel.uiState.collectAsState()
 

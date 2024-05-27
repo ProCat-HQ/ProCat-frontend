@@ -26,7 +26,6 @@ import com.example.procatfirst.R
 
 @Composable
 fun Cart(
-    modifier: Modifier = Modifier,
     onToOrderingClicked: () -> Unit,
     onGoToProfile: () -> Unit,
     cartViewModel: CartViewModel = viewModel(),
@@ -92,7 +91,6 @@ fun ConfirmInnDialog(
     onGoToProfile: () -> Unit,
     onCancel: () -> Unit,
     onContinue: () -> Unit
-
 ) {
     AlertDialog(
         title = {
@@ -127,8 +125,7 @@ fun ConfirmInnDialog(
 
 @Composable
 fun EmptyDialog(
-    onCancel: () -> Unit,
-
+    onCancel: () -> Unit
 ) {
     AlertDialog(
         title = {

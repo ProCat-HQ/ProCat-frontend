@@ -1,6 +1,5 @@
 package com.example.procatfirst.ui.personal.orders
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -35,10 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
-import com.example.procatfirst.repository.cache.UserOrdersCache
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -56,7 +52,7 @@ fun OrdersScreen(
 
         if (ordersUiState.orders.isEmpty()) {
             Text(
-                text = "Ваш список заказов пуст",
+                text = stringResource(R.string.your_orderlist_is_empty),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -167,13 +163,5 @@ fun OrderItem(
             }
 
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview() {
-    ProCatFirstTheme {
-        OrdersScreen()
     }
 }

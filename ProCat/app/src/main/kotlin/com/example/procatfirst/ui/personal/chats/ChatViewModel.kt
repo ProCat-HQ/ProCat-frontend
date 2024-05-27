@@ -6,8 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.procatfirst.data.ChatDataProvider
 import com.example.procatfirst.data.Message
-import com.example.procatfirst.data.Order
-import com.example.procatfirst.data.OrderDataProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

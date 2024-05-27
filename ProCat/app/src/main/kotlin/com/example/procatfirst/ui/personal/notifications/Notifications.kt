@@ -8,17 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
@@ -33,21 +28,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.repository.cache.UserDataCache
-import com.example.procatfirst.ui.theme.ProCatFirstTheme
-import com.example.procatfirst.ui.theme.md_theme_light_outline
-import com.example.procatfirst.ui.theme.md_theme_light_scrim
-import com.example.procatfirst.ui.theme.md_theme_light_surface
-import com.example.procatfirst.ui.theme.md_theme_light_surfaceVariant
-import com.example.procatfirst.ui.theme.md_theme_light_tertiaryContainer
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -65,7 +52,6 @@ fun NotificationsScreen(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
-        //verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -82,9 +68,6 @@ fun NotificationsScreen(
                 isViewed = notification.isViewed,
                 onClick = {
                     notificationViewModel.markAsRead(notification)
-                },
-                onDelete = {
-                    notificationViewModel.deleteNotification(notification)
                 }
             )
         }
@@ -139,8 +122,7 @@ fun notification(
     date: String,
     description: String,
     isViewed: Boolean,
-    onClick: () -> Unit,
-    onDelete: () -> Unit
+    onClick: () -> Unit
 ) {
     var isCardClicked by remember { mutableStateOf(false) }
 
@@ -155,7 +137,7 @@ fun notification(
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .padding(8.dp)
-            .clickable{
+            .clickable {
                 isCardClicked = !isCardClicked
                 onClick()
             }
@@ -180,13 +162,6 @@ fun notification(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.outline
             )
-            /*
-            IconButton(onClick = onDelete) {
-                Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = "Delete notification"
-                )
-            } */
 
         }
         Text(
@@ -197,8 +172,6 @@ fun notification(
             style = MaterialTheme.typography.bodyMedium
 
         )
-
-
     }
 }
 
@@ -213,7 +186,7 @@ fun SendNotificationDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = "Send Notification") },
+        title = { Text(text = stringResource(R.string.send_notification)) },
         text = {
             Column {
                 OutlinedTextField(
@@ -241,12 +214,12 @@ fun SendNotificationDialog(
                 onSend(userId.toInt(), title, body)
                 onDismiss()
             }) {
-                Text("Send")
+                Text(stringResource(R.string.send))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

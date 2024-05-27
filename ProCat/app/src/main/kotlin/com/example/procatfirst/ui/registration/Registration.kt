@@ -6,14 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.MaterialTheme.typography
@@ -26,27 +24,18 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.R
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
-
-import com.example.procatfirst.ui.theme.md_theme_light_scrim
-import com.example.procatfirst.ui.theme.md_theme_light_tertiary
 
 
 @Composable
@@ -54,8 +43,7 @@ fun RegistrationScreen(
     context: Context,
     onNextButtonClicked: () -> Unit,
     onToAuthClick: () -> Unit,
-    registrationViewModel: RegistrationViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    registrationViewModel: RegistrationViewModel = viewModel()
 ) {
 
     val registrationUiState by registrationViewModel.uiState.collectAsState()
@@ -82,7 +70,7 @@ fun RegistrationScreen(
         Text(
             text = stringResource(R.string.app_name),
             style = typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface
+            color = colorScheme.onSurface
         )
 
         inputField(
@@ -135,7 +123,7 @@ fun RegistrationScreen(
 
 
         if (registrationViewModel.isInputCodeDialogVisible) {
-            InputCodeDialog(registrationViewModel, registrationUiState)
+            InputCodeDialog(registrationViewModel)
         }
 
     }
@@ -167,9 +155,7 @@ fun inputField(
     isPhoneNumberWrong: Boolean,
     userInputPhoneNumber: String,
     onUserPhoneNumberChanged: (String) -> Unit,
-    onKeyboardDone2: () -> Unit,
-
-    modifier: Modifier = Modifier
+    onKeyboardDone2: () -> Unit
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
@@ -320,8 +306,7 @@ fun inputField(
 
 @Composable
 fun InputCodeDialog(
-    registrationViewModel: RegistrationViewModel,
-    registrationUiState: RegistrationUiState
+    registrationViewModel: RegistrationViewModel
 ) {
 
     AlertDialog(
@@ -332,13 +317,13 @@ fun InputCodeDialog(
                 registrationViewModel.checkCode()
             }
         ) {
-            Text("Подтвердить")
+            Text(stringResource(R.string.confirm))
         } },
         dismissButton = {
             Button(
                 onClick = {registrationViewModel.closeDialog()}
             ) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancellation))
             }
         },
         text = {
@@ -346,7 +331,7 @@ fun InputCodeDialog(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("Введите код из SMS:")
+                Text(stringResource(R.string.enter_code_from_sms))
                 TextField(
                     value = registrationViewModel.userInputCode,
                     onValueChange = { registrationViewModel.updateUserCode(it) },
@@ -360,19 +345,10 @@ fun InputCodeDialog(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     TextButton(onClick = {registrationViewModel.sendCodeAgain()}) {
-                        Text("Выслать код повторно")
+                        Text(stringResource(R.string.send_code_again))
                     }
                 }
             }
         }
     )
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun AuthPreview() {
-    ProCatFirstTheme {
-        //AuthScreen()
-    }
 }

@@ -1,8 +1,6 @@
 package com.example.procatfirst.ui.ordering
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,8 +16,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Surface
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -38,31 +36,20 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.CartItem
-import com.example.procatfirst.ui.theme.ProCatFirstTheme
 
 @Composable
 fun OrderingScreen(
     orderingViewModel: OrderingViewModel = viewModel(),
     onToConfirmationClicked: (OrderingViewModel) -> Unit,
-    context: Context,
-    ) {
-
-    //-----------------------------------------------------
+    context: Context
+) {
     val orderingUiState by orderingViewModel.uiState.collectAsState()
     val isLoading = orderingUiState.loading
-
-
-    /*
-    val addresses = listOf(
-        SelectionOption("Адрес 1", initialSelectedValue = true),
-        SelectionOption("Адрес 2", initialSelectedValue = false)
-    ) */
 
     val addresses = orderingUiState.stores.map { store ->
         SelectionOption(store.address, initialSelectedValue = false)
@@ -86,9 +73,7 @@ fun OrderingScreen(
         if (isLoading) {
             CircularProgressIndicator()
         } else {
-            Row(
-
-            ) {
+            Row() {
 
                 Text(
                     text = stringResource(R.string.delivery)
@@ -142,7 +127,7 @@ fun OrderingScreen(
                         orderingViewModel.updateSelectedPeriod(0)
                     }
                 },
-                label = { Text("Длительность аренды в днях") },
+                label = { Text(stringResource(R.string.rent_duration)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
@@ -151,7 +136,7 @@ fun OrderingScreen(
             if (orderingViewModel.uiState.value.tools.isNotEmpty()) {
                 ToolsScreenCartSmall(orderingViewModel.uiState.value.tools)
             } else {
-                Text(text = "Ваша корзина пуста", fontSize = 18.sp)
+                Text(text = stringResource(R.string.your_cart_is_empty), fontSize = 18.sp)
             }
 
             Spacer(modifier = Modifier.weight(1f))
@@ -160,9 +145,7 @@ fun OrderingScreen(
                 sum += t.price * t.count
             }
 
-            Column(
-
-            ) {
+            Column() {
                 Row() {
                     Text(
                         text = stringResource(R.string.final_price),
@@ -254,7 +237,7 @@ fun ToolCardCartSmall(
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.colorScheme.background)
-            .clickable { /* Handle click on the card if needed */ }
+            .clickable { }
             .padding(8.dp)
     ) {
         Row(
@@ -285,15 +268,5 @@ fun ToolCardCartSmall(
             )
         }
 
-    }
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun OrderingPreview() {
-    ProCatFirstTheme {
-        //OrderingScreen()
     }
 }

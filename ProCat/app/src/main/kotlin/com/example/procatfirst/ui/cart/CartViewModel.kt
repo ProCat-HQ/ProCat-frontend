@@ -1,8 +1,5 @@
 package com.example.procatfirst.ui.cart
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator

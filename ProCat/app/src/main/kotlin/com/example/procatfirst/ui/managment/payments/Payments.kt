@@ -1,7 +1,5 @@
 package com.example.procatfirst.ui.managment.payments
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,8 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -32,10 +28,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.procatfirst.ProCatScreen
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Payment
-import com.example.procatfirst.ui.managment.OrderItemFull
 
 @Composable
 fun PaymentsScreen(
@@ -82,7 +76,6 @@ fun PaymentsScreen(
     }
     if (showDialog && selectedPayment != null) {
         AddPaymentDialog(
-            payment = selectedPayment!!,
             onDismiss = { showDialog = false },
             onConfirm = { method, amount ->
                 paymentsViewModel.addPayment(selectedPayment!!.id, method, amount)
@@ -144,7 +137,6 @@ fun PaymentCard(
 
 @Composable
 fun AddPaymentDialog(
-    payment: Payment,
     onDismiss: () -> Unit,
     onConfirm: (method: String, amount: Int) -> Unit
 ) {
@@ -154,20 +146,20 @@ fun AddPaymentDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = "Добавить платеж")
+            Text(text = stringResource(R.string.add_payment))
         },
         text = {
             Column {
                 TextField(
                     value = method,
                     onValueChange = { method = it },
-                    label = { Text("Метод платежа") }
+                    label = { Text(stringResource(R.string.payment_method)) }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
                     value = amount,
                     onValueChange = { amount = it },
-                    label = { Text("Сумма платежа") }
+                    label = { Text(stringResource(R.string.payment_amount)) }
                 )
             }
         },
@@ -180,12 +172,12 @@ fun AddPaymentDialog(
                     }
                 }
             ) {
-                Text("Подтвердить")
+                Text(stringResource(R.string.confirm))
             }
         },
         dismissButton = {
             Button(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancellation))
             }
         }
     )

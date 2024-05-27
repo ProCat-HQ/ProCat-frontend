@@ -1,6 +1,5 @@
 package com.example.procatfirst.ui.managment.delivery
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,9 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -40,7 +36,6 @@ import com.example.procatfirst.R
 import com.example.procatfirst.data.ClusterResult
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryLocation
-import com.example.procatfirst.ui.editing.deliverymen.DeliverymenViewModel
 
 @Composable
 fun AdminDelivery(
@@ -66,7 +61,7 @@ fun AdminDelivery(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text("Подтвердить")
+            Text(stringResource(R.string.confirm))
         }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -115,7 +110,11 @@ fun DeliveryCard(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Курьер: ${deliveries.deliverymanId} ${deliverymanName}",
+                text = stringResource(
+                    R.string.courier_with_id_and_name,
+                    deliveries.deliverymanId,
+                    deliverymanName
+                ),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -197,7 +196,7 @@ fun DeliveryLocationCard(
                 }
                 Box {
                     FilledTonalButton(onClick = { expanded = true }) {
-                        Text("Изменить")
+                        Text(stringResource(R.string.modify))
                     }
                     DropdownMenu(
                         expanded = expanded,
@@ -236,7 +235,6 @@ fun DeliveryDetailsDialog(
                 Text(text = "Time Start: ${delivery.timeStart}")
                 Text(text = "Time End: ${delivery.timeEnd}")
                 Text(text = "Method: ${delivery.method}")
-                //Text(text = "Order ID: ${delivery.order.id}")
                 Text(text = "Order Status: ${delivery.order.status}")
                 Text(text = "Total Price: ${delivery.order.totalPrice}")
                 Text(text = "Address: ${delivery.order.address}")

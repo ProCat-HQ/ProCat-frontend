@@ -1,7 +1,6 @@
 package com.example.procatfirst.ui.personal.profile
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,7 +49,6 @@ import com.example.procatfirst.ui.theme.md_theme_light_tertiary
 fun ProfileScreen(
     profileViewModel: ProfileViewModel = viewModel(),
     context: Context? = null,
-    //modifier: Modifier = Modifier
 ) {
     var isChangePasswordDialogVisible by remember { mutableStateOf(false) }
 
@@ -174,9 +172,7 @@ fun MutableField(
         modifier = Modifier
             .padding(8.dp)
     ){
-        Row(
-
-        ){
+        Row{
             Column(
                 modifier = Modifier
                     .weight(5f)
@@ -248,7 +244,7 @@ fun EnterPasswordDialog(
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text("Введите пароль") },
+        title = { Text(stringResource(R.string.enter_password)) },
         text = {
             Column {
                 OutlinedTextField(
@@ -271,7 +267,7 @@ fun EnterPasswordDialog(
                     onDismiss()
                 }
             ) {
-                Text("Изменить")
+                Text(stringResource(R.string.modify))
             }
         }
     )
@@ -304,7 +300,10 @@ fun ChangePasswordDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (isCheckingOldPassword) "Введите старый пароль" else "Введите новый пароль") },
+        title = { Text(if (isCheckingOldPassword) stringResource(R.string.enter_old_password) else stringResource(
+            R.string.enter_new_password
+        )
+        ) },
         text = {
             Column {
                 OutlinedTextField(
@@ -316,7 +315,10 @@ fun ChangePasswordDialog(
                             newPassword = it
                         }
                     },
-                    label = { Text(if (isCheckingOldPassword) "Старый пароль" else "Новый пароль") },
+                    label = { Text(if (isCheckingOldPassword) stringResource(R.string.old_password) else stringResource(
+                        R.string.new_password
+                    )
+                    ) },
                     visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier
                         .padding(0.dp, 8.dp)
@@ -327,7 +329,7 @@ fun ChangePasswordDialog(
                     OutlinedTextField(
                         value = confirmNewPassword,
                         onValueChange = { confirmNewPassword = it },
-                        label = { Text("Подтвердите новый пароль") },
+                        label = { Text(stringResource(R.string.confirm_old_password)) },
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier
                             .padding(0.dp, 8.dp)
@@ -340,14 +342,12 @@ fun ChangePasswordDialog(
             Button(
                 onClick = {
                     if (isCheckingOldPassword) {
-                        // Check old password logic here
                         isCheckingOldPassword = false
                     } else {
                         if (newPassword == confirmNewPassword) {
                             onChangePassword(newPassword)
                             onDismiss()
-                        } else {
-                            // Handle password confirmation mismatch
+                        } else { // to do
                         }
                     }
                 }
@@ -357,17 +357,8 @@ fun ChangePasswordDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancellation))
             }
         }
     )
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview() {
-    ProCatFirstTheme {
-        ProfileScreen()
-    }
 }

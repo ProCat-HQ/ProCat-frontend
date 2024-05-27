@@ -4,20 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.Delivery
-import com.example.procatfirst.data.DeliveryOrder
-import com.example.procatfirst.data.Deliveryman
-import com.example.procatfirst.data.Notification
-import com.example.procatfirst.data.NotificationDataProvider
-import com.example.procatfirst.data.Order
-import com.example.procatfirst.data.OrderDataProvider
 import com.example.procatfirst.data.Point
 import com.example.procatfirst.data.Store
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.api.StoreApiCalls
 import com.example.procatfirst.repository.cache.AllOrdersCache
 import com.example.procatfirst.repository.cache.UserDataCache
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.getAllOrders
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,22 +24,6 @@ class CourierOrdersViewModel: ViewModel() {
 
     init{
         loadOrders()
-        //loadFakeData()
-    }
-
-    private fun loadFakeData() {
-        val fakeDelivery = Delivery(1, "20:40", "20:50", "car", DeliveryOrder(10, "ready", 1000, "Pirogova", "---", "+++"))
-        val fakeDeliveries = listOf(fakeDelivery)
-        _uiState.update { currentState ->
-            currentState.copy(
-                deliveries = fakeDeliveries
-            )
-        }
-        _uiState.update { currentState ->
-            currentState.copy(
-                orderStatus = fakeDeliveries[0].order.status
-            )
-        }
     }
 
     private fun loadOrders() {
@@ -65,7 +41,7 @@ class CourierOrdersViewModel: ViewModel() {
             }
             if (userId != null) {
                 ApiCalls.shared.getSimpleDeliveryManIdApi(userId) {
-                    ApiCalls.shared.getDeliveriesForDeliverymanApi(it.id, callback) //!!
+                    ApiCalls.shared.getDeliveriesForDeliverymanApi(it.id, callback)
                 }
             }
         }

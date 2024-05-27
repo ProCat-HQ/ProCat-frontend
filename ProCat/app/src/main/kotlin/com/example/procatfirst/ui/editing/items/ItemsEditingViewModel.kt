@@ -20,31 +20,9 @@ class ItemsEditingViewModel(): ViewModel() {
     }
 
     private fun loadItems() {
-        /*
-        viewModelScope.launch {
-            val callback = {status: String, result: List<Item> ->
-                if(status == "SUCCESS") {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            items = result
-                        )
-                    }
-                }
-            }
-            ApiCalls.shared.getItemsApi(callback)
-        } */
     }
 
     fun createItem() {
-        /*
-        viewModelScope.launch {
-            val callback = { status: String ->
-                if (status == "SUCCESS") {
-                    loadItems()
-                }
-            }
-            ApiCalls.shared.createItem(callback)
-        } */
     }
 
     fun deleteItem() {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.procatfirst.R
 import com.example.procatfirst.data.CartItem
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
@@ -48,7 +49,7 @@ class ToolViewModel(tool : CartItem): ViewModel()  {
             withContext(Dispatchers.Default) {
                 DataCoordinator.shared.increaseToolCount(uiState.value.tool.id) {
                     if (it != "") {
-                        Toast.makeText(context, "Инструмента нет в наличии", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.tool_is_not_available, Toast.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -22,15 +22,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.repository.cache.UserDataCache
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.getUserData
-import com.example.procatfirst.ui.theme.ProCatFirstTheme
 
 @Composable
 fun PersonalScreen(
@@ -42,7 +38,6 @@ fun PersonalScreen(
     onToDeliveryClicked:() -> Unit,
     onToManagerClicked:() -> Unit,
     onToAdminDeliveryClicked:() -> Unit,
-    //onToAllDeliverymenClicked: () -> Unit,
     onToEditingClicked: () -> Unit,
     personalViewModel: PersonalViewModel = viewModel()
 ) {
@@ -112,7 +107,7 @@ fun PersonalScreen(
         }
 
 
-        if(userRole == "deliveryman" /*|| userRole == "admin" */) {
+        if(userRole == "deliveryman") {
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -206,10 +201,10 @@ fun ConfirmLogoutDialog(
     Log.d("DIALOG", "DIALOG")
     AlertDialog(
         title = {
-            Text(text = "Выход")
+            Text(text = stringResource(R.string.logout))
         },
         text = {
-            Text(text = "ВЫ уверены, что хотите выйти из аккаунта?")
+            Text(text = stringResource(R.string.are_you_sure_text_logout))
         },
         onDismissRequest = {
             onCancel()
@@ -220,7 +215,7 @@ fun ConfirmLogoutDialog(
                     onCancel()
                 }
             ) {
-                Text(text = "Отмена")
+                Text(text = stringResource(R.string.cancellation))
             }
         },
         dismissButton = {
@@ -229,16 +224,8 @@ fun ConfirmLogoutDialog(
                     onContinue()
                 }
             ) {
-                Text(text = "Да, я хочу выйти")
+                Text(text = stringResource(R.string.confirm_logout))
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PersonalPreview() {
-    ProCatFirstTheme {
-        //PersonalScreen()
-    }
 }

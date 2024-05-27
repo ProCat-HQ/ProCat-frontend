@@ -1,7 +1,6 @@
 <resources>
     <string name="api_key">api_key_here</string>
 
-
     <string name="app_name">ProCat</string>
     <string name="welcome">Добро пожаловать в ProCat!</string>
     <string name="logo">Логотип</string>
@@ -49,6 +48,8 @@
 
     <string name="test">Тест</string>
     <string name="cart">Корзина</string>
+    <string name="your_cart_is_empty">Ваша корзина пуста</string>
+    <string name="tool_is_not_available">Инструмента нет в наличии</string>
     <string name="delete">Удалить</string>
     <string name="checkout">Оформить заказ</string>
     <string name="ordering">Оформление заказа</string>
@@ -69,6 +70,14 @@
     <string name="to">До:</string>
     <string name="order">Заказать</string>
 
+    <string name="create_route">Создать маршрут</string>
+    <string name="show_map">Показать карту</string>
+    <string name="update_order_status_title">Обновить стaтус заказа %1$s</string>
+    <string name="select_new_status">Выберите новый статус для заказа</string>
+    <string name="status_rented">В аренде</string>
+    <string name="status_returned">Возвращен</string>
+
+
     <string name="editing">Редактирование</string>
     <string name="stores">Магазины</string>
     <string name="payments">Платежи</string>
@@ -85,6 +94,8 @@
     <string name="descending">По убыванию</string>
 
     <string name="cancel">Закрыть</string>
+    <string name="cancellation">Отмена</string>
+    <string name="confirm">Подтвердить</string>
     <string name="apply">Применить</string>
     <string name="category_group">По категориям</string>
     <string name="reset">Сбросить</string>
@@ -120,5 +131,45 @@
     <string name="manager">Страница администратора</string>
     <string name="delivery_page">Страница курьера</string>
     <string name="finished">Доставлено</string>
+    <string name="car_id">ID машины</string>
+    <string name="end_of_work">Конец работы</string>
+    <string name="start_of_work">Начало работы</string>
+    <string name="car_capacity">Вместимость машины</string>
+    <string name="make_courier">Сделать курьером</string>
+    <string name="make_courier_with_info">Сделать курьером: %1$s</string>
+    <string name="delete_user">Удалить пользователя?: %1$s</string>
+    <string name="capacity">Вместимость: %1$s</string>
+    <string name="working_hours">Часы работы: %1$s - %2$s</string>
+    <string name="hide_users">Скрыть пользователей</string>
+    <string name="show_users">Отобразить пользователей</string>
+    <string name="create_shop">Создать магазин</string>
+    <string name="address">Адрес: %1$s</string>
+    <string name="shop_editing">Редактирование магазина</string>
+    <string name="shop_name">Название магазина</string>
+    <string name="work_start_format">Начало работы (HH:mm:ss)</string>
+    <string name="work_end_format">Конец работы (HH:mm:ss)</string>
+    <string name="courier_with_id_and_name">Курьер: %1$s %2$s</string>
+    <string name="modify">Изменить</string>
+    <string name="payment_amount">Сумма платежа</string>
+    <string name="payment_method">Метод платежа</string>
+    <string name="add_payment">Добавить платеж</string>
+    <string name="open_payments">Посмотреть платежи</string>
+    <string name="choose_time">Выберите время</string>
+    <string name="close">Закрыть</string>
+    <string name="order_confirmation_text">Произведите оплату по указанному коду или оплатите аренду при получении. Заказ скоро поступит в сборку</string>
+    <string name="rent_duration">Длительность аренды в днях</string>
+    <string name="alert_details">Alert Details</string>
+    <string name="send">Отправить</string>
+    <string name="your_orderlist_is_empty">Ваш список заказов пуст</string>
+    <string name="confirm_old_password">Подтвердите новый пароль</string>
+    <string name="old_password">Старый пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="enter_old_password">Введите старый пароль</string>
+    <string name="enter_new_password">Введите новый пароль</string>
+    <string name="are_you_sure_text_logout">ВЫ уверены, что хотите выйти из аккаунта?</string>
+    <string name="confirm_logout">Да, я хочу выйти</string>
+    <string name="logout">Выход</string>
+    <string name="send_code_again">Выслать код повторно</string>
+    <string name="enter_code_from_sms">Введите код из SMS:</string>
 
 </resources>

@@ -31,8 +31,6 @@ class ProfileViewModel: ViewModel() {
         getUserProfileInfo()
     }
 
-
-
     //Phone Number
     var userInputPhoneNumber by mutableStateOf(_uiState.value.phoneNumber)
         private set
@@ -181,7 +179,7 @@ class ProfileViewModel: ViewModel() {
             if (idUser != null) {
                 Log.i("UserId", idUser.toString())
 
-                DataCoordinator.shared.getUserData() {
+                DataCoordinator.shared.getUserData {
                     _uiState.value = _uiState.value.copy(
                         userId = it.id,
                         fullName = it.fullName,
