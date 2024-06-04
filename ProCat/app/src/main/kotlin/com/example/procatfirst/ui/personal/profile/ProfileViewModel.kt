@@ -46,7 +46,7 @@ class ProfileViewModel: ViewModel() {
         updateUserPhoneNumber(userInputPhoneNumber)
     }
 
-    fun fullSaveUserPhoneNumber(password: String) {
+    fun fullSaveUserPhoneNumber(password: String) { //not ready
         if (checkPassword(password)) {
             viewModelScope.launch {
                 //ApiCalls.shared.

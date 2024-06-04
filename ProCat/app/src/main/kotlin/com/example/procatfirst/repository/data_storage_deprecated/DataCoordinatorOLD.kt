@@ -24,11 +24,8 @@ class DataCoordinatorOLD {
     // MARK: Variables
     // Create a variable for each preference, along with a default value.
     // This is to guarantee that if it can't find it it resets to a value that you can control.
-    /// Sample String
-    var userPhonePreferenceVariable: String = ""
-    val defaultUserPhonePreferenceValue: String = ""
     var refreshTokenPreferenceVariable: String = ""
-    val defaultUserEmailPreferenceValue: String = ""
+    val defaultRefreshTokenValue: String = ""
 
 
     // MARK: Data Store Variables
@@ -44,8 +41,6 @@ class DataCoordinatorOLD {
             "READY"
         )
         // Load DataStore Settings
-        // Update Sample String
-        userPhonePreferenceVariable = getUserPhoneDataStore(context)
         refreshTokenPreferenceVariable = getRefreshTokenDataStore(context)
         // Update Sample Int
         onLoad()

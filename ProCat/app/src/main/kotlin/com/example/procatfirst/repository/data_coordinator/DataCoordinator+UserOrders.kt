@@ -10,7 +10,7 @@ import com.example.procatfirst.repository.cache.UserOrdersCache
 
 
 suspend fun DataCoordinator.getUserOrders(callback : (orders : List<OrderFull>) -> Unit) {
-    //if (UserOrdersCache.shared.getOrders().isEmpty()) {
+
         ApiCalls.shared.getUserOrders(UserDataCache.shared.getUserData()!!.id
         ) { payload: OrdersPayload? ->
             if (payload?.rows != null) {
@@ -18,7 +18,6 @@ suspend fun DataCoordinator.getUserOrders(callback : (orders : List<OrderFull>) 
                 callback(UserOrdersCache.shared.getOrders())
             }
         }
-    //}
 }
 
 suspend fun DataCoordinator.createNewOrder(order : OrderRequest, callback: (OrderSmall?) -> Unit) {

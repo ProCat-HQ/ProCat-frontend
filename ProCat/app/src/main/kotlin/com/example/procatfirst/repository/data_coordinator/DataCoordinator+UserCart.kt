@@ -1,21 +1,15 @@
 import com.example.procatfirst.data.CartItem
 import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.Item2
-import com.example.procatfirst.data.Tool
-import com.example.procatfirst.data.ToolWithCnt
 import com.example.procatfirst.intents.NotificationCoordinator
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserCartCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_storage.DataStorage
 
-    suspend fun DataCoordinator.getUserCart(): Map<Int, CartItem> {
-        //if (UserCartCache.shared.getUserCartStuff().isEmpty()) {
-            ApiCalls.shared.getCartApi { payload : CartPayload -> UserCartCache.shared.setUserCartStuff(payload) }
-            //UserCartCache.shared.setUserCartStuff(DataStorage.shared.getUserCartFromMemory())
-        //}
+suspend fun DataCoordinator.getUserCart(): Map<Int, CartItem> {
+        ApiCalls.shared.getCartApi { payload : CartPayload -> UserCartCache.shared.setUserCartStuff(payload) }
         return UserCartCache.shared.getUserCartStuff()
     }
     suspend fun DataCoordinator.getUserCartPayload(): CartPayload {
@@ -50,5 +44,4 @@ import com.example.procatfirst.repository.data_storage.DataStorage
     suspend fun DataCoordinator.decreaseToolCount(id : Int) {
         UserCartCache.shared.decreaseAmount(id)
         ApiCalls.shared.deleteInCart(id, 1)
-        //DataStorage.shared.setUserCartToMemory(UserCartCache.shared.getUserCartStuff())
     }

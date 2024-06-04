@@ -10,7 +10,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.example.procatfirst.intents.NotificationCoordinator
-import com.example.procatfirst.repository.UserRoleRepository
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.example.procatfirst.ui.theme.ProCatFirstTheme
@@ -48,7 +47,6 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun initBackground() {
-        UserRoleRepository.shared.init(baseContext)
         NotificationCoordinator.shared.initialize(baseContext)
         lifecycleScope.launch {
             DataCoordinator.shared.initialize(baseContext)

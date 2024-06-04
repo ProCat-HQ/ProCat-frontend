@@ -3,46 +3,28 @@ package com.example.procatfirst.repository.api
 import com.example.procatfirst.BuildConfig
 import com.example.procatfirst.data.AllDeliveriesForDeliverymanResponse
 import com.example.procatfirst.data.AllDeliveriesToSortResponse
-import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.data.CartResponse
-import com.example.procatfirst.data.ChangeDeliveryRequest
-import com.example.procatfirst.data.ClusterPayload
 import com.example.procatfirst.data.ClusterResponse
-import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryPayload
 import com.example.procatfirst.data.DeliveryResponse
-import com.example.procatfirst.data.Deliveryman
-import com.example.procatfirst.data.DeliverymenPayload
 import com.example.procatfirst.data.DeliverymenResponse
-import com.example.procatfirst.data.ItemResponse
-import com.example.procatfirst.data.ItemsResponse
 import com.example.procatfirst.data.NewOrderResponse
-import com.example.procatfirst.data.Notification
-import com.example.procatfirst.data.NotificationItem
-import com.example.procatfirst.data.NotificationPayload
 import com.example.procatfirst.data.NotificationReadResponse
 import com.example.procatfirst.data.NotificationResponse
-import com.example.procatfirst.data.Order
-import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.OrderFullResponse
-import com.example.procatfirst.data.OrderRequest
-import com.example.procatfirst.data.OrdersPayload
 import com.example.procatfirst.data.OrdersResponse
-import com.example.procatfirst.data.PaymentPayload
 import com.example.procatfirst.data.PaymentResponse
 import com.example.procatfirst.data.RegistrationResponse
-import com.example.procatfirst.data.RoutePayload
 import com.example.procatfirst.data.RouteResponse
 import com.example.procatfirst.data.SimpleDeliveryman
 import com.example.procatfirst.data.SimpleDeliverymenResponse
 import com.example.procatfirst.data.SubscriptionResponse
-import com.example.procatfirst.data.User
+import com.example.procatfirst.data.TokenResponse
 import com.example.procatfirst.data.UserResponse
 import com.example.procatfirst.data.UsersResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -60,9 +42,6 @@ interface UserService {
 
     @GET("/users")
     fun getAllUsers(@Header("Authorization") token: String?, @Query("limit") limit: Int? = null, @Query("page") page: Int? = null, @Query("role") role: String? = null): Call<UsersResponse>
-
-    //@GET("/users/{userId}")
-    //suspend fun getSimpleUser(@Query("userId") userId: Int): Call<ResponseBody>
 
     @DELETE("/users/{userId}")
     fun deleteUser(@Path("userId") userId: Int, @Header("Authorization") token: String?): Call<ResponseBody>

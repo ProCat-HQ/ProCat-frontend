@@ -13,12 +13,3 @@ suspend fun DataCoordinatorOLD.updateRefreshToken(context: Context, value: Strin
     // Update DataStore
     setRefreshTokenDataStore(context, value)
 }
-
-// MARK: DataStore Update Functionality
-suspend fun DataCoordinatorOLD.updateUserPhone(context: Context, value: String) {
-    // Update Value
-    this.userPhonePreferenceVariable = value
-    // Save to System
-    // Update DataStore
-    setUserPhoneDataStore(context, value)
-}

@@ -1,6 +1,5 @@
 package com.example.procatfirst.repository.api
 
-import com.example.procatfirst.data.ItemFullPayload
 import com.example.procatfirst.data.ItemFullResponse
 import com.example.procatfirst.data.ItemResponse
 import com.example.procatfirst.data.RegistrationResponse
@@ -26,7 +25,7 @@ interface ItemsService {
     @POST("/items/{categoryId}")
     suspend fun createCategory(@Query("categoryId") categoryId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
-    @GET("/items") //query params
+    @GET("/items")
     suspend fun getAllItems(): Call<ItemResponse>
 
     @GET("/items")
@@ -41,11 +40,6 @@ interface ItemsService {
     @PATCH("/items/{itemId}")
     fun editItem(@Path("itemId") itemId: Int, @Body requestBody: RequestBody): Call<ResponseBody>
 
-    /*
-    @Multipart
-    @POST("/items")
-    fun createItem(@Header("Authorization") token: String?, @Body requestBody: RequestBody): Call<RegistrationResponse>
-*/
     @Multipart
     @POST("/items")
     fun createItem(

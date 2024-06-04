@@ -1,4 +1,4 @@
-package com.example.procatfirst.repository.api
+package com.example.procatfirst.data
 
 data class TokenResponse(
     val status: Int,

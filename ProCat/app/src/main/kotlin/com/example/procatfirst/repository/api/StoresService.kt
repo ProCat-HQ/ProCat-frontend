@@ -1,7 +1,6 @@
 package com.example.procatfirst.repository.api
 
 import com.example.procatfirst.data.NewStoreResponse
-import com.example.procatfirst.data.StoreRequest
 import com.example.procatfirst.data.StoreResponse
 import okhttp3.RequestBody
 import okhttp3.ResponseBody

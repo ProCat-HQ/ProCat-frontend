@@ -1,13 +1,10 @@
 package com.example.procatfirst.repository.data_coordinator
 
 import android.graphics.Bitmap
-import com.example.procatfirst.data.Item
 import com.example.procatfirst.data.Item2
 import com.example.procatfirst.data.ItemFullPayload
-import com.example.procatfirst.data.Tool
 import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.CatalogCache
-import java.io.InputStream
 
 suspend fun DataCoordinator.loadCatalog(callback : () -> Unit) {
     if (CatalogCache.shared.getCatalogStuff().isEmpty()) {

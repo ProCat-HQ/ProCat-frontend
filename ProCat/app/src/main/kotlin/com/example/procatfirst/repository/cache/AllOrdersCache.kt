@@ -1,20 +1,18 @@
 package com.example.procatfirst.repository.cache
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import com.example.procatfirst.data.Order
 import com.example.procatfirst.data.OrderDataProvider
 import com.example.procatfirst.data.Point
-import com.example.procatfirst.data.User
 import ru.dublgis.dgismobile.mapsdk.LonLat
 
 class AllOrdersCache {
 
     var orders : MutableList<Order> = OrderDataProvider.deliveryOrders.toMutableList()
     var adressToCoords : MutableState<LonLat> = mutableStateOf( LonLat(54.843243, 83.088801) )
-    public var ordersToDelivery: MutableList<Point>? = null
-    public var storage: LonLat? = null
+    var ordersToDelivery: MutableList<Point>? = null
+    var storage: LonLat? = null
 
     companion object {
         val shared = AllOrdersCache()

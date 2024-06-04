@@ -34,7 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
-import com.example.procatfirst.repository.cache.UserDataCache
+import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import com.example.procatfirst.repository.data_coordinator.getUserRole
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -44,7 +45,7 @@ fun NotificationsScreen(
     notificationViewModel: NotificationViewModel = viewModel()
 ) {
     val notificationsUiState by notificationViewModel.uiState.collectAsState()
-    val userRole = UserDataCache.shared.getUserRole()
+    val userRole = DataCoordinator.shared.getUserRole()
     var showDialog by remember { mutableStateOf(false) }
 
 

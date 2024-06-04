@@ -4,16 +4,12 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.util.Log
-import com.example.procatfirst.data.CartPayload
 import com.example.procatfirst.repository.api.ApiCalls
-import com.example.procatfirst.repository.cache.UserCartCache
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_storage.DataStorage
 import com.example.procatfirst.repository.data_storage_deprecated.DataCoordinatorOLD
 import com.example.procatfirst.repository.data_storage_deprecated.getRefreshTokenDataStore
 import com.example.procatfirst.repository.data_storage_deprecated.updateRefreshToken
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -23,7 +19,6 @@ import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.time.LocalDateTime
-import java.time.temporal.TemporalAmount
 import java.util.Locale
 
 /**

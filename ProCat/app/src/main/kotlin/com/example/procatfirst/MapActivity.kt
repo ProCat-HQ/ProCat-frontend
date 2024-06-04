@@ -1,17 +1,12 @@
 package com.example.procatfirst
 
 import android.content.Intent
-import android.graphics.ColorSpace
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.colorspace.Rgb
 import androidx.lifecycle.lifecycleScope
 import com.example.procatfirst.data.Point
 import com.example.procatfirst.repository.api.ApiCalls
@@ -26,7 +21,6 @@ import ru.dublgis.dgismobile.mapsdk.MarkerOptions
 import ru.dublgis.dgismobile.mapsdk.directions.CarRouteOptions
 import ru.dublgis.dgismobile.mapsdk.directions.Directions
 import ru.dublgis.dgismobile.mapsdk.directions.DirectionsOptions
-import ru.dublgis.dgismobile.mapsdk.geometries.polygon.PolygonOptions
 import ru.dublgis.dgismobile.mapsdk.labels.Label
 import ru.dublgis.dgismobile.mapsdk.labels.LabelOptions
 import ru.dublgis.dgismobile.mapsdk.location.UserLocationOptions
@@ -87,7 +81,7 @@ class MapActivity : AppCompatActivity() {
 //                            break
 //                        }
 //                    }
-                    finishOrder(AllOrdersCache.shared.ordersToDelivery!!.size - order.deliveryId + 1)
+                    finishOrder(AllOrdersCache.shared.ordersToDelivery!!.size - order.deliveryId + 1) // Дичь полная, надо разобраться, но очень не хочется
                     //finishOrder(order.deliveryId)
                 }
                 finishButton.visibility = View.INVISIBLE
