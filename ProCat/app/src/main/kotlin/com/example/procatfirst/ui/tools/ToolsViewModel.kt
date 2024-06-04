@@ -50,9 +50,6 @@ class ToolsViewModel: ViewModel() {
         _uiState.update { it.copy(tools = it.tools.sortedByDescending { tool -> tool.price }) }
     }
 
-    fun groupByCategory() {
-    }
-
     fun resetFilters() {
         _uiState.update { currentState ->
             currentState.copy(

@@ -5,8 +5,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.procatfirst.R
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
 
@@ -28,7 +30,7 @@ fun ToolCard(
     if(toolUiState.tools.items.isNotEmpty() && toolUiState.isActive) {
         ToolsScreenCart(toolUiState.tools, context)
     } else {
-        Text(text = "Ваша корзина пуста", fontSize = 18.sp)
+        Text(text = stringResource(R.string.your_cart_is_empty), fontSize = 18.sp)
     }
 
 }

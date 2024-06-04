@@ -17,9 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AuthViewModel(
-
-): ViewModel()  {
+class AuthViewModel: ViewModel()  {
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
@@ -52,15 +50,21 @@ class AuthViewModel(
 
 
     private fun checkUserPhoneNumber(): Boolean {
-        if //(userInputPhoneNumber.length == 11) {
-            (userInputPhoneNumber != "") {
-
+        if (userInputPhoneNumber != "") {
             return true
         } else {
-            wrongPassword()
+            wrongPhoneNumber()
         }
         updateUserPhoneNumber("")
         return false
+    }
+
+    private fun wrongPhoneNumber() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                enteredPhoneNumberWrong = true
+            )
+        }
     }
 
     fun wrongPassword() {

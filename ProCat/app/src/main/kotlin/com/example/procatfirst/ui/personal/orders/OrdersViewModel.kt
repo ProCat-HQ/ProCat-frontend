@@ -26,7 +26,7 @@ class OrdersViewModel: ViewModel() {
 
     private fun open() {
         viewModelScope.launch {
-            DataCoordinator.shared.getUserOrders() {
+            DataCoordinator.shared.getUserOrders {
                 _uiState.value = OrdersUiState(it)
             }
         }

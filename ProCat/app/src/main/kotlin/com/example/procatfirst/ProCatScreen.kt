@@ -77,9 +77,9 @@ enum class ProCatScreen(@StringRes val title: Int) {
     ListOfChatsScreen(title = R.string.list_of_chats),
     Chat(title = R.string.chat),
     Ordering(title = R.string.ordering),
-    Delivery(title = R.string.delivery_page), // damn
+    Delivery(title = R.string.delivery_page),
     Registration(title = R.string.registration),
-    Manager(title = R.string.manager), // damn
+    Manager(title = R.string.manager),
     OrderConfirmation(title = R.string.order_confirmation),
     AdminDelivery(title = R.string.delivery),
     AllDeliverymen(title = R.string.deliverymen),
@@ -187,7 +187,6 @@ fun ProCatApp (
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    //val currentScreen = ProCatScreen.valueOf(backStackEntry?.destination?.route ?: ProCatScreen.Start.name)
     val currentScreen = getProCatScreenFromRoute(backStackEntry?.destination?.route)
 
 
@@ -218,10 +217,7 @@ fun ProCatApp (
                     controller = controller,
                     onNextButtonClicked = {
                         navController.navigate(ProCatScreen.Auth.name)
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
+                    }
                 )
             }
             composable(route = ProCatScreen.Auth.name) {
@@ -232,10 +228,7 @@ fun ProCatApp (
                     context = controller,
                     onToRegistrationClick = {
                         navController.navigate(ProCatScreen.Registration.name)
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
+                    }
                 )
             }
             composable(route = ProCatScreen.Registration.name) {
@@ -246,10 +239,7 @@ fun ProCatApp (
                     },
                     onToAuthClick = {
                         navController.navigate(ProCatScreen.Auth.name)
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
+                    }
                 )
             }
             composable(route = ProCatScreen.Tools.name) {
@@ -261,9 +251,6 @@ fun ProCatApp (
                         CatalogCache.shared.setCurrentID(it.id)
                         navController.navigate(ProCatScreen.Tool.name)
                     },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
                 )
             }
             composable(route = ProCatScreen.Tool.name) {
@@ -272,17 +259,11 @@ fun ProCatApp (
                         navController.navigate(ProCatScreen.Cart.name)
                     },
                     toolId = CatalogCache.shared.getCurrentId(),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
                     context = controller,
                 )
             }
             composable(route = ProCatScreen.Cart.name) {
                 Cart(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
                     onToOrderingClicked = {
                         navController.navigate(ProCatScreen.Ordering.name)
                     },
@@ -328,9 +309,7 @@ fun ProCatApp (
                 )
             }
             composable(route = ProCatScreen.Orders.name) {
-                OrdersScreen(
-
-                )
+                OrdersScreen()
             }
             composable(route = ProCatScreen.Delivery.name) {
 
@@ -355,9 +334,7 @@ fun ProCatApp (
                 )
             }
             composable(route = ProCatScreen.Chat.name) {
-                ChatScreen(
-
-                )
+                ChatScreen()
             }
             composable(route = ProCatScreen.Ordering.name) {
                 OrderingScreen(
@@ -373,14 +350,10 @@ fun ProCatApp (
                 )
             }
             composable(route = ProCatScreen.AdminDelivery.name) {
-                AdminDelivery(
-
-                )
+                AdminDelivery()
             }
             composable(route = ProCatScreen.AllDeliverymen.name) {
-                Deliverymen(
-
-                )
+                Deliverymen()
             }
             composable(route = ProCatScreen.Editing.name) {
                 EditingScreen(
@@ -396,14 +369,10 @@ fun ProCatApp (
                 )
             }
             composable(route = ProCatScreen.Stores.name) {
-                StoresScreen(
-
-                )
+                StoresScreen()
             }
             composable(route = ProCatScreen.ItemsEditing.name) {
-                ItemsEditingScreen(
-
-                )
+                ItemsEditingScreen()
             }
             composable(route = "${ProCatScreen.Payments.name}/{orderId}") { backStackEntry ->
                 val orderId = backStackEntry.arguments?.getString("orderId")?.toInt()

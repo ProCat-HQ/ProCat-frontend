@@ -1,21 +1,16 @@
 package com.example.procatfirst.ui.ordering
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Divider
-import androidx.compose.material.Surface
-import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ElevatedButton
@@ -40,7 +35,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -173,7 +167,7 @@ fun DateTimePickerComponent(
     // time picker component To
     if (showTimePickerTo) {
         TimePickerDialog(
-            onDismissRequest = { /*TODO*/ },
+            onDismissRequest = {  },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -187,7 +181,7 @@ fun DateTimePickerComponent(
                     onClick = {
                         showTimePickerTo = false
                     }
-                ) { Text("Закрыть") }
+                ) { Text(stringResource(R.string.close)) }
             }
         )
         {
@@ -199,7 +193,7 @@ fun DateTimePickerComponent(
 
 @Composable
 fun TimePickerDialog(
-    title: String = "Выберите время",
+    title: String = stringResource(R.string.choose_time),
     onDismissRequest: () -> Unit,
     confirmButton: @Composable (() -> Unit),
     dismissButton: @Composable (() -> Unit)? = null,
@@ -214,7 +208,6 @@ fun TimePickerDialog(
     ) {
         Surface(
             shape = MaterialTheme.shapes.extraLarge,
-            //tonalElevation = 6.dp,
             modifier = Modifier
                 .width(IntrinsicSize.Min)
                 .height(IntrinsicSize.Min)

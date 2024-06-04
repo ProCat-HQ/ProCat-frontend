@@ -10,10 +10,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -35,18 +33,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.MapActivity
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Delivery
 import com.example.procatfirst.data.DeliveryOrder
-import com.example.procatfirst.data.Order
-import com.example.procatfirst.repository.data_coordinator.DataCoordinator
-import com.example.procatfirst.repository.data_coordinator.setOrderStatus
-import com.example.procatfirst.ui.managment.delivery.AdminDeliveryUiState
-import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -59,10 +51,6 @@ fun CourierOrdersScreen(
 ) {
     val deliveriesUiState by courierOrdersViewModel.uiState.collectAsState()
     var currentOrder by remember { mutableStateOf<DeliveryOrder?>(null) }
-
-
-
-    //val orders by courierOrdersViewModel.orders.collectAsState()
     var changeStatusDialogVisible by remember { mutableStateOf(false) }
 
 
@@ -85,8 +73,7 @@ fun CourierOrdersScreen(
                     changeStatus = {
                         changeStatusDialogVisible = true
                         currentOrder = delivery.order
-                    },
-                    deliveriesUiState
+                    }
                 )
             }
         }
@@ -96,7 +83,7 @@ fun CourierOrdersScreen(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text("Создать маршрут")
+            Text(text = stringResource(R.string.create_route))
         }
 
         if (deliveriesUiState.mapButtonVisible) {
@@ -106,7 +93,7 @@ fun CourierOrdersScreen(
                     .fillMaxWidth()
                     .padding(16.dp),
             ) {
-                Text("Показать карту")
+                Text(text = stringResource(R.string.create_route))
             }
         }
 
@@ -133,8 +120,7 @@ fun formatDateTime(dateTimeString: String): String {
 @Composable
 fun DeliveryCard(
     delivery: Delivery,
-    changeStatus: (DeliveryOrder) -> Unit,
-    deliveryUiState: CourierOrdersUiState
+    changeStatus: (DeliveryOrder) -> Unit
 ){
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -222,21 +208,21 @@ fun ChangeStatusDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Обновить стaтус заказа ${currentOrder.id}") },
+        title = { Text(stringResource(R.string.update_order_status_title, currentOrder.id)) },
         text = {
             Column {
-                Text("Выберите новый статус для заказа")
+                Text(stringResource(R.string.select_new_status))
             }
         },
         confirmButton = {
             if (currentOrder.status == "delivering") {
                 Button(onClick = { onChangeStatus("rent") }) {
-                    Text("В аренде",
+                    Text(stringResource(R.string.status_rented),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
                 Button(onClick = { onChangeStatus("returned") }) {
-                    Text("Возвращен",
+                    Text(stringResource(R.string.status_returned),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -244,16 +230,8 @@ fun ChangeStatusDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancel))
             }
         }
     )
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun ProfilePreview() {
-//    ProCatFirstTheme {
-//        CourierOrdersScreen()
-//    }
-//}

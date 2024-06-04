@@ -1,8 +1,6 @@
 package com.example.procatfirst.ui.personal.chats
 
 import androidx.compose.runtime.Composable
-
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,15 +10,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TextFieldDefaults.textFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
@@ -28,25 +25,18 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.example.procatfirst.R
-import com.example.procatfirst.data.Chat
 import com.example.procatfirst.data.Message
 import com.example.procatfirst.data.User
 import com.example.procatfirst.data.UserDataProvider.users
-import com.example.procatfirst.ui.auth.AuthViewModel
-import com.example.procatfirst.ui.theme.ProCatFirstTheme
-import com.example.procatfirst.ui.theme.md_theme_light_background
 import com.example.procatfirst.ui.theme.md_theme_light_inversePrimary
 import com.example.procatfirst.ui.theme.md_theme_light_outline
 import com.example.procatfirst.ui.theme.md_theme_light_scrim
@@ -59,8 +49,6 @@ fun ChatScreen (
     chatViewModel: ChatViewModel = viewModel()
 ) {
     val chatUiState by chatViewModel.uiState.collectAsState()
-
-    //var message by remember { mutableStateOf("") }
     val companion = users[2]
 
     Box(
@@ -80,7 +68,8 @@ fun ChatScreen (
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        MaterialTheme.colors.background, RoundedCornerShape(
+                        color = MaterialTheme.colorScheme.background,
+                        shape = RoundedCornerShape(
                             topStart = 30.dp, topEnd = 30.dp
                         )
                     )
@@ -101,7 +90,6 @@ fun ChatScreen (
                 }
             }
         }
-
         CustomTextField(
             text = chatViewModel.userInputMessage, onValueChange = { chatViewModel.updateTextMessage(it) },
             modifier = Modifier
@@ -118,7 +106,6 @@ fun ChatRow(
     message: Message,
     currentUserId: Int
 ) {
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = if (message.userId == currentUserId) Alignment.End else Alignment.Start
@@ -172,7 +159,7 @@ fun CustomTextField(
                 textAlign = TextAlign.Center
             )
         },
-        colors = TextFieldDefaults.textFieldColors(
+        colors = textFieldColors(
             containerColor = md_theme_light_secondaryContainer,
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent
@@ -224,7 +211,6 @@ fun UserNameRow(
     name: String,
     user: User
 ) {
-
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -247,14 +233,5 @@ fun UserNameRow(
                 )
             }
         }
-    }
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ChatPreview() {
-    ProCatFirstTheme {
-        ChatScreen()
     }
 }

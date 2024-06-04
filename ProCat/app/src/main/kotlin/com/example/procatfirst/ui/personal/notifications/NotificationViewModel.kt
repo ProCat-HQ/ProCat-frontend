@@ -2,8 +2,6 @@ package com.example.procatfirst.ui.personal.notifications
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.procatfirst.data.Deliveryman
-import com.example.procatfirst.data.NotificationDataProvider
 import com.example.procatfirst.data.NotificationItem
 import com.example.procatfirst.repository.api.ApiCalls
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -3,7 +3,6 @@ package com.example.procatfirst.ui.tools
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,12 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
@@ -41,27 +38,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procatfirst.R
 import com.example.procatfirst.data.Item2
-import com.example.procatfirst.data.Tool
 import com.example.procatfirst.intents.SystemNotifications
 import com.example.procatfirst.ui.IntentsReceiverAbstractObject
-import com.example.procatfirst.ui.theme.ProCatFirstTheme
 
 @Composable
 fun ToolsScreen(
     onNextButtonClicked: () -> Unit,
     onNextButtonClicked1: (Item2) -> Unit,
-    toolsViewModel: ToolsViewModel = viewModel(),
-    modifier: Modifier = Modifier
-    ) {
+    toolsViewModel: ToolsViewModel = viewModel()
+) {
     val searchUiState by toolsViewModel.uiState.collectAsState()
     val (showFilterDialog, setShowFilterDialog) = remember { mutableStateOf(false) }
     val (groupByCategory, setGroupByCategory) = remember { mutableStateOf(false) }
@@ -75,9 +67,7 @@ fun ToolsScreen(
     receiver1.CreateReceiver(intentToReact = SystemNotifications.stuffAddedIntent)
 
     if (searchUiState.isActive) {
-        Column (
-
-        ){
+        Column {
             Row(
                 modifier = Modifier
                     .padding(16.dp),
@@ -123,7 +113,6 @@ fun ToolsScreen(
             if (groupByCategory) {
                 LazyColumn(
                     modifier = Modifier
-                        //.verticalScroll(rememberScrollState())
                         .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -132,7 +121,7 @@ fun ToolsScreen(
                     groupedTools.forEach { (categoryName, tools) ->
                         item {
                             Text(
-                                text = categoryName.toString(),
+                                text = categoryName,
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold
                             )
@@ -197,7 +186,6 @@ fun ToolsScreen(
 @Composable
 fun ToolCard(
     tool: Item2,
-    //tool: Tool,
     onNextButtonClicked: (Item2) -> Unit,
     toolViewModel: ToolViewModel = ToolViewModel(tool)
 ) {
@@ -305,13 +293,5 @@ fun FilterDialog(
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ToolPreview() {
-    ProCatFirstTheme {
-        //ToolsScreen()
-    }
 }
 

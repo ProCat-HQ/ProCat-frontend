@@ -7,9 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.procatfirst.intents.NotificationCoordinator
-import com.example.procatfirst.intents.SystemNotifications
-import com.example.procatfirst.intents.sendIntent
 import com.example.procatfirst.repository.api.ApiCalls
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,13 +39,12 @@ class RegistrationViewModel: ViewModel()  {
 
 
 
-    fun check() {
+    private fun check() {
         checkUserPassword()
         checkUserPhoneNumber()
         checkUserLastName()
         checkUserFirstName()
         checkUserFatherName()
-
     }
 
     fun updateUserLastName(enteredLastName: String){
@@ -161,7 +157,7 @@ class RegistrationViewModel: ViewModel()  {
 
         if (!_uiState.value.enteredLastNameWrong && !_uiState.value.enteredPhoneNumberWrong
             && !_uiState.value.enteredFirstNameWrong && !_uiState.value.enteredPasswordWrong) {
-            val fullName: String = "$userInputLastName $userInputFirstName $userInputFatherName"
+            val fullName = "$userInputLastName $userInputFirstName $userInputFatherName"
             viewModelScope.launch {
                 ApiCalls.shared.signUpApi(userInputPhoneNumber, userInputPassword, fullName) {
                     if (it == "SUCCESS") {
@@ -173,7 +169,6 @@ class RegistrationViewModel: ViewModel()  {
                     }
                 }
             }
-            //createNewVerificationCode
             isInputCodeDialogVisible = true
         }
     }
@@ -181,8 +176,6 @@ class RegistrationViewModel: ViewModel()  {
     private fun open(){
         _uiState.value = RegistrationUiState()
     }
-
-
 
 
 }

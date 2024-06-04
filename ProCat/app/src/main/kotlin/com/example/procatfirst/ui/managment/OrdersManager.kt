@@ -10,16 +10,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -27,8 +21,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -49,10 +41,8 @@ import androidx.navigation.NavController
 import com.example.procatfirst.MapActivity
 import com.example.procatfirst.ProCatScreen
 import com.example.procatfirst.R
-import com.example.procatfirst.data.DeliveryOrder
 import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.OrderItem
-import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -78,24 +68,22 @@ fun OrdersManagerScreen(
             style = MaterialTheme.typography.titleLarge,
         )
 
-        if (ordersUiState.orders != null) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(16.dp),
-            ) {
-                items(ordersUiState.orders!!) { orderFull ->
-                    if (orderFull.status != "closed") {
-                        OrderItemFull(
-                            orderFull = orderFull,
-                            changeStatus = {
-                                changeStatusDialogVisible = true
-                                currentOrder = orderFull
-                            },
-                            onViewPaymentsClicked = { orderId ->
-                                navController.navigate("${ProCatScreen.Payments.name}/$orderId")
-                            }
-                        )
-                    }
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(16.dp),
+        ) {
+            items(ordersUiState.orders) { orderFull ->
+                if (orderFull.status != "closed") {
+                    OrderItemFull(
+                        orderFull = orderFull,
+                        changeStatus = {
+                            changeStatusDialogVisible = true
+                            currentOrder = orderFull
+                        },
+                        onViewPaymentsClicked = { orderId ->
+                            navController.navigate("${ProCatScreen.Payments.name}/$orderId")
+                        }
+                    )
                 }
             }
         }
@@ -106,7 +94,7 @@ fun OrdersManagerScreen(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text("Показать карту")
+            Text(stringResource(R.string.show_map))
         }
         if (changeStatusDialogVisible) {
             ChangeStatusDialog(
@@ -200,7 +188,7 @@ fun OrderItemFull(
                         .padding(8.dp)
                 ) {
                     Text(
-                        text = "Посмотреть платежи",
+                        text = stringResource(R.string.open_payments),
                         style = MaterialTheme.typography.titleMedium,
                     )
                 }
@@ -238,7 +226,6 @@ fun OrderItemCard(
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .padding(vertical = 8.dp),
-            //.clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.tertiaryContainer,
             contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -289,29 +276,6 @@ fun ChangeStatusDialog(
                 Text("Выберите новый статус для заказа")
             }
         },
-        /*
-        confirmButton = {
-            LazyColumn {
-                items(items = listOf(
-                    "awaitingPayment", "accepted", "readyToPickup", "readyToDelivery", "delivering",
-                    "rent", "shouldBeReturned", "expired", "problem", "deliveryBack", "returned",
-                    "itemsCheck", "awaitingRepairPayment", "closed"
-                )) { status ->
-                    Button(
-                        onClick = { onChangeStatus(status) },
-                        //modifier = Modifier
-                        //    .size(width = 200.dp, height = 40.dp)
-                        //    .padding(vertical = 4.dp)
-                    ) {
-                        Text(
-                            text = status,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-            }
-        }, */
-
         confirmButton = {
             if (currentOrder.status == "accepted") {
                 Button(onClick = { onChangeStatus("readyToPickup") }) {

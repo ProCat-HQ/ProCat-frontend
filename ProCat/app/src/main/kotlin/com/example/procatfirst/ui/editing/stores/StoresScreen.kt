@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,11 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.procatfirst.R
 import com.example.procatfirst.data.Store
-import com.example.procatfirst.ui.editing.deliverymen.DeliveryManCard
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -67,7 +67,7 @@ fun StoresScreen(
                     .padding(top = 8.dp)
                     .fillMaxWidth()
             ) {
-                Text("Создать магазин")
+                Text(stringResource(R.string.create_shop))
             }
         }
     }
@@ -119,11 +119,15 @@ fun StoreCard(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Адрес: ${store.address}",
+                text = stringResource(R.string.address, store.address),
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-                text = "Часы работы: ${formatTime(store.workingHoursStart)} - ${formatTime(store.workingHoursEnd)}",
+                text = stringResource(
+                    R.string.working_hours,
+                    formatTime(store.workingHoursStart),
+                    formatTime(store.workingHoursEnd)
+                ),
                 style = MaterialTheme.typography.bodyMedium
             )
             Box(
@@ -134,7 +138,7 @@ fun StoreCard(
                     onClick = onEditClick,
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
-                    Text("Редактировать")
+                    Text(stringResource(R.string.edit))
                 }
             }
         }
@@ -163,32 +167,32 @@ fun EditStoreDialog(
     AlertDialog(
         onDismissRequest = onCancel,
         title = {
-            Text(text = "Редактирование магазина")
+            Text(text = stringResource(R.string.shop_editing))
         },
         text = {
             Column {
                 OutlinedTextField(
                     value = name.value,
                     onValueChange = { name.value = it },
-                    label = { Text("Название магазина") },
+                    label = { Text(stringResource(R.string.shop_name)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = address.value,
                     onValueChange = { address.value = it },
-                    label = { Text("Адрес") },
+                    label = { Text(stringResource(R.string.address)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = workingHoursStart.value,
                     onValueChange = { workingHoursStart.value = it },
-                    label = { Text("Начало работы (HH:mm:ss)") },
+                    label = { Text(stringResource(R.string.work_start_format)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = workingHoursEnd.value,
                     onValueChange = { workingHoursEnd.value = it },
-                    label = { Text("Конец работы (HH:mm:ss)") },
+                    label = { Text(stringResource(R.string.work_end_format)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -203,12 +207,12 @@ fun EditStoreDialog(
                 )
                 onSave(updatedStore)
             }) {
-                Text("Сохранить")
+                Text(stringResource(R.string.save))
             }
         },
         dismissButton = {
             TextButton(onClick = onCancel) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancellation))
             }
         }
     )

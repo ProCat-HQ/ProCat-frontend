@@ -13,7 +13,7 @@ class AllOrdersCache {
 
     var orders : MutableList<Order> = OrderDataProvider.deliveryOrders.toMutableList()
     var adressToCoords : MutableState<LonLat> = mutableStateOf( LonLat(54.843243, 83.088801) )
-    var ordersToDelivery: List<Point>? = null
+    public var ordersToDelivery: MutableList<Point>? = null
     public var storage: LonLat? = null
 
     companion object {
@@ -46,7 +46,7 @@ class AllOrdersCache {
     }
 
     fun setPoints(points : List<Point>) {
-        ordersToDelivery = points
+        ordersToDelivery = points.toMutableList()
     }
 
     fun getPoints() : List<Point>? {

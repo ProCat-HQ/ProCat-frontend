@@ -12,11 +12,13 @@ import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.cache.UserDataCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
 import com.example.procatfirst.repository.data_coordinator.getUserData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ProfileViewModel: ViewModel() {
@@ -28,8 +30,6 @@ class ProfileViewModel: ViewModel() {
     init {
         getUserProfileInfo()
     }
-
-
 
     //Phone Number
     var userInputPhoneNumber by mutableStateOf(_uiState.value.phoneNumber)
@@ -113,14 +113,16 @@ class ProfileViewModel: ViewModel() {
 
     fun fullSaveUserIdentificationNumber(password: String, context: Context) {
         viewModelScope.launch {
-            ApiCalls.shared.changeIin(userInputIdentificationNumber, password) {
-                if (it == "SUCCESS") {
-                    Log.d("IIN", "$userInputIdentificationNumber $password")
-                    getUserProfileInfo()
-                    Toast.makeText(context, "Успех", Toast.LENGTH_SHORT).show()
-                }
-                else {
-                    errorDialog("Ваш ИИН некорректен или не соответствует указанному ФИО $it")
+            withContext(Dispatchers.IO) {
+                ApiCalls.shared.changeIin(userInputIdentificationNumber, password) {
+                    if (it == "SUCCESS") {
+                        Log.d("IIN", "$userInputIdentificationNumber $password")
+                        Toast.makeText(context, "Успех", Toast.LENGTH_SHORT).show()
+                        getUserProfileInfo()
+                    }
+                    else {
+                        errorDialog("Ваш ИИН некорректен или не соответствует указанному ФИО $it")
+                    }
                 }
             }
         }
@@ -152,10 +154,11 @@ class ProfileViewModel: ViewModel() {
         }
         updateUserEmail(userInputEmail)
     }
-    fun fullSaveUserEmail(password: String) {
+    fun fullSaveUserEmail(password: String, context: Context) {
         viewModelScope.launch {
             ApiCalls.shared.changeEmail(userInputEmail, password) {
                 if (it == "SUCCESS") {
+                    Toast.makeText(context, "Успех", Toast.LENGTH_SHORT).show()
                     getUserProfileInfo()
                 }
                 else {
@@ -176,7 +179,7 @@ class ProfileViewModel: ViewModel() {
             if (idUser != null) {
                 Log.i("UserId", idUser.toString())
 
-                DataCoordinator.shared.getUserData() {
+                DataCoordinator.shared.getUserData {
                     _uiState.value = _uiState.value.copy(
                         userId = it.id,
                         fullName = it.fullName,

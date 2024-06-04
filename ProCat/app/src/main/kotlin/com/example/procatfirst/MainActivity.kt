@@ -1,6 +1,5 @@
 package com.example.procatfirst
 
-//import dagger.hilt.android.AndroidEntryPoint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -18,7 +17,6 @@ import com.example.procatfirst.ui.theme.ProCatFirstTheme
 import kotlinx.coroutines.launch
 
 
-//@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

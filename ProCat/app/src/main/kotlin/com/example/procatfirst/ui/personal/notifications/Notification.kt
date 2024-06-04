@@ -1,6 +1,5 @@
 package com.example.procatfirst.ui.personal.notifications
 
-import android.app.Notification.EXTRA_NOTIFICATION_ID
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,13 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getSystemService
 import com.example.procatfirst.R
 
 
 fun makeNotification(context: Context, title: String, content: String) {
 
-    // Create an explicit intent for an Activity in your app.
     val intent = Intent(context, AlertDetails::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
@@ -24,24 +21,12 @@ fun makeNotification(context: Context, title: String, content: String) {
     val textTitle = title
     val textContent = content
 
-    /*
-    val ACTION_MARK_READ = "Пометить как прочитанное"
-
-    val markReadIntent = Intent(context, MyBroadcastReceiver::class.java).apply {
-        action = ACTION_MARK_READ
-        putExtra(EXTRA_NOTIFICATION_ID, 0)
-    }
-    val markReadPendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 0, markReadIntent,
-        PendingIntent.FLAG_MUTABLE) */
-
     var builder = NotificationCompat.Builder(context, CHANNEL_ID)
         .setSmallIcon(R.drawable.cat_logo)
         .setContentTitle(textTitle)
         .setContentText(textContent)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
-        // Set the intent that fires when the user taps the notification.
         .setContentIntent(pendingIntent)
-        //.addAction(R.drawable.cat_logo, "Mark As Read", markReadPendingIntent)
         .setAutoCancel(true)
 
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

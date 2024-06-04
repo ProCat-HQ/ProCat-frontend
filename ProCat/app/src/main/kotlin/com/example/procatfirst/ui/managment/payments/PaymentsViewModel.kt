@@ -2,10 +2,8 @@ package com.example.procatfirst.ui.managment.payments
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.procatfirst.data.OrderFull
 import com.example.procatfirst.data.Payment
 import com.example.procatfirst.repository.api.ApiCalls
-import com.example.procatfirst.ui.managment.OrdersManagerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,16 +26,6 @@ class PaymentsViewModel: ViewModel() {
                 }
             }
             ApiCalls.shared.getInfoAboutPaymentsApi(orderId, callback)
-        }
-    }
-
-    fun loadFakeData(orderId: Int) {
-        val payment = Payment(9, 90, "cash", 900, "recently")
-        val payments = listOf(payment)
-        _uiState.update { currentState ->
-            currentState.copy(
-                payments = payments
-            )
         }
     }
 

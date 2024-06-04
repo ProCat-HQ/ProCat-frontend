@@ -11,8 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.data.OrderRequest
 import com.example.procatfirst.data.OrderSmall
 import com.example.procatfirst.data.Store
-import com.example.procatfirst.data.User
-import com.example.procatfirst.repository.api.ApiCalls
 import com.example.procatfirst.repository.api.StoreApiCalls
 import com.example.procatfirst.repository.cache.UserOrdersCache
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
@@ -30,7 +28,7 @@ import java.time.LocalDate
 import java.util.Calendar
 import java.util.Locale
 
-class OrderingViewModel(): ViewModel() {
+class OrderingViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(OrderingUiState())
     val uiState: StateFlow<OrderingUiState> = _uiState.asStateFlow()
 
@@ -113,7 +111,6 @@ class OrderingViewModel(): ViewModel() {
     }
 
     fun order(context: Context, nextPage: (OrderingViewModel) -> Unit) {
-        // send request to make order with date, time, address and items!
         updateSelectedAddress(address)
         viewModelScope.launch {
             _uiState.update { it.copy(loading = true) }

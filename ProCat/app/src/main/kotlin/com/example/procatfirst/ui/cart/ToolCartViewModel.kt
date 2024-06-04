@@ -4,12 +4,15 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procatfirst.repository.data_coordinator.DataCoordinator
+import getUserCart
 import getUserCartPayload
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ToolCartViewModel: ViewModel()  {
     private val _uiState = MutableStateFlow(ToolsUiState())
@@ -22,7 +25,10 @@ class ToolCartViewModel: ViewModel()  {
     private fun open(){
         Log.d("CartOpen", "CartOpen")
         viewModelScope.launch {
-            _uiState.value = ToolsUiState(true, DataCoordinator.shared.getUserCartPayload())
+            withContext(Dispatchers.IO) {
+                DataCoordinator.shared.getUserCart()
+                _uiState.value = ToolsUiState(true, DataCoordinator.shared.getUserCartPayload())
+            }
         }
     }
 

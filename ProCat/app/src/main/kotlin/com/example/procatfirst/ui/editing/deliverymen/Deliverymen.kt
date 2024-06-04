@@ -27,9 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.procatfirst.R
 import com.example.procatfirst.data.Deliveryman
 import com.example.procatfirst.data.User
 
@@ -74,7 +76,9 @@ fun Deliverymen(
                     }
                 }
             ) {
-                Text(if (showUsers) "Скрыть пользователей" else "Отобразить пользователей")
+                Text(if (showUsers) stringResource(R.string.hide_users)
+                else stringResource(R.string.show_users)
+                )
             }
         }
 
@@ -139,11 +143,15 @@ fun DeliveryManCard(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Вместимость: ${man.carCapacity}",
+                text = stringResource(R.string.capacity, man.carCapacity),
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-                text = "Часы работы: ${man.workingHoursStart.dropLast(3)} - ${man.workingHoursEnd.dropLast(3)}",
+                text = stringResource(
+                    R.string.working_hours,
+                    man.workingHoursStart.dropLast(3),
+                    man.workingHoursEnd.dropLast(3)
+                ),
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
@@ -162,7 +170,7 @@ fun DeliveryManCard(
                     onClick = onDeleteClick,
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
-                    Text("Удалить")
+                    Text(stringResource(R.string.delete))
                 }
             }
         }
@@ -199,12 +207,12 @@ fun UserNameCard(
                     Modifier.padding(5.dp),
                     colors = ButtonColors(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.colorScheme.error, MaterialTheme.colorScheme.errorContainer, MaterialTheme.colorScheme.onErrorContainer),
                 ) {
-                    Text("Удалить")
+                    Text(stringResource(R.string.delete))
                 }
                 OutlinedButton(
                     onClick = onMakeCourierClick,
                 ) {
-                    Text("Сделать курьером")
+                    Text(stringResource(R.string.make_courier))
                 }
             }
         }
@@ -225,32 +233,40 @@ fun MakeCourierDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = "Сделать курьером: ${user.fullName}") },
+        title = { Text(text = stringResource(R.string.make_courier_with_info, user.fullName)) },
         text = {
             Column {
                 OutlinedTextField(
                     value = carCapacity,
                     onValueChange = { carCapacity = it },
-                    label = { Text("Вместимость машины") },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                    label = { Text(stringResource(R.string.car_capacity)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 )
                 OutlinedTextField(
                     value = workingHoursStart,
                     onValueChange = { workingHoursStart = it },
-                    label = { Text("Начало работы") },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                    label = { Text(stringResource(R.string.start_of_work)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 )
                 OutlinedTextField(
                     value = workingHoursEnd,
                     onValueChange = { workingHoursEnd = it },
-                    label = { Text("Конец работы") },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                    label = { Text(stringResource(R.string.end_of_work)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 )
                 OutlinedTextField(
                     value = carId,
                     onValueChange = { carId = it },
-                    label = { Text("ID машины") },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                    label = { Text(stringResource(R.string.car_id)) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                 )
             }
         },
@@ -260,12 +276,12 @@ fun MakeCourierDialog(
                     onConfirm(carCapacity, workingHoursStart, workingHoursEnd, carId)
                 }
             ) {
-                Text("Подтвердить")
+                Text(stringResource(R.string.confirm))
             }
         },
         dismissButton = {
             Button(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancellation))
             }
         }
     )
@@ -280,19 +296,19 @@ fun DeleteUserDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = "Удалить пользователя?: ${user.fullName}") },
+        title = { Text(text = stringResource(R.string.delete_user, user.fullName)) },
         confirmButton = {
             Button(
                 onClick = {
                     onConfirm()
                 }
             ) {
-                Text("Подтвердить")
+                Text(stringResource(R.string.confirm))
             }
         },
         dismissButton = {
             Button(onClick = onDismiss) {
-                Text("Отмена")
+                Text(stringResource(R.string.cancellation))
             }
         }
     )
